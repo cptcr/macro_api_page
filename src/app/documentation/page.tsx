@@ -1,9 +1,4 @@
-// src/app/documentation/page.tsx
-'use client';
-
 import React, { useState, useEffect } from 'react';
-import Navbar from '@/components/common/Navbar';
-import Footer from '@/components/common/Footer';
 import { 
   Search, 
   Book, 
@@ -38,26 +33,141 @@ import {
   Info,
   CheckCircle,
   Home,
-  ChevronLeft,
   Menu,
-  X
+  X,
+  Monitor,
+  HardDrive,
+  Send,
+  PlayCircle,
+  PauseCircle,
+  SkipForward,
+  SkipBack,
+  Repeat,
+  Shuffle,
+  Heart,
+  Plus,
+  Minus,
+  Edit,
+  Trash2,
+  Download,
+  Upload,
+  RefreshCw,
+  Eye,
+  EyeOff,
+  Lock,
+  Unlock,
+  Users,
+  User,
+  Star,
+  Flag,
+  Tag,
+  Calendar,
+  Clock,
+  MapPin,
+  Globe,
+  Smartphone,
+  Tablet,
+  Laptop,
+  Headphones,
+  Mic,
+  MicOff,
+  Video,
+  VideoOff,
+  Image,
+  FileImage,
+  FileVideo,
+  FileAudio,
+  FilePlus,
+  FolderPlus,
+  Archive,
+  Hash,
+  AtSign,
+  Link,
+  Bell,
+  BellOff,
+  Volume2,
+  VolumeX,
+  Activity,
+  BarChart3,
+  PieChart,
+  TrendingUp,
+  TrendingDown,
+  Filter,
+  SortAsc,
+  SortDesc,
+  Grid,
+  List,
+  MoreHorizontal,
+  MoreVertical
 } from 'lucide-react';
+
+// Type definitions
+type LucideIcon = React.ComponentType<{ className?: string }>;
+
+interface NavigationItem {
+  id: string;
+  title: string;
+  icon: LucideIcon;
+}
+
+interface NavigationSection {
+  id: string;
+  title: string;
+  icon: LucideIcon;
+  items: NavigationItem[];
+}
+
+interface ExpandedSections {
+  [key: string]: boolean;
+}
+
+interface CodeBlockProps {
+  code: string;
+  language?: string;
+  title?: string;
+}
+
+interface InfoBoxProps {
+  type?: 'info' | 'warning' | 'success' | 'error' | 'note';
+  title?: string;
+  children: React.ReactNode;
+}
+
+interface MethodProps {
+  name: string;
+  description: string;
+  parameters?: Array<{
+    name: string;
+    type: string;
+    description: string;
+    required?: boolean;
+    default?: string;
+  }>;
+  returns?: {
+    type: string;
+    description: string;
+  };
+  example: string;
+  throws?: string[];
+}
 
 export default function Documentation() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSection, setActiveSection] = useState('getting-started');
-  const [expandedSections, setExpandedSections] = useState({
+  const [expandedSections, setExpandedSections] = useState<ExpandedSections>({
     'quick-start': true,
     'api-classes': true,
     'core-features': true,
-    'production-apis': true
+    'production-apis': true,
+    'games-apis': true,
+    'utility-apis': true
   });
   const [copiedCode, setCopiedCode] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [filteredSections, setFilteredSections] = useState([]);
+  const [filteredSections, setFilteredSections] = useState<NavigationSection[]>([]);
 
-  // Navigation structure
-  const navigation = [
+  // Navigation structure with comprehensive API coverage
+  const navigation: NavigationSection[] = [
     {
       id: 'quick-start',
       title: 'Quick Start',
@@ -66,7 +176,8 @@ export default function Documentation() {
         { id: 'getting-started', title: 'Getting Started', icon: Home },
         { id: 'installation', title: 'Installation', icon: Package },
         { id: 'basic-usage', title: 'Basic Usage', icon: Code },
-        { id: 'authentication', title: 'Authentication', icon: Shield }
+        { id: 'authentication', title: 'Authentication', icon: Shield },
+        { id: 'unified-client', title: 'Unified Client', icon: Layers }
       ]
     },
     {
@@ -76,37 +187,80 @@ export default function Documentation() {
       items: [
         { id: 'error-handling', title: 'Error Handling', icon: AlertCircle },
         { id: 'caching', title: 'Caching System', icon: Database },
-        { id: 'retry-logic', title: 'Retry Logic', icon: Settings },
-        { id: 'circuit-breaker', title: 'Circuit Breaker', icon: Shield }
+        { id: 'retry-logic', title: 'Retry Logic', icon: RefreshCw },
+        { id: 'circuit-breaker', title: 'Circuit Breaker', icon: Shield },
+        { id: 'cache-providers', title: 'Cache Providers', icon: Server }
       ]
     },
     {
-      id: 'api-classes',
-      title: 'API Classes',
-      icon: Layers,
+      id: 'ai-ml-apis',
+      title: 'AI/ML APIs',
+      icon: Brain,
       items: [
         { id: 'chatgpt', title: 'ChatGPT/OpenAI', icon: MessageSquare },
-        { id: 'spotify', title: 'Spotify API', icon: Music },
-        { id: 'stripe', title: 'Stripe API', icon: CreditCard },
-        { id: 'notion', title: 'Notion API', icon: FileText },
-        { id: 'football', title: 'Football API', icon: Dribbble },
-        { id: 'paypal', title: 'PayPal API', icon: DollarSign },
-        { id: 'deepseek', title: 'DeepSeek API', icon: Brain },
-        { id: 'valorant', title: 'Valorant API', icon: Target },
-        { id: 'youtube', title: 'YouTube Notifications', icon: Youtube },
-        { id: 'github', title: 'GitHub API', icon: Github }
+        { id: 'deepseek', title: 'DeepSeek API', icon: Brain }
       ]
     },
     {
-      id: 'production-apis',
-      title: 'Production APIs',
-      icon: Server,
+      id: 'payment-apis',
+      title: 'Payment APIs',
+      icon: CreditCard,
+      items: [
+        { id: 'stripe', title: 'Stripe API', icon: CreditCard },
+        { id: 'paypal', title: 'PayPal API', icon: DollarSign }
+      ]
+    },
+    {
+      id: 'communication-apis',
+      title: 'Communication',
+      icon: MessageSquare,
       items: [
         { id: 'slack', title: 'Slack API', icon: Slack },
-        { id: 'sendgrid', title: 'SendGrid API', icon: Mail },
+        { id: 'sendgrid', title: 'SendGrid API', icon: Mail }
+      ]
+    },
+    {
+      id: 'cloud-apis',
+      title: 'Cloud & Infrastructure',
+      icon: Cloud,
+      items: [
         { id: 'vercel', title: 'Vercel API', icon: Cloud },
         { id: 's3', title: 'AWS S3 API', icon: Database },
         { id: 'dockerhub', title: 'Docker Hub API', icon: Container }
+      ]
+    },
+    {
+      id: 'media-apis',
+      title: 'Media & Social',
+      icon: Music,
+      items: [
+        { id: 'spotify', title: 'Spotify API', icon: Music },
+        { id: 'youtube', title: 'YouTube Notifications', icon: Youtube }
+      ]
+    },
+    {
+      id: 'developer-apis',
+      title: 'Developer Tools',
+      icon: Code,
+      items: [
+        { id: 'github', title: 'GitHub API', icon: Github },
+        { id: 'notion', title: 'Notion API', icon: FileText }
+      ]
+    },
+    {
+      id: 'games-apis',
+      title: 'Gaming APIs',
+      icon: Target,
+      items: [
+        { id: 'valorant', title: 'Valorant API', icon: Target }
+      ]
+    },
+    {
+      id: 'utility-apis',
+      title: 'Utility APIs',
+      icon: Settings,
+      items: [
+        { id: 'football', title: 'Football API', icon: Dribbble }
       ]
     }
   ];
@@ -129,20 +283,20 @@ export default function Documentation() {
     setFilteredSections(filtered);
   }, [searchTerm]);
 
-  const copyToClipboard = (code) => {
+  const copyToClipboard = (code: string) => {
     navigator.clipboard.writeText(code);
     setCopiedCode(code);
     setTimeout(() => setCopiedCode(''), 2000);
   };
 
-  const toggleSection = (sectionId) => {
+  const toggleSection = (sectionId: string) => {
     setExpandedSections(prev => ({
       ...prev,
       [sectionId]: !prev[sectionId]
     }));
   };
 
-  const CodeBlock = ({ code, language = 'typescript', title }) => (
+  const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = 'typescript', title }) => (
     <div className="relative bg-gray-900 rounded-lg overflow-hidden border border-gray-700 my-6">
       {title && (
         <div className="flex items-center justify-between px-4 py-2 bg-gray-800 border-b border-gray-700">
@@ -171,19 +325,21 @@ export default function Documentation() {
     </div>
   );
 
-  const InfoBox = ({ type = 'info', title, children }) => {
+  const InfoBox: React.FC<InfoBoxProps> = ({ type = 'info', title, children }) => {
     const styles = {
       info: 'bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-200',
       warning: 'bg-yellow-50 border-yellow-200 text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-800 dark:text-yellow-200',
       success: 'bg-green-50 border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200',
-      error: 'bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200'
+      error: 'bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200',
+      note: 'bg-purple-50 border-purple-200 text-purple-800 dark:bg-purple-900/20 dark:border-purple-800 dark:text-purple-200'
     };
 
-    const icons = {
+    const icons: Record<string, LucideIcon> = {
       info: Info,
       warning: AlertCircle,
       success: CheckCircle,
-      error: AlertCircle
+      error: AlertCircle,
+      note: Book
     };
 
     const Icon = icons[type];
@@ -201,6 +357,66 @@ export default function Documentation() {
     );
   };
 
+  const Method: React.FC<MethodProps> = ({ name, description, parameters, returns, example, throws }) => (
+    <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 my-6">
+      <div className="flex items-center mb-4">
+        <Code className="h-5 w-5 mr-2 text-blue-600" />
+        <h4 className="text-lg font-semibold font-mono text-blue-600">{name}</h4>
+      </div>
+      
+      <p className="text-gray-700 dark:text-gray-300 mb-4">{description}</p>
+      
+      {parameters && parameters.length > 0 && (
+        <div className="mb-4">
+          <h5 className="font-semibold mb-2 text-sm uppercase tracking-wide text-gray-600 dark:text-gray-400">Parameters</h5>
+          <div className="space-y-2">
+            {parameters.map((param, index) => (
+              <div key={index} className="bg-gray-50 dark:bg-gray-800 rounded p-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <span className="font-mono text-sm font-semibold text-purple-600">{param.name}</span>
+                    {param.required && <span className="text-red-500 text-xs ml-1">*</span>}
+                    <span className="text-gray-500 text-sm ml-2">({param.type})</span>
+                    {param.default && <span className="text-gray-500 text-xs ml-2">= {param.default}</span>}
+                  </div>
+                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{param.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      {returns && (
+        <div className="mb-4">
+          <h5 className="font-semibold mb-2 text-sm uppercase tracking-wide text-gray-600 dark:text-gray-400">Returns</h5>
+          <div className="bg-gray-50 dark:bg-gray-800 rounded p-3">
+            <span className="font-mono text-sm font-semibold text-green-600">{returns.type}</span>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{returns.description}</p>
+          </div>
+        </div>
+      )}
+      
+      {throws && throws.length > 0 && (
+        <div className="mb-4">
+          <h5 className="font-semibold mb-2 text-sm uppercase tracking-wide text-gray-600 dark:text-gray-400">Throws</h5>
+          <div className="space-y-1">
+            {throws.map((error, index) => (
+              <div key={index} className="bg-red-50 dark:bg-red-900/20 rounded p-2">
+                <span className="font-mono text-sm text-red-600">{error}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      <div>
+        <h5 className="font-semibold mb-2 text-sm uppercase tracking-wide text-gray-600 dark:text-gray-400">Example</h5>
+        <CodeBlock code={example} />
+      </div>
+    </div>
+  );
+
   const Sidebar = () => (
     <div className="w-80 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 h-full overflow-y-auto">
       {/* Search */}
@@ -212,7 +428,7 @@ export default function Documentation() {
             placeholder="Search documentation..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
       </div>
@@ -245,7 +461,7 @@ export default function Documentation() {
                     }}
                     className={`flex items-center w-full text-left px-2 py-1.5 text-sm rounded transition-colors ${
                       activeSection === item.id
-                        ? 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 font-medium'
+                        ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 font-medium'
                         : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100'
                     }`}
                   >
@@ -268,42 +484,106 @@ export default function Documentation() {
           <div>
             <h1 className="text-4xl font-bold mb-6">Getting Started with macro_api</h1>
             <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
-              A comprehensive TypeScript/JavaScript library for unified API integrations with production-ready features.
+              A comprehensive, production-ready TypeScript/JavaScript library for unified API integrations with built-in error handling, caching, retry logic, and circuit breakers.
             </p>
             
             <InfoBox type="info" title="What is macro_api?">
-              macro_api is a powerful, production-ready library that provides unified interfaces for popular APIs, 
-              complete with error handling, caching, retry logic, and TypeScript support.
+              macro_api is a powerful library that provides unified interfaces for popular APIs, complete with enterprise-grade features like automatic retries, intelligent caching, circuit breakers, and comprehensive error handling. It's designed to make API integration robust, reliable, and developer-friendly.
             </InfoBox>
 
             <h2 className="text-2xl font-semibold mb-4 mt-8">Key Features</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <Shield className="h-6 w-6 text-primary-600 dark:text-primary-400 mb-2" />
+                <Shield className="h-6 w-6 text-blue-600 mb-2" />
                 <h3 className="font-semibold mb-1">Production Ready</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Built-in error handling, retry logic, and circuit breakers.</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Built-in error handling, retry logic, circuit breakers, and monitoring.</p>
               </div>
               <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <Code className="h-6 w-6 text-primary-600 dark:text-primary-400 mb-2" />
-                <h3 className="font-semibold mb-1">TypeScript Support</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Full TypeScript definitions for all APIs and methods.</p>
+                <Code className="h-6 w-6 text-blue-600 mb-2" />
+                <h3 className="font-semibold mb-1">TypeScript First</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Complete TypeScript definitions with IntelliSense support.</p>
               </div>
               <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <Database className="h-6 w-6 text-primary-600 dark:text-primary-400 mb-2" />
+                <Database className="h-6 w-6 text-blue-600 mb-2" />
                 <h3 className="font-semibold mb-1">Intelligent Caching</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Memory, Redis, and hybrid caching strategies.</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Memory, Redis, and hybrid caching with LRU eviction.</p>
               </div>
               <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <Layers className="h-6 w-6 text-primary-600 dark:text-primary-400 mb-2" />
+                <Layers className="h-6 w-6 text-blue-600 mb-2" />
                 <h3 className="font-semibold mb-1">Unified Interface</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Consistent patterns across all API integrations.</p>
+              </div>
+            </div>
+
+            <h2 className="text-2xl font-semibold mb-4">Supported Services</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+              <div className="p-4 border rounded-lg">
+                <h4 className="font-semibold text-green-600 flex items-center mb-2">
+                  <Brain className="h-4 w-4 mr-2" />
+                  AI/ML Services
+                </h4>
+                <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                  <li>• ChatGPT/OpenAI - Chat, embeddings, images</li>
+                  <li>• DeepSeek - Code generation, chat</li>
+                </ul>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <h4 className="font-semibold text-blue-600 flex items-center mb-2">
+                  <CreditCard className="h-4 w-4 mr-2" />
+                  Payments
+                </h4>
+                <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                  <li>• Stripe - Complete payment processing</li>
+                  <li>• PayPal - Orders, invoices, webhooks</li>
+                </ul>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <h4 className="font-semibold text-purple-600 flex items-center mb-2">
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Communication
+                </h4>
+                <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                  <li>• Slack - Messages, files, webhooks</li>
+                  <li>• SendGrid - Email delivery, templates</li>
+                </ul>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <h4 className="font-semibold text-orange-600 flex items-center mb-2">
+                  <Cloud className="h-4 w-4 mr-2" />
+                  Cloud & Infrastructure
+                </h4>
+                <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                  <li>• Vercel - Deployments, projects</li>
+                  <li>• AWS S3 - Object storage</li>
+                  <li>• Docker Hub - Container registry</li>
+                </ul>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <h4 className="font-semibold text-red-600 flex items-center mb-2">
+                  <Music className="h-4 w-4 mr-2" />
+                  Media & Social
+                </h4>
+                <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                  <li>• Spotify - Music streaming, playlists</li>
+                  <li>• YouTube - Notifications, monitoring</li>
+                </ul>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <h4 className="font-semibold text-indigo-600 flex items-center mb-2">
+                  <Code className="h-4 w-4 mr-2" />
+                  Developer Tools
+                </h4>
+                <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                  <li>• GitHub - Repositories, issues, PRs</li>
+                  <li>• Notion - Pages, databases, blocks</li>
+                </ul>
               </div>
             </div>
 
             <h2 className="text-2xl font-semibold mb-4">Quick Example</h2>
             <CodeBlock
               title="Basic Usage"
-              code={`import { ChatGPT, SpotifyAPI, StripeAPI } from 'macro_api';
+              code={`import { ChatGPT, SpotifyAPI, StripeAPI, MacroAPIClient } from 'macro_api';
 
 // Initialize clients with your API keys
 const gpt = new ChatGPT({
@@ -319,11 +599,35 @@ const stripe = new StripeAPI({
   secretKey: process.env.STRIPE_SECRET_KEY
 });
 
-// Use them with consistent patterns
-const response = await gpt.chat('Hello, world!');
+// Create unified client with caching and retries
+const client = new MacroAPIClient({
+  cache: {
+    type: 'hybrid',
+    ttl: 3600,
+    maxSize: 1000,
+    redis: { url: process.env.REDIS_URL }
+  },
+  retries: {
+    maxRetries: 3,
+    baseDelay: 1000
+  }
+});
+
+// Use with automatic error handling and caching
+const response = await client.execute(
+  () => gpt.chat('Hello, world!'),
+  { service: 'openai', method: 'chat' }
+);
+
 const user = await spotify.getCurrentUser();
-const customer = await stripe.createCustomer({ email: 'user@example.com' });`}
+const customer = await stripe.createCustomer({ 
+  email: 'user@example.com' 
+});`}
             />
+
+            <InfoBox type="success" title="Ready to Start?">
+              Check out the Installation guide to set up macro_api in your project, or explore the API documentation to see what's possible with each service.
+            </InfoBox>
           </div>
         );
 
@@ -355,6 +659,12 @@ const customer = await stripe.createCustomer({ email: 'user@example.com' });`}
               language="bash"
             />
 
+            <CodeBlock
+              title="bun"
+              code="bun add macro_api"
+              language="bash"
+            />
+
             <h2 className="text-2xl font-semibold mb-4 mt-8">Environment Setup</h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Create a <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-sm">.env</code> file to store your API credentials:
@@ -362,22 +672,53 @@ const customer = await stripe.createCustomer({ email: 'user@example.com' });`}
 
             <CodeBlock
               title=".env"
-              code={`# OpenAI/ChatGPT
-OPENAI_API_KEY=your_openai_api_key
+              code={`# AI/ML Services
+OPENAI_API_KEY=sk-your_openai_api_key
+DEEPSEEK_API_KEY=sk-your_deepseek_api_key
 
-# Spotify
+# Payment Services
+STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
+PAYPAL_CLIENT_ID=your_paypal_client_id
+PAYPAL_CLIENT_SECRET=your_paypal_client_secret
+
+# Communication Services
+SLACK_BOT_TOKEN=xoxb-your_slack_bot_token
+SLACK_SIGNING_SECRET=your_slack_signing_secret
+SENDGRID_API_KEY=SG.your_sendgrid_api_key
+
+# Cloud & Infrastructure
+VERCEL_ACCESS_TOKEN=your_vercel_token
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+AWS_REGION=us-east-1
+DOCKERHUB_TOKEN=your_dockerhub_token
+
+# Media & Social
 SPOTIFY_CLIENT_ID=your_spotify_client_id
 SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+YOUTUBE_API_KEY=your_youtube_api_key
 
-# Stripe
-STRIPE_SECRET_KEY=your_stripe_secret_key
+# Developer Tools
+GITHUB_TOKEN=ghp_your_github_token
+NOTION_API_KEY=secret_your_notion_key
 
-# And so on for other services...`}
+# Gaming & Sports
+VALORANT_API_KEY=your_valorant_api_key
+FOOTBALL_API_KEY=your_football_api_key
+
+# Optional: Redis for caching
+REDIS_URL=redis://localhost:6379`}
               language="bash"
             />
 
-            <InfoBox type="warning" title="Security Note">
-              Never commit API keys to version control. Use environment variables or secure key management systems.
+            <InfoBox type="warning" title="Security Best Practices">
+              <ul className="list-disc list-inside space-y-1">
+                <li>Never commit API keys to version control</li>
+                <li>Use environment variables or secure key management</li>
+                <li>Rotate keys regularly</li>
+                <li>Use the principle of least privilege for API permissions</li>
+                <li>Monitor API usage and set up alerts for unusual activity</li>
+              </ul>
             </InfoBox>
 
             <h2 className="text-2xl font-semibold mb-4 mt-8">TypeScript Configuration</h2>
@@ -391,14 +732,87 @@ STRIPE_SECRET_KEY=your_stripe_secret_key
   "compilerOptions": {
     "target": "ES2020",
     "module": "commonjs",
+    "lib": ["ES2020", "DOM"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  }
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }`}
               language="json"
             />
+
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Optional Dependencies</h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              For enhanced functionality, you can install these optional dependencies:
+            </p>
+
+            <CodeBlock
+              title="Redis Support (for caching)"
+              code="npm install ioredis @types/ioredis"
+              language="bash"
+            />
+
+            <CodeBlock
+              title="Development Dependencies"
+              code={`npm install --save-dev \\
+  @types/node \\
+  typescript \\
+  ts-node \\
+  nodemon \\
+  jest \\
+  @types/jest`}
+              language="bash"
+            />
+
+            <InfoBox type="info" title="Optional Dependencies">
+              <ul className="list-disc list-inside space-y-1">
+                <li><strong>ioredis</strong>: Required for Redis caching support</li>
+                <li><strong>@types/node</strong>: Node.js type definitions</li>
+                <li><strong>jest</strong>: For testing your API integrations</li>
+              </ul>
+            </InfoBox>
+
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Verification</h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              Verify your installation with a simple test:
+            </p>
+
+            <CodeBlock
+              title="test.js"
+              code={`const { ChatGPT, VERSION, PACKAGE_INFO } = require('macro_api');
+
+console.log('macro_api version:', VERSION);
+console.log('Package info:', PACKAGE_INFO);
+
+// Test basic functionality
+const gpt = new ChatGPT({
+  apiKey: 'test-key' // This won't work but validates the import
+});
+
+console.log('✅ macro_api installed successfully!');`}
+              language="javascript"
+            />
+
+            <CodeBlock
+              title="Run verification"
+              code="node test.js"
+              language="bash"
+            />
+
+            <InfoBox type="success" title="Installation Complete!">
+              You're ready to start using macro_api! Check out the Basic Usage guide to see how to initialize and use the API clients.
+            </InfoBox>
           </div>
         );
 
@@ -413,10 +827,17 @@ STRIPE_SECRET_KEY=your_stripe_secret_key
             </p>
 
             <CodeBlock
-              title="Basic Setup"
-              code={`import { ChatGPT, SpotifyAPI, StripeAPI } from 'macro_api';
+              title="ES Modules (Recommended)"
+              code={`import { 
+  ChatGPT, 
+  SpotifyAPI, 
+  StripeAPI,
+  SlackAPI,
+  SendGridAPI,
+  MacroAPIClient 
+} from 'macro_api';
 
-// Initialize with environment variables
+// Initialize individual clients
 const gpt = new ChatGPT({
   apiKey: process.env.OPENAI_API_KEY
 });
@@ -432,9 +853,24 @@ const stripe = new StripeAPI({
 });`}
             />
 
+            <CodeBlock
+              title="CommonJS"
+              code={`const { 
+  ChatGPT, 
+  SpotifyAPI, 
+  StripeAPI,
+  MacroAPIClient 
+} = require('macro_api');
+
+// Same initialization as above
+const gpt = new ChatGPT({
+  apiKey: process.env.OPENAI_API_KEY
+});`}
+            />
+
             <h2 className="text-2xl font-semibold mb-4 mt-8">Making API Calls</h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              All API methods return Promises and can be used with async/await or .then():
+              All API methods return Promises and include built-in error handling:
             </p>
 
             <CodeBlock
@@ -443,10 +879,10 @@ const stripe = new StripeAPI({
   try {
     // ChatGPT example
     const chatResponse = await gpt.chat(
-      'Explain quantum computing in simple terms',
+      'Explain quantum computing',
       'You are a helpful assistant'
     );
-    console.log(chatResponse);
+    console.log('AI Response:', chatResponse);
 
     // Stripe example
     const customer = await stripe.createCustomer({
@@ -455,466 +891,98 @@ const stripe = new StripeAPI({
     });
     console.log('Customer created:', customer.id);
 
-    // Spotify example (requires OAuth)
-    const user = await spotify.getCurrentUser();
-    console.log('Current user:', user.display_name);
-    
+    // Slack example
+    const message = await slack.sendMessage(
+      '#general', 
+      'Hello from macro_api!'
+    );
+    console.log('Message sent:', message.ts);
+
   } catch (error) {
+    // All errors follow consistent patterns
     console.error('API Error:', error.message);
+    console.error('Service:', error.service);
+    console.error('Status Code:', error.statusCode);
   }
 }`}
             />
 
             <h2 className="text-2xl font-semibold mb-4 mt-8">Error Handling</h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              macro_api provides comprehensive error handling with detailed error information:
+              macro_api provides comprehensive error handling with specific error types:
             </p>
 
             <CodeBlock
-              title="Error Handling"
+              title="Error Handling Patterns"
               code={`import { 
   MacroApiError, 
   AuthenticationError, 
   RateLimitError, 
-  NotFoundError 
+  NotFoundError,
+  ValidationError 
 } from 'macro_api';
 
-async function handleErrors() {
+async function robustApiCall() {
   try {
-    const result = await gpt.chat('Hello');
-  } catch (error) {
-    if (error instanceof AuthenticationError) {
-      console.error('Invalid API key');
-    } else if (error instanceof RateLimitError) {
-      console.error('Rate limit exceeded, retry after:', error.retryAfter);
-    } else if (error instanceof NotFoundError) {
-      console.error('Resource not found');
-    } else if (error instanceof MacroApiError) {
-      console.error('API Error:', error.code, error.message);
-    } else {
-      console.error('Unknown error:', error);
-    }
-  }
-}`}
-            />
-
-            <InfoBox type="info" title="Consistent Error Handling">
-              All API classes throw consistent error types, making it easy to handle errors uniformly across your application.
-            </InfoBox>
-          </div>
-        );
-
-      case 'authentication':
-        return (
-          <div>
-            <h1 className="text-4xl font-bold mb-6">Authentication</h1>
-            
-            <p className="text-gray-600 dark:text-gray-400 mb-8">
-              Different APIs use different authentication methods. macro_api handles these automatically once configured.
-            </p>
-
-            <h2 className="text-2xl font-semibold mb-4">API Key Authentication</h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Most APIs use simple API key authentication:
-            </p>
-
-            <CodeBlock
-              title="API Key Examples"
-              code={`// OpenAI/ChatGPT
-const gpt = new ChatGPT({
-  apiKey: 'sk-...'
-});
-
-// Stripe
-const stripe = new StripeAPI({
-  secretKey: 'sk_test_...'
-});
-
-// SendGrid
-const sendgrid = new SendGridAPI({
-  apiKey: 'SG...'
-});`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">OAuth 2.0 Authentication</h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              For OAuth-based APIs like Spotify, the process involves multiple steps:
-            </p>
-
-            <CodeBlock
-              title="OAuth Flow"
-              code={`const spotify = new SpotifyAPI({
-  clientId: 'your_client_id',
-  clientSecret: 'your_client_secret',
-  redirectUri: 'http://localhost:3000/callback'
-});
-
-// Step 1: Get authorization URL
-const authUrl = spotify.getAuthorizationUrl([
-  'user-read-private',
-  'playlist-read-private'
-]);
-
-// Redirect user to authUrl...
-
-// Step 2: Exchange code for token (in your callback handler)
-async function handleCallback(code) {
-  await spotify.exchangeCode(code);
-  
-  // Now you can make authenticated requests
-  const user = await spotify.getCurrentUser();
-  console.log(user);
-}`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Token Management</h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              macro_api automatically handles token refresh for supported APIs:
-            </p>
-
-            <CodeBlock
-              title="Automatic Token Refresh"
-              code={`// Tokens are automatically refreshed when needed
-const user = await spotify.getCurrentUser(); // Works seamlessly
-
-// Manual token management (if needed)
-spotify.setAccessToken(token, expiresIn, refreshToken);
-
-// Check if token needs refresh
-if (spotify.needsTokenRefresh()) {
-  await spotify.refreshAccessToken();
-}`}
-            />
-
-            <InfoBox type="success" title="Automatic Handling">
-              macro_api automatically handles token refresh, expiration, and retry logic for OAuth-based APIs.
-            </InfoBox>
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Environment Variables</h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Best practice is to store credentials in environment variables:
-            </p>
-
-            <CodeBlock
-              title="Environment Setup"
-              code={`// .env file
-OPENAI_API_KEY=sk-...
-SPOTIFY_CLIENT_ID=...
-SPOTIFY_CLIENT_SECRET=...
-STRIPE_SECRET_KEY=sk_test_...
-SLACK_BOT_TOKEN=xoxb-...
-SENDGRID_API_KEY=SG...
-
-// In your application
-const gpt = new ChatGPT({
-  apiKey: process.env.OPENAI_API_KEY
-});`}
-            />
-          </div>
-        );
-
-      case 'error-handling':
-        return (
-          <div>
-            <h1 className="text-4xl font-bold mb-6">Error Handling</h1>
-            
-            <p className="text-gray-600 dark:text-gray-400 mb-8">
-              macro_api provides a comprehensive error handling system with specific error types, 
-              automatic retries, and detailed error information.
-            </p>
-
-            <h2 className="text-2xl font-semibold mb-4">Error Types</h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              All errors inherit from the base <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-sm">MacroApiError</code> class:
-            </p>
-
-            <CodeBlock
-              title="Error Types"
-              code={`import {
-  MacroApiError,           // Base error class
-  AuthenticationError,     // 401 - Invalid credentials
-  PermissionError,         // 403 - Insufficient permissions
-  NotFoundError,          // 404 - Resource not found
-  RateLimitError,         // 429 - Rate limit exceeded
-  ValidationError,        // 400 - Invalid input
-  ServiceUnreachableError, // 503 - Service down
-  TimeoutError,           // 408 - Request timeout
-  NetworkError,           // Network issues
-  ConflictError,          // 409 - Resource conflict
-  QuotaExceededError      // Quota/billing limits
-} from 'macro_api';`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Error Handling Patterns</h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Use specific error types to handle different scenarios:
-            </p>
-
-            <CodeBlock
-              title="Comprehensive Error Handling"
-              code={`async function robustApiCall() {
-  try {
-    const result = await gpt.chat('Hello, world!');
+    const result = await gpt.chat('Hello world');
     return result;
   } catch (error) {
     if (error instanceof AuthenticationError) {
-      console.error('Authentication failed - check your API key');
-      // Redirect to login or refresh credentials
+      console.error('Invalid API key:', error.message);
+      // Handle auth error - maybe refresh token
     } else if (error instanceof RateLimitError) {
-      console.warn(\`Rate limited. Retry after: \${error.retryAfter} seconds\`);
+      console.warn(\`Rate limited. Retry after: \${error.retryAfter}s\`);
       // Implement exponential backoff
       await new Promise(resolve => 
         setTimeout(resolve, error.retryAfter * 1000)
       );
       return robustApiCall(); // Retry
     } else if (error instanceof ValidationError) {
-      console.error('Invalid input:', error.issues);
+      console.error('Validation failed:');
       error.issues.forEach(issue => {
-        console.error(\`Field \${issue.field}: \${issue.message}\`);
+        console.error(\`- \${issue.field}: \${issue.message}\`);
       });
-    } else if (error instanceof ServiceUnreachableError) {
-      console.error('Service temporarily unavailable');
-      // Use cached data or fallback service
+    } else if (error instanceof NotFoundError) {
+      console.error('Resource not found:', error.message);
     } else if (error instanceof MacroApiError) {
       console.error(\`API Error [\${error.code}]: \${error.message}\`);
       console.error('Service:', error.service);
-      console.error('Status:', error.statusCode);
       console.error('Details:', error.details);
     } else {
       console.error('Unexpected error:', error);
     }
     
-    throw error; // Re-throw if you want calling code to handle it
+    throw error;
   }
 }`}
             />
 
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Global Error Handler</h2>
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Using the Unified Client</h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Use the global error handler for consistent error processing and metrics:
+              The MacroAPIClient provides centralized caching, retry logic, and monitoring:
             </p>
 
             <CodeBlock
-              title="Global Error Handler"
-              code={`import { ErrorHandler } from 'macro_api';
-
-const errorHandler = ErrorHandler.getInstance();
-
-async function makeApiCall() {
-  try {
-    return await gpt.chat('Hello');
-  } catch (error) {
-    // Convert any error to MacroApiError and log metrics
-    const standardizedError = errorHandler.handle(error, {
-      service: 'openai',
-      operation: 'chat'
-    });
-    
-    throw standardizedError;
-  }
-}
-
-// Get error statistics
-const stats = errorHandler.getErrorStats();
-console.log('Error statistics:', stats);
-// Output: [{ code: 'RATE_LIMIT_ERROR', service: 'openai', count: 5, lastOccurred: Date }]`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Retry Manager</h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Automatic retry with exponential backoff for transient failures:
-            </p>
-
-            <CodeBlock
-              title="Retry Logic"
-              code={`import { RetryManager } from 'macro_api';
-
-const retryManager = new RetryManager(
-  3,      // maxRetries
-  1000,   // baseDelay (ms)
-  30000,  // maxDelay (ms)
-  true    // jitter
-);
-
-async function reliableApiCall() {
-  return await retryManager.execute(
-    async () => {
-      return await gpt.chat('Hello');
-    },
-    'chatgpt.chat',  // operation name for logging
-    'openai'         // service name
-  );
-}
-
-// The retry manager will automatically:
-// - Retry on 5xx errors, timeouts, and network issues
-// - Skip retries for 4xx errors (except rate limits)
-// - Use exponential backoff with jitter
-// - Log retry attempts`}
-            />
-
-            <InfoBox type="info" title="Built-in Retries">
-              Most macro_api classes have built-in retry logic enabled by default. You can customize or disable it during initialization.
-            </InfoBox>
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Circuit Breaker</h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Prevent cascading failures with the circuit breaker pattern:
-            </p>
-
-            <CodeBlock
-              title="Circuit Breaker"
-              code={`import { CircuitBreaker } from 'macro_api';
-
-const circuitBreaker = new CircuitBreaker(
-  5,      // failureThreshold
-  60000,  // recoveryTimeout (ms)
-  10000,  // monitoringPeriod (ms)
-  3       // successThreshold
-);
-
-async function protectedApiCall() {
-  return await circuitBreaker.execute(
-    async () => {
-      return await gpt.chat('Hello');
-    },
-    async () => {
-      // Fallback function when circuit is open
-      return 'Service temporarily unavailable';
-    }
-  );
-}
-
-// Monitor circuit breaker state
-console.log('Circuit state:', circuitBreaker.getState()); // CLOSED, OPEN, or HALF_OPEN
-console.log('Failure count:', circuitBreaker.getFailureCount());`}
-            />
-          </div>
-        );
-
-      case 'caching':
-        return (
-          <div>
-            <h1 className="text-4xl font-bold mb-6">Caching System</h1>
-            
-            <p className="text-gray-600 dark:text-gray-400 mb-8">
-              macro_api includes a sophisticated caching system with support for memory, Redis, 
-              and hybrid caching strategies to improve performance and reduce API calls.
-            </p>
-
-            <h2 className="text-2xl font-semibold mb-4">Cache Types</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <Database className="h-6 w-6 text-blue-600 mb-2" />
-                <h3 className="font-semibold mb-1">Memory Cache</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Fast in-memory caching with LRU eviction</p>
-              </div>
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <Server className="h-6 w-6 text-red-600 mb-2" />
-                <h3 className="font-semibold mb-1">Redis Cache</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Distributed caching with persistence</p>
-              </div>
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <Layers className="h-6 w-6 text-green-600 mb-2" />
-                <h3 className="font-semibold mb-1">Hybrid Cache</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">L1 memory + L2 Redis for best performance</p>
-              </div>
-            </div>
-
-            <h2 className="text-2xl font-semibold mb-4">Basic Usage</h2>
-            <CodeBlock
-              title="Setting up Caching"
-              code={`import { CacheManager, MacroAPIClient } from 'macro_api';
-
-// Memory cache
-const memoryCache = new CacheManager({
-  type: 'memory',
-  ttl: 3600,        // 1 hour TTL
-  maxSize: 1000     // Max 1000 entries
-});
-
-// Redis cache
-const redisCache = new CacheManager({
-  type: 'redis',
-  ttl: 3600,
-  redis: {
-    url: 'redis://localhost:6379',
-    keyPrefix: 'myapp',
-    password: 'optional_password'
-  }
-});
-
-// Hybrid cache (recommended for production)
-const hybridCache = new CacheManager({
-  type: 'hybrid',
-  ttl: 3600,
-  maxSize: 500,     // L1 cache size
-  redis: {
-    url: process.env.REDIS_URL,
-    keyPrefix: 'myapp'
-  }
-});`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Manual Cache Operations</h2>
-            <CodeBlock
-              title="Cache Operations"
-              code={`// Basic cache operations
-await cache.set('user:123', userData, 7200); // 2 hour TTL
-const user = await cache.get('user:123');
-const exists = await cache.has('user:123');
-await cache.delete('user:123');
-await cache.clear(); // Clear all
-
-// Generate cache keys
-const key = cache.generateKey('spotify', 'getUser', { userId: '123' });
-
-// Wrap functions with caching
-const cachedResult = await cache.cached(
-  'expensive-operation',
-  async () => {
-    // Expensive API call or computation
-    return await someExpensiveOperation();
-  },
-  3600 // TTL in seconds
-);
-
-// Memoize functions
-const memoizedFunction = cache.memoize(
-  async (userId) => {
-    return await fetchUserData(userId);
-  },
-  (userId) => \`user:\${userId}\`, // Key generator
-  3600 // TTL
-);
-
-const userData = await memoizedFunction('123'); // Cached automatically`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Integrated Client</h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Use the integrated client for automatic caching across all API calls:
-            </p>
-
-            <CodeBlock
-              title="Cached API Client"
+              title="Unified Client Setup"
               code={`const client = new MacroAPIClient({
   cache: {
-    type: 'hybrid',
-    ttl: 3600,
-    maxSize: 1000,
+    type: 'hybrid', // memory + redis
+    ttl: 3600, // 1 hour default
+    maxSize: 1000, // memory cache size
     redis: {
-      url: process.env.REDIS_URL
+      url: process.env.REDIS_URL,
+      keyPrefix: 'myapp'
     }
   },
   retries: {
     maxRetries: 3,
-    baseDelay: 1000
+    baseDelay: 1000,
+    maxDelay: 30000
   }
 });
 
 // All operations are automatically cached and retried
-const chatResponse = await client.execute(
+const response = await client.execute(
   () => gpt.chat('Hello world'),
   {
     service: 'openai',
@@ -928,66 +996,96 @@ const chatResponse = await client.execute(
 
 // Get cache statistics
 const stats = await client.getCacheStats();
-console.log(\`Hit rate: \${(stats.hitRate * 100).toFixed(1)}%\`);
-console.log(\`Cache size: \${stats.size} entries\`);`}
+console.log(\`Cache hit rate: \${(stats.hitRate * 100).toFixed(1)}%\`);
+console.log(\`Total requests: \${stats.hits + stats.misses}\`);`}
             />
 
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Cache Strategies</h2>
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Configuration Patterns</h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              Common configuration patterns for different environments:
+            </p>
+
             <CodeBlock
-              title="Advanced Caching Patterns"
-              code={`// Cache warming
-await cache.warmUp([
-  { key: 'user:popular', value: popularUserData, ttl: 7200 },
-  { key: 'config:app', value: appConfig, ttl: 86400 }
-]);
+              title="Environment-specific Configuration"
+              code={`// config.js
+const isDevelopment = process.env.NODE_ENV === 'development';
+const isProduction = process.env.NODE_ENV === 'production';
 
-// Pattern-based invalidation
-await cache.invalidatePattern('user:*'); // Invalidate all user cache
-
-// Cache statistics and monitoring
-const stats = await cache.getStats();
-console.log({
-  hits: stats.hits,
-  misses: stats.misses,
-  hitRate: \`\${(stats.hitRate * 100).toFixed(1)}%\`,
-  size: stats.size,
-  evictions: stats.evictions
-});
-
-// Cleanup and shutdown
-await cache.close(); // Close Redis connections`}
-            />
-
-            <InfoBox type="success" title="Performance Boost">
-              Proper caching can reduce API calls by 70-90% and improve response times significantly. 
-              The hybrid cache provides the best of both worlds with L1 memory speed and L2 Redis persistence.
-            </InfoBox>
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Configuration Examples</h2>
-            <CodeBlock
-              title="Production Configuration"
-              code={`// Development (memory only)
-const devCache = new CacheManager({
-  type: 'memory',
-  ttl: 300,     // Short TTL for development
-  maxSize: 100
-});
-
-// Production (hybrid with Redis cluster)
-const prodCache = new CacheManager({
-  type: 'hybrid',
-  ttl: 3600,
-  maxSize: 2000,
-  redis: {
-    url: process.env.REDIS_CLUSTER_URL,
-    keyPrefix: \`myapp:\${process.env.NODE_ENV}\`,
-    cluster: true,
-    password: process.env.REDIS_PASSWORD
+export const apiConfig = {
+  // OpenAI Configuration
+  openai: {
+    apiKey: process.env.OPENAI_API_KEY,
+    // Use cheaper model in development
+    defaultModel: isDevelopment ? 'gpt-3.5-turbo' : 'gpt-4',
+    timeout: isDevelopment ? 10000 : 30000
   },
-  compression: true,        // Compress large values
-  serialization: 'msgpack'  // Faster than JSON
+  
+  // Stripe Configuration
+  stripe: {
+    secretKey: isDevelopment 
+      ? process.env.STRIPE_TEST_KEY 
+      : process.env.STRIPE_LIVE_KEY,
+    webhook: {
+      secret: process.env.STRIPE_WEBHOOK_SECRET
+    }
+  },
+  
+  // Cache Configuration
+  cache: {
+    type: isProduction ? 'hybrid' : 'memory',
+    ttl: isDevelopment ? 300 : 3600, // 5 min dev, 1 hour prod
+    maxSize: isDevelopment ? 100 : 1000,
+    redis: isProduction ? {
+      url: process.env.REDIS_URL,
+      keyPrefix: 'myapp:prod'
+    } : undefined
+  },
+  
+  // Retry Configuration
+  retries: {
+    maxRetries: isDevelopment ? 1 : 3,
+    baseDelay: 1000,
+    maxDelay: isDevelopment ? 5000 : 30000
+  }
+};
+
+// Usage
+const gpt = new ChatGPT(apiConfig.openai);
+const stripe = new StripeAPI(apiConfig.stripe);
+const client = new MacroAPIClient({
+  cache: apiConfig.cache,
+  retries: apiConfig.retries
 });`}
             />
+
+            <InfoBox type="info" title="Best Practices">
+              <ul className="list-disc list-inside space-y-1">
+                <li>Always use environment variables for API keys</li>
+                <li>Implement proper error handling for each API</li>
+                <li>Use the unified client for automatic caching and retries</li>
+                <li>Configure different settings for development and production</li>
+                <li>Monitor API usage and implement rate limiting</li>
+                <li>Use TypeScript for better development experience</li>
+              </ul>
+            </InfoBox>
+
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Next Steps</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="border rounded-lg p-4">
+                <Shield className="h-6 w-6 text-blue-600 mb-2" />
+                <h3 className="font-semibold mb-2">Authentication</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Learn about different authentication methods for each API service.
+                </p>
+              </div>
+              <div className="border rounded-lg p-4">
+                <Layers className="h-6 w-6 text-blue-600 mb-2" />
+                <h3 className="font-semibold mb-2">Core Features</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Explore caching, retry logic, and error handling in detail.
+                </p>
+              </div>
+            </div>
           </div>
         );
 
@@ -1000,37 +1098,168 @@ const prodCache = new CacheManager({
             </h1>
             
             <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
-              Complete OpenAI API wrapper with support for chat completions, embeddings, streaming, and function calling.
+              Complete OpenAI API wrapper with support for chat completions, embeddings, streaming, function calling, tool calling, and vision capabilities.
             </p>
 
             <InfoBox type="info" title="API Key Required">
-              Get your API key from <a href="https://platform.openai.com/account/api-keys" className="text-primary-600 dark:text-primary-400 hover:underline" target="_blank">OpenAI Platform</a>
+              Get your API key from <a href="https://platform.openai.com/account/api-keys" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">OpenAI Platform</a>
             </InfoBox>
 
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Basic Setup</h2>
-            <CodeBlock
-              title="ChatGPT Client Initialization"
-              code={`import { ChatGPT } from 'macro_api';
-
-const gpt = new ChatGPT({
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Constructor</h2>
+            
+            <Method
+              name="new ChatGPT(config)"
+              description="Creates a new ChatGPT API client instance."
+              parameters={[
+                {
+                  name: "config",
+                  type: "ChatGPTConfig",
+                  description: "Configuration object for the ChatGPT client",
+                  required: true
+                },
+                {
+                  name: "config.apiKey",
+                  type: "string",
+                  description: "Your OpenAI API key",
+                  required: true
+                },
+                {
+                  name: "config.organizationId",
+                  type: "string",
+                  description: "Optional organization ID for API usage tracking",
+                  required: false
+                },
+                {
+                  name: "config.baseUrl",
+                  type: "string",
+                  description: "Custom API base URL",
+                  required: false,
+                  default: "https://api.openai.com/v1"
+                }
+              ]}
+              returns={{
+                type: "ChatGPT",
+                description: "A new ChatGPT client instance"
+              }}
+              example={`const gpt = new ChatGPT({
   apiKey: process.env.OPENAI_API_KEY,
-  organizationId: 'org-...',  // Optional
-  baseUrl: 'https://api.openai.com/v1'  // Optional, for custom endpoints
+  organizationId: 'org-your-org-id', // Optional
+  baseUrl: 'https://api.openai.com/v1' // Optional
 });`}
+              throws={["ConfigurationError - if apiKey is missing"]}
             />
 
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Chat Completions</h2>
-            <CodeBlock
-              title="Simple Chat"
-              code={`// Simple chat with default settings
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Chat Methods</h2>
+
+            <Method
+              name="chat(prompt, systemPrompt?, model?)"
+              description="Generate a chat completion with a simple interface."
+              parameters={[
+                {
+                  name: "prompt",
+                  type: "string",
+                  description: "The user message to send to the model",
+                  required: true
+                },
+                {
+                  name: "systemPrompt",
+                  type: "string",
+                  description: "Optional system message to set behavior",
+                  required: false
+                },
+                {
+                  name: "model",
+                  type: "string",
+                  description: "Model to use for the completion",
+                  required: false,
+                  default: "gpt-4o"
+                }
+              ]}
+              returns={{
+                type: "Promise<string>",
+                description: "The model's response as a string"
+              }}
+              example={`// Simple chat
 const response = await gpt.chat(
   'Explain quantum computing in simple terms',
-  'You are a helpful assistant'
+  'You are a helpful physics teacher'
 );
-console.log(response);
 
-// Advanced chat with custom parameters
-const advancedResponse = await gpt.createChatCompletion({
+// With custom model
+const response = await gpt.chat(
+  'Write a haiku about programming',
+  'You are a creative poet',
+  'gpt-4-turbo'
+);`}
+              throws={[
+                "AuthenticationError - Invalid API key",
+                "RateLimitError - Rate limit exceeded",
+                "ValidationError - Invalid parameters"
+              ]}
+            />
+
+            <Method
+              name="createChatCompletion(options)"
+              description="Create a chat completion with full control over all parameters."
+              parameters={[
+                {
+                  name: "options",
+                  type: "ChatCompletionOptions",
+                  description: "Complete options for chat completion",
+                  required: true
+                },
+                {
+                  name: "options.model",
+                  type: "string",
+                  description: "Model to use (e.g., 'gpt-4', 'gpt-3.5-turbo')",
+                  required: true
+                },
+                {
+                  name: "options.messages",
+                  type: "Message[]",
+                  description: "Array of message objects",
+                  required: true
+                },
+                {
+                  name: "options.temperature",
+                  type: "number",
+                  description: "Sampling temperature (0-2)",
+                  required: false,
+                  default: "1"
+                },
+                {
+                  name: "options.max_tokens",
+                  type: "number",
+                  description: "Maximum tokens to generate",
+                  required: false
+                },
+                {
+                  name: "options.top_p",
+                  type: "number",
+                  description: "Nucleus sampling parameter",
+                  required: false,
+                  default: "1"
+                },
+                {
+                  name: "options.frequency_penalty",
+                  type: "number",
+                  description: "Frequency penalty (-2 to 2)",
+                  required: false,
+                  default: "0"
+                },
+                {
+                  name: "options.presence_penalty",
+                  type: "number",
+                  description: "Presence penalty (-2 to 2)",
+                  required: false,
+                  default: "0"
+                }
+              ]}
+              returns={{
+                type: "Promise<ChatCompletionResponse>",
+                description: "Complete response object with usage metrics"
+              }}
+              example={`const response = await gpt.createChatCompletion({
   model: 'gpt-4',
   messages: [
     {
@@ -1044,51 +1273,158 @@ const advancedResponse = await gpt.createChatCompletion({
   ],
   temperature: 0.7,
   max_tokens: 1000,
-  top_p: 1,
-  frequency_penalty: 0,
-  presence_penalty: 0
-});`}
+  frequency_penalty: 0.1,
+  presence_penalty: 0.1
+});
+
+console.log(response.choices[0].message.content);
+console.log('Tokens used:', response.usage.total_tokens);`}
             />
 
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Streaming Responses</h2>
-            <CodeBlock
-              title="Streaming Chat Completion"
-              code={`// Stream responses for real-time applications
-const stream = await gpt.createStreamingChatCompletion(
+            <Method
+              name="conversation(messages, model?)"
+              description="Continue a multi-turn conversation with message history."
+              parameters={[
+                {
+                  name: "messages",
+                  type: "Message[]",
+                  description: "Array of conversation messages",
+                  required: true
+                },
+                {
+                  name: "model",
+                  type: "string",
+                  description: "Model to use for the completion",
+                  required: false,
+                  default: "gpt-4o"
+                }
+              ]}
+              returns={{
+                type: "Promise<string>",
+                description: "The assistant's response"
+              }}
+              example={`const conversation = [
+  { role: 'system', content: 'You are a coding assistant.' },
+  { role: 'user', content: 'How do I create a REST API?' },
+  { role: 'assistant', content: 'I can help you create a REST API...' },
+  { role: 'user', content: 'Can you show me an Express.js example?' }
+];
+
+const reply = await gpt.conversation(conversation);
+console.log(reply);
+
+// Add the response back to conversation for next turn
+conversation.push({ role: 'assistant', content: reply });`}
+            />
+
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Streaming Methods</h2>
+
+            <Method
+              name="createStreamingChatCompletion(options, onData, onError?, onEnd?)"
+              description="Create a streaming chat completion for real-time responses."
+              parameters={[
+                {
+                  name: "options",
+                  type: "ChatCompletionOptions",
+                  description: "Chat completion options (stream will be set to true)",
+                  required: true
+                },
+                {
+                  name: "onData",
+                  type: "(chunk: any) => void",
+                  description: "Callback for each data chunk received",
+                  required: true
+                },
+                {
+                  name: "onError",
+                  type: "(error: any) => void",
+                  description: "Callback for handling errors",
+                  required: false
+                },
+                {
+                  name: "onEnd",
+                  type: "() => void",
+                  description: "Callback when stream ends",
+                  required: false
+                }
+              ]}
+              returns={{
+                type: "Promise<ReadableStream>",
+                description: "The stream object that can be cancelled"
+              }}
+              example={`// Stream to console
+await gpt.createStreamingChatCompletion(
   {
     model: 'gpt-4',
     messages: [
       { role: 'user', content: 'Write a short story about a robot' }
     ],
-    temperature: 0.8,
-    max_tokens: 500
+    temperature: 0.8
   },
-  // On data chunk received
   (chunk) => {
     const content = chunk.choices?.[0]?.delta?.content;
     if (content) {
-      process.stdout.write(content); // Stream to console
+      process.stdout.write(content);
     }
   },
-  // On error
-  (error) => {
-    console.error('Stream error:', error);
-  },
-  // On stream end
-  () => {
-    console.log('\\nStream completed');
-  }
+  (error) => console.error('Stream error:', error),
+  () => console.log('\\nStream completed')
 );
 
-// Cancel stream if needed
-// stream.destroy();`}
+// Stream to web client
+async function streamToClient(ws, prompt) {
+  await gpt.createStreamingChatCompletion(
+    {
+      model: 'gpt-4',
+      messages: [{ role: 'user', content: prompt }]
+    },
+    (chunk) => {
+      const content = chunk.choices?.[0]?.delta?.content;
+      if (content) {
+        ws.send(JSON.stringify({ type: 'content', data: content }));
+      }
+    },
+    (error) => {
+      ws.send(JSON.stringify({ type: 'error', data: error.message }));
+    },
+    () => {
+      ws.send(JSON.stringify({ type: 'complete' }));
+    }
+  );
+}`}
             />
 
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Function Calling</h2>
-            <CodeBlock
-              title="Function Calling"
-              code={`// Define functions that the AI can call
-const functions = [
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Function & Tool Calling</h2>
+
+            <Method
+              name="withFunctions(prompt, functions, model?)"
+              description="Generate text with function calling capabilities (legacy format)."
+              parameters={[
+                {
+                  name: "prompt",
+                  type: "string",
+                  description: "User message that may trigger function calls",
+                  required: true
+                },
+                {
+                  name: "functions",
+                  type: "Function[]",
+                  description: "Array of function definitions",
+                  required: true
+                },
+                {
+                  name: "model",
+                  type: "string",
+                  description: "Model to use for the completion",
+                  required: false,
+                  default: "gpt-4o"
+                }
+              ]}
+              returns={{
+                type: "Promise<Message>",
+                description: "Message that may contain function calls"
+              }}
+              example={`const functions = [
   {
     name: 'get_weather',
     description: 'Get current weather for a location',
@@ -1098,10 +1434,6 @@ const functions = [
         location: {
           type: 'string',
           description: 'City name'
-        },
-        unit: {
-          type: 'string',
-          enum: ['celsius', 'fahrenheit']
         }
       },
       required: ['location']
@@ -1114,146 +1446,535 @@ const response = await gpt.withFunctions(
   functions
 );
 
-// Check if AI wants to call a function
 if (response.function_call) {
   const { name, arguments: args } = response.function_call;
   console.log(\`AI wants to call: \${name}\`);
   console.log(\`With arguments: \${args}\`);
   
-  // Execute the function and send result back
-  if (name === 'get_weather') {
-    const weatherData = await getWeather(JSON.parse(args).location);
-    
-    // Continue conversation with function result
-    const finalResponse = await gpt.createChatCompletion({
-      model: 'gpt-4',
-      messages: [
-        { role: 'user', content: 'What\\'s the weather like in New York?' },
-        response.message,
-        {
-          role: 'function',
-          name: 'get_weather',
-          content: JSON.stringify(weatherData)
-        }
-      ]
-    });
-  }
+  // Execute the function and continue conversation
+  const result = await getWeather(JSON.parse(args).location);
+  // ... continue with result
 }`}
             />
 
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Embeddings</h2>
-            <CodeBlock
-              title="Text Embeddings"
-              code={`// Create embeddings for semantic search
-const embeddings = await gpt.createEmbeddings({
-  model: 'text-embedding-3-small',
-  input: [
-    'The quick brown fox jumps over the lazy dog',
-    'A journey of a thousand miles begins with a single step',
-    'To be or not to be, that is the question'
-  ]
-});
-
-// Access individual embeddings
-embeddings.data.forEach((embedding, index) => {
-  console.log(\`Embedding \${index}: \${embedding.embedding.length} dimensions\`);
-});
-
-// Helper method for single text
-const singleEmbedding = await gpt.embed('Hello world');
-console.log('Single embedding:', singleEmbedding[0].embedding);`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Conversation Management</h2>
-            <CodeBlock
-              title="Multi-turn Conversations"
-              code={`// Maintain conversation history
-const conversation = [
-  {
-    role: 'system',
-    content: 'You are a helpful coding assistant.'
-  }
-];
-
-// Add user message
-conversation.push({
-  role: 'user',
-  content: 'How do I create a REST API in Node.js?'
-});
-
-// Get AI response
-const response1 = await gpt.conversation(conversation);
-conversation.push({
-  role: 'assistant',
-  content: response1
-});
-
-// Continue conversation
-conversation.push({
-  role: 'user',
-  content: 'Can you show me an example with Express.js?'
-});
-
-const response2 = await gpt.conversation(conversation);
-console.log('AI Response:', response2);`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Advanced Features</h2>
-            <CodeBlock
-              title="Tool Calling (GPT-4)"
-              code={`// New tool calling interface (GPT-4)
-const tools = [
+            <Method
+              name="withTools(prompt, tools, model?)"
+              description="Generate text with modern tool calling capabilities."
+              parameters={[
+                {
+                  name: "prompt",
+                  type: "string",
+                  description: "User message that may trigger tool calls",
+                  required: true
+                },
+                {
+                  name: "tools",
+                  type: "Tool[]",
+                  description: "Array of tool definitions",
+                  required: true
+                },
+                {
+                  name: "model",
+                  type: "string",
+                  description: "Model to use for the completion",
+                  required: false,
+                  default: "gpt-4o"
+                }
+              ]}
+              returns={{
+                type: "Promise<Message>",
+                description: "Message that may contain tool calls"
+              }}
+              example={`const tools = [
   {
     type: 'function',
     function: {
-      name: 'calculate',
-      description: 'Perform mathematical calculations',
+      name: 'web_search',
+      description: 'Search the web for information',
       parameters: {
         type: 'object',
         properties: {
-          expression: {
+          query: {
             type: 'string',
-            description: 'Mathematical expression to evaluate'
+            description: 'Search query'
           }
         },
-        required: ['expression']
+        required: ['query']
       }
     }
   }
 ];
 
 const response = await gpt.withTools(
-  'What is 15% of 240?',
+  'Search for the latest AI news',
   tools
 );
 
-// List available models
-const models = await gpt.listModels();
-console.log('Available models:', models.data.map(m => m.id));`}
+if (response.tool_calls) {
+  for (const toolCall of response.tool_calls) {
+    const { id, function: func } = toolCall;
+    const { name, arguments: args } = func;
+    
+    if (name === 'web_search') {
+      const result = await webSearch(JSON.parse(args).query);
+      // Continue conversation with tool result
+    }
+  }
+}`}
             />
 
-            <InfoBox type="warning" title="Rate Limits">
-              OpenAI has rate limits based on your plan. The ChatGPT class automatically handles rate limiting and retries with exponential backoff.
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Embeddings</h2>
+
+            <Method
+              name="createEmbeddings(options)"
+              description="Create text embeddings for semantic search and similarity."
+              parameters={[
+                {
+                  name: "options",
+                  type: "EmbeddingOptions",
+                  description: "Embedding creation options",
+                  required: true
+                },
+                {
+                  name: "options.model",
+                  type: "string",
+                  description: "Embedding model to use",
+                  required: true
+                },
+                {
+                  name: "options.input",
+                  type: "string | string[]",
+                  description: "Text(s) to embed",
+                  required: true
+                },
+                {
+                  name: "options.encoding_format",
+                  type: "'float' | 'base64'",
+                  description: "Format for returned embeddings",
+                  required: false,
+                  default: "float"
+                }
+              ]}
+              returns={{
+                type: "Promise<EmbeddingResponse>",
+                description: "Response containing embeddings and usage info"
+              }}
+              example={`// Create embeddings for multiple texts
+const embeddings = await gpt.createEmbeddings({
+  model: 'text-embedding-3-small',
+  input: [
+    'The quick brown fox jumps over the lazy dog',
+    'Machine learning is a subset of artificial intelligence',
+    'Python is a popular programming language'
+  ]
+});
+
+embeddings.data.forEach((embedding, index) => {
+  console.log(\`Embedding \${index}: \${embedding.embedding.length} dimensions\`);
+});
+
+// Use for semantic search
+const queryEmbedding = await gpt.createEmbeddings({
+  model: 'text-embedding-3-small',
+  input: 'artificial intelligence programming'
+});
+
+// Calculate cosine similarity with stored embeddings
+const similarities = embeddings.data.map(embedding => {
+  return cosineSimilarity(queryEmbedding.data[0].embedding, embedding.embedding);
+});`}
+            />
+
+            <Method
+              name="embed(text, model?)"
+              description="Simple helper method to create embeddings for a single text."
+              parameters={[
+                {
+                  name: "text",
+                  type: "string | string[]",
+                  description: "Text or array of texts to embed",
+                  required: true
+                },
+                {
+                  name: "model",
+                  type: "string",
+                  description: "Embedding model to use",
+                  required: false,
+                  default: "text-embedding-3-small"
+                }
+              ]}
+              returns={{
+                type: "Promise<EmbeddingData[]>",
+                description: "Array of embedding data objects"
+              }}
+              example={`// Simple embedding
+const embeddings = await gpt.embed('Hello world');
+console.log('Embedding vector:', embeddings[0].embedding);
+
+// Multiple texts
+const embeddings = await gpt.embed([
+  'First document',
+  'Second document',
+  'Third document'
+]);
+
+embeddings.forEach((emb, i) => {
+  console.log(\`Document \${i + 1}: \${emb.embedding.length} dimensions\`);
+});`}
+            />
+
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Vision Capabilities</h2>
+
+            <InfoBox type="note" title="Vision Models">
+              Vision capabilities require GPT-4 Vision models (gpt-4-vision-preview, gpt-4o, etc.)
             </InfoBox>
 
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Configuration Options</h2>
             <CodeBlock
-              title="ChatGPT Configuration"
-              code={`interface ChatGPTConfig {
-  apiKey: string;
-  organizationId?: string;  // For organization accounts
-  baseUrl?: string;         // Custom API endpoint
+              title="Image Analysis Example"
+              code={`// Analyze image from URL
+const imageResponse = await gpt.createChatCompletion({
+  model: 'gpt-4-vision-preview',
+  messages: [
+    {
+      role: 'user',
+      content: [
+        {
+          type: 'text',
+          text: 'What do you see in this image? Describe it in detail.'
+        },
+        {
+          type: 'image_url',
+          image_url: {
+            url: 'https://example.com/image.jpg',
+            detail: 'high' // 'low', 'high', or 'auto'
+          }
+        }
+      ]
+    }
+  ],
+  max_tokens: 500
+});
+
+// Analyze local image (base64)
+const fs = require('fs');
+const imageBuffer = fs.readFileSync('image.jpg');
+const base64Image = imageBuffer.toString('base64');
+
+const localImageResponse = await gpt.createChatCompletion({
+  model: 'gpt-4-vision-preview',
+  messages: [
+    {
+      role: 'user',
+      content: [
+        {
+          type: 'text',
+          text: 'Analyze this chart and extract key insights.'
+        },
+        {
+          type: 'image_url',
+          image_url: {
+            url: \`data:image/jpeg;base64,\${base64Image}\`
+          }
+        }
+      ]
+    }
+  ]
+});
+
+// Multiple images comparison
+const multiImageResponse = await gpt.createChatCompletion({
+  model: 'gpt-4-vision-preview',
+  messages: [
+    {
+      role: 'user',
+      content: [
+        { type: 'text', text: 'Compare these two images:' },
+        { type: 'image_url', image_url: { url: 'https://example.com/image1.jpg' } },
+        { type: 'image_url', image_url: { url: 'https://example.com/image2.jpg' } }
+      ]
+    }
+  ]
+});`}
+            />
+
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Model Management</h2>
+
+            <Method
+              name="listModels()"
+              description="Get a list of available models from OpenAI."
+              returns={{
+                type: "Promise<ModelListResponse>",
+                description: "List of available models with metadata"
+              }}
+              example={`const models = await gpt.listModels();
+console.log('Available models:');
+models.data.forEach(model => {
+  console.log(\`- \${model.id} (created: \${new Date(model.created * 1000)})\`);
+});
+
+// Filter for specific types
+const gpt4Models = models.data.filter(m => m.id.includes('gpt-4'));
+const embeddingModels = models.data.filter(m => m.id.includes('embedding'));`}
+            />
+
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Utility Methods</h2>
+
+            <CodeBlock
+              title="Model Selection Helper"
+              code={`// Smart model selection based on task
+function selectModel(task, budget = 'medium') {
+  const models = {
+    'creative': {
+      high: 'gpt-4-turbo',
+      medium: 'gpt-4',
+      low: 'gpt-3.5-turbo'
+    },
+    'analytical': {
+      high: 'gpt-4',
+      medium: 'gpt-4',
+      low: 'gpt-3.5-turbo'
+    },
+    'coding': {
+      high: 'gpt-4-turbo',
+      medium: 'gpt-4',
+      low: 'gpt-3.5-turbo'
+    },
+    'vision': {
+      high: 'gpt-4-vision-preview',
+      medium: 'gpt-4-vision-preview',
+      low: 'gpt-4-vision-preview'
+    }
+  };
+  
+  return models[task]?.[budget] || 'gpt-3.5-turbo';
 }
 
-// Example configurations
-const config = {
-  apiKey: process.env.OPENAI_API_KEY,
-  organizationId: 'org-abc123',
-  baseUrl: 'https://api.openai.com/v1'
-};
-
-const gpt = new ChatGPT(config);`}
+// Usage
+const model = selectModel('creative', 'high');
+const response = await gpt.chat('Write a creative story', '', model);`}
             />
+
+            <CodeBlock
+              title="Token Estimation"
+              code={`// Simple token estimation (rough approximation)
+function estimateTokens(text) {
+  // Rough estimate: ~4 characters per token for English
+  return Math.ceil(text.length / 4);
+}
+
+function estimateCost(tokens, model) {
+  const pricing = {
+    'gpt-4-turbo': { input: 0.01, output: 0.03 }, // per 1K tokens
+    'gpt-4': { input: 0.03, output: 0.06 },
+    'gpt-3.5-turbo': { input: 0.002, output: 0.002 }
+  };
+  
+  const rates = pricing[model] || pricing['gpt-3.5-turbo'];
+  return {
+    input: (tokens / 1000) * rates.input,
+    output: (tokens / 1000) * rates.output
+  };
+}
+
+// Usage
+const prompt = 'Explain quantum computing in detail';
+const estimatedTokens = estimateTokens(prompt);
+const estimatedCost = estimateCost(estimatedTokens, 'gpt-4');
+console.log(\`Estimated cost: $\${estimatedCost.input.toFixed(4)}\`);`}
+            />
+
+            <InfoBox type="warning" title="Rate Limits & Costs">
+              <ul className="list-disc list-inside space-y-1">
+                <li>OpenAI has rate limits based on your tier and model</li>
+                <li>Costs vary significantly between models (GPT-4 vs GPT-3.5)</li>
+                <li>Vision models have higher costs and different rate limits</li>
+                <li>Implement proper error handling for rate limit errors</li>
+                <li>Monitor usage to avoid unexpected costs</li>
+              </ul>
+            </InfoBox>
+
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Error Handling Specifics</h2>
+
+            <CodeBlock
+              title="OpenAI-Specific Error Handling"
+              code={`try {
+  const response = await gpt.chat('Hello world');
+} catch (error) {
+  if (error instanceof RateLimitError) {
+    console.log('Rate limit hit. Headers:', error.details?.headers);
+    // OpenAI provides retry-after header
+    const retryAfter = error.retryAfter || 60;
+    await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
+  } else if (error.code === 'context_length_exceeded') {
+    console.log('Message too long for model context window');
+    // Truncate or split the message
+  } else if (error.code === 'model_not_found') {
+    console.log('Invalid model specified');
+    // Fallback to default model
+  } else if (error.code === 'insufficient_quota') {
+    console.log('API quota exceeded');
+    // Handle billing issues
+  }
+}`}
+            />
+
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Advanced Usage Examples</h2>
+
+            <CodeBlock
+              title="Conversation Manager"
+              code={`class ConversationManager {
+  constructor(gpt, maxTokens = 4000) {
+    this.gpt = gpt;
+    this.maxTokens = maxTokens;
+    this.messages = [];
+  }
+  
+  addMessage(role, content) {
+    this.messages.push({ role, content });
+    this.trimMessages();
+  }
+  
+  async getResponse(model = 'gpt-4') {
+    const response = await this.gpt.conversation(this.messages, model);
+    this.addMessage('assistant', response);
+    return response;
+  }
+  
+  trimMessages() {
+    // Keep system message and trim old messages if needed
+    const systemMessage = this.messages.find(m => m.role === 'system');
+    let totalTokens = 0;
+    const keptMessages = [];
+    
+    // Add system message first
+    if (systemMessage) {
+      keptMessages.push(systemMessage);
+      totalTokens += this.estimateTokens(systemMessage.content);
+    }
+    
+    // Add messages from newest to oldest
+    for (let i = this.messages.length - 1; i >= 0; i--) {
+      const message = this.messages[i];
+      if (message.role === 'system') continue;
+      
+      const messageTokens = this.estimateTokens(message.content);
+      if (totalTokens + messageTokens > this.maxTokens) break;
+      
+      keptMessages.unshift(message);
+      totalTokens += messageTokens;
+    }
+    
+    this.messages = keptMessages;
+  }
+  
+  estimateTokens(text) {
+    return Math.ceil(text.length / 4);
+  }
+  
+  export() {
+    return {
+      messages: this.messages,
+      timestamp: new Date().toISOString()
+    };
+  }
+}
+
+// Usage
+const conversation = new ConversationManager(gpt);
+conversation.addMessage('system', 'You are a helpful coding assistant.');
+conversation.addMessage('user', 'How do I implement a binary tree?');
+
+const response = await conversation.getResponse();
+console.log(response);`}
+            />
+
+            <CodeBlock
+              title="Batch Processing"
+              code={`// Process multiple prompts with rate limiting
+async function batchProcess(prompts, options = {}) {
+  const {
+    batchSize = 5,
+    delayMs = 1000,
+    model = 'gpt-3.5-turbo',
+    maxRetries = 3
+  } = options;
+  
+  const results = [];
+  
+  for (let i = 0; i < prompts.length; i += batchSize) {
+    const batch = prompts.slice(i, i + batchSize);
+    
+    const batchPromises = batch.map(async (prompt, index) => {
+      let attempts = 0;
+      
+      while (attempts < maxRetries) {
+        try {
+          const response = await gpt.chat(prompt.message, prompt.system, model);
+          return { 
+            index: i + index,
+            prompt: prompt.message,
+            response,
+            success: true 
+          };
+        } catch (error) {
+          attempts++;
+          if (error instanceof RateLimitError && attempts < maxRetries) {
+            const delay = Math.min(error.retryAfter * 1000, 60000);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            continue;
+          }
+          return { 
+            index: i + index,
+            prompt: prompt.message,
+            error: error.message,
+            success: false 
+          };
+        }
+      }
+    });
+    
+    const batchResults = await Promise.all(batchPromises);
+    results.push(...batchResults);
+    
+    // Delay between batches
+    if (i + batchSize < prompts.length) {
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+    
+    console.log(\`Processed batch \${Math.floor(i / batchSize) + 1}/\${Math.ceil(prompts.length / batchSize)}\`);
+  }
+  
+  return results;
+}
+
+// Usage
+const prompts = [
+  { message: 'Explain photosynthesis', system: 'You are a biology teacher' },
+  { message: 'What is calculus?', system: 'You are a math tutor' },
+  { message: 'How do computers work?', system: 'You are a tech expert' }
+];
+
+const results = await batchProcess(prompts, {
+  batchSize: 2,
+  delayMs: 2000,
+  model: 'gpt-4'
+});
+
+console.log(\`Processed \${results.length} prompts\`);
+console.log(\`Success rate: \${results.filter(r => r.success).length / results.length * 100}%\`);`}
+            />
+
+            <InfoBox type="success" title="Best Practices">
+              <ul className="list-disc list-inside space-y-1">
+                <li>Use appropriate models for different tasks (GPT-4 for complex reasoning, GPT-3.5 for simple tasks)</li>
+                <li>Implement conversation management for multi-turn chats</li>
+                <li>Handle rate limits gracefully with exponential backoff</li>
+                <li>Monitor token usage and costs</li>
+                <li>Use streaming for real-time applications</li>
+                <li>Implement proper error handling for all edge cases</li>
+                <li>Cache responses when appropriate to reduce costs</li>
+              </ul>
+            </InfoBox>
           </div>
         );
 
@@ -1266,1055 +1987,963 @@ const gpt = new ChatGPT(config);`}
             </h1>
             
             <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
-              Complete Spotify Web API wrapper with OAuth2 authentication, playlist management, search, and player controls.
+              Complete Spotify Web API wrapper with OAuth2 authentication, playlist management, search, player controls, and music analytics.
             </p>
 
             <InfoBox type="info" title="Spotify App Required">
-              Create a Spotify app at <a href="https://developer.spotify.com/dashboard/" className="text-primary-600 dark:text-primary-400 hover:underline" target="_blank">Spotify Developer Dashboard</a> to get your credentials.
+              Create a Spotify app at <a href="https://developer.spotify.com/dashboard/" className="text-green-600 hover:underline" target="_blank" rel="noopener noreferrer">Spotify Developer Dashboard</a> to get your credentials.
             </InfoBox>
 
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Authentication Setup</h2>
-            <CodeBlock
-              title="OAuth2 Flow"
-              code={`import { SpotifyAPI } from 'macro_api';
-
-const spotify = new SpotifyAPI({
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Constructor & Authentication</h2>
+            
+            <Method
+              name="new SpotifyAPI(options)"
+              description="Creates a new Spotify API client instance."
+              parameters={[
+                {
+                  name: "options",
+                  type: "SpotifyAuthOptions",
+                  description: "Configuration object for the Spotify client",
+                  required: true
+                },
+                {
+                  name: "options.clientId",
+                  type: "string",
+                  description: "Your Spotify app client ID",
+                  required: true
+                },
+                {
+                  name: "options.clientSecret",
+                  type: "string",
+                  description: "Your Spotify app client secret",
+                  required: true
+                },
+                {
+                  name: "options.redirectUri",
+                  type: "string",
+                  description: "OAuth redirect URI configured in your app",
+                  required: false
+                }
+              ]}
+              returns={{
+                type: "SpotifyAPI",
+                description: "A new Spotify API client instance"
+              }}
+              example={`const spotify = new SpotifyAPI({
   clientId: process.env.SPOTIFY_CLIENT_ID,
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
   redirectUri: 'http://localhost:3000/callback'
-});
+});`}
+            />
 
-// Step 1: Get authorization URL
-const authUrl = spotify.getAuthorizationUrl([
+            <Method
+              name="getAuthorizationUrl(scopes, state?)"
+              description="Generate OAuth authorization URL for user consent."
+              parameters={[
+                {
+                  name: "scopes",
+                  type: "string[]",
+                  description: "Array of permission scopes to request",
+                  required: true
+                },
+                {
+                  name: "state",
+                  type: "string",
+                  description: "Optional state parameter for security",
+                  required: false
+                }
+              ]}
+              returns={{
+                type: "string",
+                description: "Authorization URL to redirect user to"
+              }}
+              example={`const authUrl = spotify.getAuthorizationUrl([
   'user-read-private',
   'user-read-email',
   'playlist-read-private',
   'playlist-modify-public',
-  'playlist-modify-private',
   'user-read-playback-state',
   'user-modify-playback-state'
-]);
+], 'random-state-string');
 
-console.log('Redirect user to:', authUrl);
+// Redirect user to authUrl
+res.redirect(authUrl);`}
+            />
 
-// Step 2: Handle callback and exchange code for tokens
+            <Method
+              name="exchangeCode(code)"
+              description="Exchange authorization code for access tokens."
+              parameters={[
+                {
+                  name: "code",
+                  type: "string",
+                  description: "Authorization code from callback",
+                  required: true
+                }
+              ]}
+              returns={{
+                type: "Promise<void>",
+                description: "Sets internal tokens for authenticated requests"
+              }}
+              example={`// In your callback route
 app.get('/callback', async (req, res) => {
-  const { code } = req.query;
+  const { code, error, state } = req.query;
+  
+  if (error) {
+    return res.status(400).send('Authorization failed');
+  }
   
   try {
     await spotify.exchangeCode(code);
-    res.send('Authentication successful!');
+    res.send('Authorization successful!');
   } catch (error) {
-    res.status(400).send('Authentication failed');
+    res.status(400).send('Token exchange failed');
   }
 });`}
+              throws={[
+                "AuthenticationError - Invalid authorization code",
+                "ValidationError - Missing redirect URI"
+              ]}
             />
 
-            <h2 className="text-2xl font-semibold mb-4 mt-8">User Information</h2>
-            <CodeBlock
-              title="User Profile"
-              code={`// Get current user's profile
-const user = await spotify.getCurrentUser();
+            <Method
+              name="setAccessToken(token, expiresIn, refreshToken?)"
+              description="Manually set access token (for existing tokens)."
+              parameters={[
+                {
+                  name: "token",
+                  type: "string",
+                  description: "Access token",
+                  required: true
+                },
+                {
+                  name: "expiresIn",
+                  type: "number",
+                  description: "Token expiry time in seconds",
+                  required: true
+                },
+                {
+                  name: "refreshToken",
+                  type: "string",
+                  description: "Refresh token for automatic renewal",
+                  required: false
+                }
+              ]}
+              returns={{
+                type: "void",
+                description: "Sets internal authentication state"
+              }}
+              example={`// Set tokens from database
+const userTokens = await getUserTokens(userId);
+spotify.setAccessToken(
+  userTokens.accessToken,
+  userTokens.expiresIn,
+  userTokens.refreshToken
+);`}
+            />
+
+            <h2 className="text-2xl font-semibold mb-4 mt-8">User Profile Methods</h2>
+
+            <Method
+              name="getCurrentUser()"
+              description="Get the current user's profile information."
+              returns={{
+                type: "Promise<SpotifyUser>",
+                description: "Current user's profile data"
+              }}
+              example={`const user = await spotify.getCurrentUser();
 console.log(\`Welcome, \${user.display_name}!\`);
 console.log(\`Followers: \${user.followers.total}\`);
 console.log(\`Country: \${user.country}\`);
-console.log(\`Subscription: \${user.product}\`);
-
-// Get another user's profile
-const otherUser = await spotify.getUser('spotify');
-console.log(\`User: \${otherUser.display_name}\`);`}
+console.log(\`Subscription: \${user.product}\`); // free, premium
+console.log(\`Profile Image: \${user.images[0]?.url}\`);`}
+              throws={[
+                "AuthenticationError - Invalid or expired token",
+                "PermissionError - Missing user-read-private scope"
+              ]}
             />
 
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Search and Discovery</h2>
-            <CodeBlock
-              title="Search Content"
-              code={`// Search for tracks, artists, albums, playlists
-const searchResults = await spotify.search(
+            <Method
+              name="getUser(userId)"
+              description="Get another user's public profile information."
+              parameters={[
+                {
+                  name: "userId",
+                  type: "string",
+                  description: "Spotify user ID",
+                  required: true
+                }
+              ]}
+              returns={{
+                type: "Promise<SpotifyUser>",
+                description: "User's public profile data"
+              }}
+              example={`const user = await spotify.getUser('spotify');
+console.log(\`User: \${user.display_name}\`);
+console.log(\`Followers: \${user.followers.total}\`);
+console.log(\`Public playlists: \${user.public_playlists?.total || 'Unknown'}\`);`}
+            />
+
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Music Catalog Methods</h2>
+
+            <Method
+              name="search(query, types, params?)"
+              description="Search Spotify's catalog for tracks, artists, albums, and playlists."
+              parameters={[
+                {
+                  name: "query",
+                  type: "string",
+                  description: "Search query string",
+                  required: true
+                },
+                {
+                  name: "types",
+                  type: "('track' | 'artist' | 'album' | 'playlist')[]",
+                  description: "Types of items to search for",
+                  required: true
+                },
+                {
+                  name: "params",
+                  type: "SearchParams",
+                  description: "Additional search parameters",
+                  required: false
+                }
+              ]}
+              returns={{
+                type: "Promise<SearchResults>",
+                description: "Search results containing requested types"
+              }}
+              example={`// Basic search
+const results = await spotify.search(
   'Never Gonna Give You Up',
   ['track', 'artist'],
-  {
-    limit: 10,
-    market: 'US'
-  }
+  { limit: 10, market: 'US' }
 );
 
-console.log('Tracks found:', searchResults.tracks.items.length);
-console.log('Artists found:', searchResults.artists.items.length);
+console.log('Tracks found:', results.tracks.items.length);
+console.log('Artists found:', results.artists.items.length);
 
-// Search for specific content
-const tracks = await spotify.search('Bohemian Rhapsody', ['track'], { limit: 5 });
-tracks.tracks.items.forEach(track => {
-  console.log(\`\${track.name} by \${track.artists[0].name}\`);
-});
+// Advanced search with filters
+const rockTracks = await spotify.search(
+  'genre:rock year:2020-2023',
+  ['track'],
+  { limit: 50, market: 'US' }
+);
 
-// Get recommendations
-const recommendations = await spotify.getRecommendations({
-  seed_artists: ['4NHQUGzhtTLFvgF5SZesLK'], // Tina Turner
-  seed_tracks: ['0u2P5u6lvoDfwTYjAADbn4'],   // "What's Love Got to Do with It"
-  seed_genres: ['pop', 'rock'],
-  limit: 20,
-  target_energy: 0.8,
-  target_danceability: 0.7
+// Search for specific artist
+const beatlesTracks = await spotify.search(
+  'artist:Beatles album:Abbey Road',
+  ['track'],
+  { limit: 20 }
+);
+
+beatlesTracks.tracks.items.forEach(track => {
+  console.log(\`\${track.name} - \${track.artists[0].name}\`);
+  console.log(\`Album: \${track.album.name}\`);
+  console.log(\`Popularity: \${track.popularity}/100\`);
 });`}
             />
 
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Playlist Management</h2>
-            <CodeBlock
-              title="Create and Manage Playlists"
-              code={`// Create a new playlist
-const user = await spotify.getCurrentUser();
-const playlist = await spotify.createPlaylist(
-  user.id,
-  'My Awesome Playlist',
-  false, // private
-  'Created with macro_api'
-);
-
-console.log(\`Playlist created: \${playlist.external_urls.spotify}\`);
-
-// Search for tracks to add
-const searchResults = await spotify.search('Daft Punk', ['track'], { limit: 10 });
-const trackUris = searchResults.tracks.items.map(track => track.uri);
-
-// Add tracks to playlist
-await spotify.addTracksToPlaylist(playlist.id, trackUris);
-
-// Get playlist details
-const playlistDetails = await spotify.getPlaylist(playlist.id);
-console.log(\`Playlist has \${playlistDetails.tracks.total} tracks\`);
-
-// Get playlist tracks with pagination
-const tracks = await spotify.getPlaylistTracks(playlist.id, {
-  limit: 50,
-  offset: 0
-});`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Music Library</h2>
-            <CodeBlock
-              title="Tracks, Albums, and Artists"
-              code={`// Get track details
-const track = await spotify.getTrack('4uLU6hMCjMI75M1A2tKUQC');
+            <Method
+              name="getTrack(trackId)"
+              description="Get detailed information about a specific track."
+              parameters={[
+                {
+                  name: "trackId",
+                  type: "string",
+                  description: "Spotify track ID",
+                  required: true
+                }
+              ]}
+              returns={{
+                type: "Promise<Track>",
+                description: "Detailed track information"
+              }}
+              example={`const track = await spotify.getTrack('4iV5W9uYEdYUVa79Axb7Rh');
 console.log(\`Track: \${track.name}\`);
+console.log(\`Artist: \${track.artists[0].name}\`);
 console.log(\`Album: \${track.album.name}\`);
 console.log(\`Duration: \${Math.floor(track.duration_ms / 1000)}s\`);
+console.log(\`Explicit: \${track.explicit}\`);
+console.log(\`Preview: \${track.preview_url}\`);`}
+            />
 
-// Get multiple tracks
-const tracks = await spotify.getTracks([
-  '4uLU6hMCjMI75M1A2tKUQC',
-  '1301WleyT98MSxVHPZCA6M'
+            <Method
+              name="getTracks(trackIds)"
+              description="Get detailed information about multiple tracks."
+              parameters={[
+                {
+                  name: "trackIds",
+                  type: "string[]",
+                  description: "Array of Spotify track IDs (max 50)",
+                  required: true
+                }
+              ]}
+              returns={{
+                type: "Promise<TracksResponse>",
+                description: "Array of track information"
+              }}
+              example={`const tracks = await spotify.getTracks([
+  '4iV5W9uYEdYUVa79Axb7Rh',
+  '1Je1IMUlBXcx1Fz0WE7oPT',
+  '6y0igZArWVi6Iz0rj35c1Y'
 ]);
 
-// Get album information
-const album = await spotify.getAlbum('1DFixLWuPkv3KT3TnV35m3');
-console.log(\`Album: \${album.name} by \${album.artists[0].name}\`);
+tracks.tracks.forEach(track => {
+  if (track) { // Can be null if track not found
+    console.log(\`\${track.name} by \${track.artists[0].name}\`);
+  }
+});`}
+            />
 
-// Get album tracks
-const albumTracks = await spotify.getAlbumTracks(album.id, {
-  limit: 50,
-  market: 'US'
-});
-
-// Get artist information
-const artist = await spotify.getArtist('0TnOYISbd1XYRBk9myaseg'); // Pitbull
+            <Method
+              name="getArtist(artistId)"
+              description="Get detailed information about an artist."
+              parameters={[
+                {
+                  name: "artistId",
+                  type: "string",
+                  description: "Spotify artist ID",
+                  required: true
+                }
+              ]}
+              returns={{
+                type: "Promise<Artist>",
+                description: "Detailed artist information"
+              }}
+              example={`const artist = await spotify.getArtist('4NHQUGzhtTLFvgF5SZesLK');
 console.log(\`Artist: \${artist.name}\`);
 console.log(\`Genres: \${artist.genres.join(', ')}\`);
-console.log(\`Popularity: \${artist.popularity}\`);
-
-// Get artist's albums
-const artistAlbums = await spotify.getArtistAlbums(artist.id, {
-  include_groups: 'album,single',
-  market: 'US',
-  limit: 20
-});
-
-// Get artist's top tracks
-const topTracks = await spotify.getArtistTopTracks(artist.id, 'US');
-console.log('Top tracks:', topTracks.tracks.map(t => t.name));`}
+console.log(\`Followers: \${artist.followers.total.toLocaleString()}\`);
+console.log(\`Popularity: \${artist.popularity}/100\`);
+console.log(\`Image: \${artist.images[0]?.url}\`);`}
             />
 
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Player Control</h2>
-            <CodeBlock
-              title="Playback Control"
-              code={`// Get current playback state
-const playbackState = await spotify.getPlaybackState();
-if (playbackState) {
-  console.log(\`Currently playing: \${playbackState.item?.name}\`);
-  console.log(\`Device: \${playbackState.device?.name}\`);
-  console.log(\`Is playing: \${playbackState.is_playing}\`);
-  console.log(\`Progress: \${playbackState.progress_ms}ms\`);
-}
-
-// Get currently playing track
-const currentTrack = await spotify.getCurrentlyPlaying();
-if (currentTrack && currentTrack.item) {
-  console.log(\`Now playing: \${currentTrack.item.name}\`);
-}
-
-// Control playback (requires Spotify Premium)
-await spotify.controlPlayback('play');    // Resume playback
-await spotify.controlPlayback('pause');   // Pause playback
-await spotify.controlPlayback('next');    // Next track
-await spotify.controlPlayback('previous'); // Previous track
-
-// Control playback on specific device
-await spotify.controlPlayback('play', 'device_id_here');`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Token Management</h2>
-            <CodeBlock
-              title="Handling Tokens"
-              code={`// Manual token management (if needed)
-spotify.setAccessToken(
-  'BQC4YhJ...',  // access token
-  3600,          // expires in seconds
-  'AQD5uL...'    // refresh token
+            <Method
+              name="getArtistTopTracks(artistId, market?)"
+              description="Get an artist's top tracks in a specific market."
+              parameters={[
+                {
+                  name: "artistId",
+                  type: "string",
+                  description: "Spotify artist ID",
+                  required: true
+                },
+                {
+                  name: "market",
+                  type: "string",
+                  description: "ISO country code",
+                  required: false,
+                  default: "US"
+                }
+              ]}
+              returns={{
+                type: "Promise<TracksResponse>",
+                description: "Artist's top tracks"
+              }}
+              example={`const topTracks = await spotify.getArtistTopTracks(
+  '4NHQUGzhtTLFvgF5SZesLK', // Tina Turner
+  'US'
 );
 
-// Check if token needs refresh
-if (spotify.needsTokenRefresh()) {
-  await spotify.refreshAccessToken();
-}
-
-// Automatic refresh is handled internally
-// You don't need to manually refresh in most cases`}
-            />
-
-            <InfoBox type="warning" title="Premium Features">
-              Playback control features require Spotify Premium. Free users can only access track information and metadata.
-            </InfoBox>
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Configuration</h2>
-            <CodeBlock
-              title="SpotifyAPI Configuration"
-              code={`interface SpotifyAuthOptions {
-  clientId: string;
-  clientSecret: string;
-  redirectUri?: string;  // Required for OAuth flow
-}
-
-// Spotify scopes for different features
-const scopes = [
-  // User profile
-  'user-read-private',
-  'user-read-email',
-  
-  // Playlists
-  'playlist-read-private',
-  'playlist-read-collaborative',
-  'playlist-modify-public',
-  'playlist-modify-private',
-  
-  // Library
-  'user-library-read',
-  'user-library-modify',
-  
-  // Playback
-  'user-read-playback-state',
-  'user-modify-playback-state',
-  'user-read-currently-playing',
-  
-  // Following
-  'user-follow-read',
-  'user-follow-modify',
-  
-  // Top items
-  'user-top-read',
-  
-  // Recently played
-  'user-read-recently-played'
-];`}
-            />
-          </div>
-        );
-
-      // Add more cases for other sections...
-      // I'll continue with a few more key sections
-
-      case 'slack':
-        return (
-          <div>
-            <h1 className="text-4xl font-bold mb-6">
-              <Slack className="inline h-10 w-10 mr-3 text-purple-500" />
-              Slack API
-            </h1>
-            
-            <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
-              Production-ready Slack API wrapper for team communication, bot development, and workflow automation.
-            </p>
-
-            <InfoBox type="info" title="Slack App Required">
-              Create a Slack app at <a href="https://api.slack.com/apps" className="text-primary-600 dark:text-primary-400 hover:underline" target="_blank">Slack API Dashboard</a> to get your bot token.
-            </InfoBox>
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Basic Setup</h2>
-            <CodeBlock
-              title="Slack Client"
-              code={`import { SlackAPI } from 'macro_api';
-
-const slack = new SlackAPI({
-  botToken: process.env.SLACK_BOT_TOKEN,
-  signingSecret: process.env.SLACK_SIGNING_SECRET, // For webhook verification
-  appToken: process.env.SLACK_APP_TOKEN // For socket mode (optional)
+console.log('Top tracks:');
+topTracks.tracks.forEach((track, index) => {
+  console.log(\`\${index + 1}. \${track.name}\`);
+  console.log(\`   Album: \${track.album.name}\`);
+  console.log(\`   Popularity: \${track.popularity}/100\`);
 });`}
             />
 
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Sending Messages</h2>
-            <CodeBlock
-              title="Message Operations"
-              code={`// Send a simple message
-await slack.sendMessage('#general', 'Hello, world!');
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Playlist Methods</h2>
 
-// Send message with rich formatting
-await slack.sendMessage('#general', 'Hello team!', {
-  blocks: [
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: '*Welcome to our team!* :wave:'
-      }
-    },
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: 'Here are some quick links:'
-      },
-      accessory: {
-        type: 'button',
-        text: {
-          type: 'plain_text',
-          text: 'Documentation'
-        },
-        url: 'https://example.com/docs'
-      }
-    }
-  ],
-  unfurlLinks: false
-});
-
-// Send to user DM
-await slack.sendMessage('@username', 'Private message');
-
-// Send threaded message
-await slack.sendMessage('#general', 'Reply to thread', {
-  threadTs: '1234567890.123456' // timestamp of parent message
-});`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Channel Management</h2>
-            <CodeBlock
-              title="Channel Operations"
-              code={`// Create a new channel
-const channel = await slack.createChannel('project-apollo', {
-  isPrivate: false,
-  topic: 'Discussion about Project Apollo',
-  purpose: 'Coordinate Project Apollo development'
-});
-
-// Get channel list
-const channels = await slack.getChannels(true); // exclude archived
-channels.forEach(ch => {
-  console.log(\`Channel: #\${ch.name} (\${ch.numMembers} members)\`);
-});
-
-// Join a channel
-await slack.joinChannel('#random');
-
-// Invite users to channel
-await slack.inviteUsersToChannel('#project-apollo', ['U123456', 'U789012']);
-
-// Get channel members
-const members = await slack.getChannelMembers('#project-apollo');
-console.log(\`Channel has \${members.length} members\`);
-
-// Archive/unarchive channel
-await slack.archiveChannel('#old-project');
-await slack.unarchiveChannel('#revived-project');
-
-// Set channel topic and purpose
-await slack.setChannelTopic('#general', 'General discussion and announcements');
-await slack.setChannelPurpose('#general', 'Company-wide communication');`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">File Operations</h2>
-            <CodeBlock
-              title="File Upload and Sharing"
-              code={`// Upload file from buffer
-const fileBuffer = fs.readFileSync('./report.pdf');
-const fileUpload = await slack.uploadFile(
-  ['#general', '#reports'],
-  fileBuffer,
-  {
-    filename: 'monthly-report.pdf',
-    title: 'Monthly Report - December 2024',
-    initialComment: 'Here\\'s the monthly report for review'
-  }
+            <Method
+              name="createPlaylist(userId, name, isPublic?, description?)"
+              description="Create a new playlist for a user."
+              parameters={[
+                {
+                  name: "userId",
+                  type: "string",
+                  description: "Spotify user ID",
+                  required: true
+                },
+                {
+                  name: "name",
+                  type: "string",
+                  description: "Playlist name",
+                  required: true
+                },
+                {
+                  name: "isPublic",
+                  type: "boolean",
+                  description: "Whether playlist is public",
+                  required: false,
+                  default: "true"
+                },
+                {
+                  name: "description",
+                  type: "string",
+                  description: "Playlist description",
+                  required: false
+                }
+              ]}
+              returns={{
+                type: "Promise<Playlist>",
+                description: "Created playlist information"
+              }}
+              example={`const playlist = await spotify.createPlaylist(
+  'username',
+  'My Awesome Playlist',
+  true,
+  'A collection of my favorite tracks'
 );
 
-// Upload text content as file
-await slack.uploadFile(
-  '#dev',
-  'console.log("Hello, Slack!");',
-  {
-    filename: 'hello.js',
-    filetype: 'javascript',
-    title: 'Sample Code'
-  }
+console.log(\`Created playlist: \${playlist.name}\`);
+console.log(\`Playlist ID: \${playlist.id}\`);
+console.log(\`URL: \${playlist.external_urls.spotify}\`);`}
+              throws={[
+                "PermissionError - Missing playlist-modify-public/private scope",
+                "ValidationError - Invalid playlist name"
+              ]}
+            />
+
+            <Method
+              name="getPlaylist(playlistId)"
+              description="Get detailed information about a playlist."
+              parameters={[
+                {
+                  name: "playlistId",
+                  type: "string",
+                  description: "Spotify playlist ID",
+                  required: true
+                }
+              ]}
+              returns={{
+                type: "Promise<Playlist>",
+                description: "Detailed playlist information"
+              }}
+              example={`const playlist = await spotify.getPlaylist('37i9dQZF1DXcBWIGoYBM5M');
+console.log(\`Playlist: \${playlist.name}\`);
+console.log(\`Description: \${playlist.description}\`);
+console.log(\`Tracks: \${playlist.tracks.total}\`);
+console.log(\`Followers: \${playlist.followers.total}\`);
+console.log(\`Owner: \${playlist.owner.display_name}\`);
+console.log(\`Public: \${playlist.public}\`);`}
+            />
+
+            <Method
+              name="addTracksToPlaylist(playlistId, trackUris, position?)"
+              description="Add tracks to a playlist."
+              parameters={[
+                {
+                  name: "playlistId",
+                  type: "string",
+                  description: "Spotify playlist ID",
+                  required: true
+                },
+                {
+                  name: "trackUris",
+                  type: "string[]",
+                  description: "Array of Spotify track URIs (max 100)",
+                  required: true
+                },
+                {
+                  name: "position",
+                  type: "number",
+                  description: "Position to insert tracks",
+                  required: false
+                }
+              ]}
+              returns={{
+                type: "Promise<{ snapshot_id: string }>",
+                description: "Playlist snapshot ID after modification"
+              }}
+              example={`// Add tracks to end of playlist
+const result = await spotify.addTracksToPlaylist(
+  'playlist_id',
+  [
+    'spotify:track:4iV5W9uYEdYUVa79Axb7Rh',
+    'spotify:track:1Je1IMUlBXcx1Fz0WE7oPT'
+  ]
+);
+
+console.log('Playlist updated, snapshot:', result.snapshot_id);
+
+// Add tracks at specific position
+await spotify.addTracksToPlaylist(
+  'playlist_id',
+  ['spotify:track:6y0igZArWVi6Iz0rj35c1Y'],
+  0 // Add at beginning
 );`}
+              throws={[
+                "PermissionError - Cannot modify playlist",
+                "ValidationError - Invalid track URIs or too many tracks"
+              ]}
             />
 
-            <h2 className="text-2xl font-semibold mb-4 mt-8">User Management</h2>
-            <CodeBlock
-              title="User Information"
-              code={`// Get user information
-const user = await slack.getUserInfo('U1234567890');
-console.log(\`User: \${user.profile.displayName}\`);
-console.log(\`Email: \${user.profile.email}\`);
-console.log(\`Status: \${user.profile.statusText}\`);
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Player Control Methods</h2>
 
-// Get team information
-const team = await slack.getTeamInfo();
-console.log(\`Team: \${team.name}\`);`}
+            <InfoBox type="warning" title="Premium Required">
+              Player control methods require Spotify Premium subscription and active device.
+            </InfoBox>
+
+            <Method
+              name="getCurrentlyPlaying()"
+              description="Get information about the user's currently playing track."
+              returns={{
+                type: "Promise<CurrentlyPlaying | null>",
+                description: "Currently playing track info or null if nothing playing"
+              }}
+              example={`const current = await spotify.getCurrentlyPlaying();
+
+if (current && current.is_playing) {
+  console.log(\`Now playing: \${current.item.name}\`);
+  console.log(\`Artist: \${current.item.artists[0].name}\`);
+  console.log(\`Album: \${current.item.album.name}\`);
+  console.log(\`Progress: \${current.progress_ms}ms / \${current.item.duration_ms}ms\`);
+  console.log(\`Device: \${current.device.name}\`);
+  console.log(\`Volume: \${current.device.volume_percent}%\`);
+} else {
+  console.log('Nothing currently playing');
+}`}
+              throws={[
+                "PermissionError - Missing user-read-currently-playing scope",
+                "ServiceUnreachableError - No active device"
+              ]}
             />
 
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Slash Commands</h2>
-            <CodeBlock
-              title="Handling Slash Commands"
-              code={`// Express.js route for handling slash commands
-app.post('/slack/commands', express.raw({type: 'application/x-www-form-urlencoded'}), async (req, res) => {
-  const signature = req.headers['x-slack-signature'];
-  const timestamp = req.headers['x-slack-request-timestamp'];
-  const body = req.body.toString();
-  
-  // Parse the payload
-  const params = new URLSearchParams(body);
-  const payload = {
-    token: params.get('token'),
-    teamId: params.get('team_id'),
-    teamDomain: params.get('team_domain'),
-    channelId: params.get('channel_id'),
-    channelName: params.get('channel_name'),
-    userId: params.get('user_id'),
-    userName: params.get('user_name'),
-    command: params.get('command'),
-    text: params.get('text'),
-    responseUrl: params.get('response_url'),
-    triggerId: params.get('trigger_id')
-  };
-  
-  try {
-    const response = await slack.handleSlashCommand(
-      payload,
-      signature,
-      timestamp,
-      body
-    );
-    
-    res.json(response);
-  } catch (error) {
-    res.status(400).json({
-      response_type: 'ephemeral',
-      text: 'Command failed to execute'
-    });
-  }
-});
+            <Method
+              name="getPlaybackState()"
+              description="Get full playback state including queue and context."
+              returns={{
+                type: "Promise<PlaybackState | null>",
+                description: "Complete playback state or null if no active session"
+              }}
+              example={`const state = await spotify.getPlaybackState();
 
-// Custom command handling
-async function customCommandHandler(payload) {
-  const { command, text, userId } = payload;
+if (state) {
+  console.log(\`Device: \${state.device.name} (\${state.device.type})\`);
+  console.log(\`Volume: \${state.device.volume_percent}%\`);
+  console.log(\`Shuffle: \${state.shuffle_state}\`);
+  console.log(\`Repeat: \${state.repeat_state}\`); // off, track, context
+  console.log(\`Playing: \${state.is_playing}\`);
   
-  switch (command) {
-    case '/weather':
-      const weather = await getWeather(text);
-      return {
-        response_type: 'in_channel',
-        text: \`Weather in \${text}: \${weather.description}, \${weather.temp}°F\`
-      };
-      
-    case '/deploy':
-      // Trigger deployment
-      triggerDeployment(text);
-      return {
-        response_type: 'ephemeral',
-        text: \`Deployment of \${text} started!\`
-      };
-      
-    default:
-      return {
-        response_type: 'ephemeral',
-        text: 'Unknown command'
-      };
+  if (state.context) {
+    console.log(\`Context: \${state.context.type} - \${state.context.uri}\`);
   }
+} else {
+  console.log('No active playback session');
 }`}
             />
 
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Interactive Components</h2>
-            <CodeBlock
-              title="Buttons and Interactive Elements"
-              code={`// Send message with interactive buttons
-await slack.sendMessage('#general', 'Choose an action:', {
-  blocks: [
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: '*Project Status Update*'
-      }
-    },
-    {
-      type: 'actions',
-      elements: [
-        {
-          type: 'button',
-          text: {
-            type: 'plain_text',
-            text: 'Approve'
-          },
-          style: 'primary',
-          value: 'approve',
-          action_id: 'approval_approve'
-        },
-        {
-          type: 'button',
-          text: {
-            type: 'plain_text',
-            text: 'Reject'
-          },
-          style: 'danger',
-          value: 'reject',
-          action_id: 'approval_reject'
-        }
-      ]
-    }
-  ]
+            <Method
+              name="controlPlayback(action, deviceId?)"
+              description="Control playback (play, pause, next, previous)."
+              parameters={[
+                {
+                  name: "action",
+                  type: "'play' | 'pause' | 'next' | 'previous'",
+                  description: "Playback action to perform",
+                  required: true
+                },
+                {
+                  name: "deviceId",
+                  type: "string",
+                  description: "Specific device to control",
+                  required: false
+                }
+              ]}
+              returns={{
+                type: "Promise<void>",
+                description: "Action completed"
+              }}
+              example={`// Basic playback control
+await spotify.controlPlayback('play');
+await spotify.controlPlayback('pause');
+await spotify.controlPlayback('next');
+await spotify.controlPlayback('previous');
+
+// Control specific device
+const devices = await spotify.getDevices();
+const phoneDevice = devices.devices.find(d => d.type === 'Smartphone');
+if (phoneDevice) {
+  await spotify.controlPlayback('play', phoneDevice.id);
+}`}
+              throws={[
+                "PermissionError - Missing user-modify-playback-state scope",
+                "ServiceUnreachableError - No active device",
+                "ValidationError - Invalid action"
+              ]}
+            />
+
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Recommendations</h2>
+
+            <Method
+              name="getRecommendations(params)"
+              description="Get track recommendations based on seeds and audio features."
+              parameters={[
+                {
+                  name: "params",
+                  type: "RecommendationParams",
+                  description: "Recommendation parameters",
+                  required: true
+                },
+                {
+                  name: "params.seed_artists",
+                  type: "string[]",
+                  description: "Artist IDs for seed (max 5 total seeds)",
+                  required: false
+                },
+                {
+                  name: "params.seed_tracks",
+                  type: "string[]",
+                  description: "Track IDs for seed (max 5 total seeds)",
+                  required: false
+                },
+                {
+                  name: "params.seed_genres",
+                  type: "string[]",
+                  description: "Genre names for seed (max 5 total seeds)",
+                  required: false
+                },
+                {
+                  name: "params.limit",
+                  type: "number",
+                  description: "Number of recommendations (1-100)",
+                  required: false,
+                  default: "20"
+                }
+              ]}
+              returns={{
+                type: "Promise<RecommendationsResponse>",
+                description: "Recommended tracks with seed information"
+              }}
+              example={`// Get recommendations based on artists and audio features
+const recommendations = await spotify.getRecommendations({
+  seed_artists: ['4NHQUGzhtTLFvgF5SZesLK'], // Tina Turner
+  seed_genres: ['rock', 'pop'],
+  limit: 10,
+  target_energy: 0.8,
+  target_danceability: 0.7,
+  min_popularity: 30
 });
 
-// Handle button interactions
-app.post('/slack/interactive', express.json(), async (req, res) => {
-  const payload = JSON.parse(req.body.payload);
+console.log('Recommended tracks:');
+recommendations.tracks.forEach((track, index) => {
+  console.log(\`\${index + 1}. \${track.name} by \${track.artists[0].name}\`);
+  console.log(\`   Popularity: \${track.popularity}/100\`);
+  console.log(\`   Preview: \${track.preview_url || 'No preview'}\`);
+});
+
+// Audio feature based recommendations
+const energeticTracks = await spotify.getRecommendations({
+  seed_genres: ['electronic', 'dance'],
+  target_energy: 0.9,
+  target_valence: 0.8, // Positivity
+  target_tempo: 128,
+  min_popularity: 50,
+  limit: 20
+});`}
+            />
+
+            <h2 className="text-2xl font-semibold mb-4 mt-8">User Library Methods</h2>
+
+            <Method
+              name="getMyTopTracks(params?)"
+              description="Get user's top tracks over different time periods."
+              parameters={[
+                {
+                  name: "params",
+                  type: "TopItemsParams",
+                  description: "Parameters for top tracks",
+                  required: false
+                },
+                {
+                  name: "params.time_range",
+                  type: "'short_term' | 'medium_term' | 'long_term'",
+                  description: "Time period (4 weeks, 6 months, all time)",
+                  required: false,
+                  default: "medium_term"
+                },
+                {
+                  name: "params.limit",
+                  type: "number",
+                  description: "Number of tracks (1-50)",
+                  required: false,
+                  default: "20"
+                }
+              ]}
+              returns={{
+                type: "Promise<PagingObject<Track>>",
+                description: "User's top tracks"
+              }}
+              example={`// Get top tracks for different periods
+const shortTerm = await spotify.getMyTopTracks({
+  time_range: 'short_term', // Last 4 weeks
+  limit: 10
+});
+
+const allTime = await spotify.getMyTopTracks({
+  time_range: 'long_term', // All time
+  limit: 50
+});
+
+console.log('Your top tracks (last 4 weeks):');
+shortTerm.items.forEach((track, index) => {
+  console.log(\`\${index + 1}. \${track.name} - \${track.artists[0].name}\`);
+});
+
+console.log('\\nYour all-time favorites:');
+allTime.items.slice(0, 5).forEach((track, index) => {
+  console.log(\`\${index + 1}. \${track.name} - \${track.artists[0].name}\`);
+});`}
+              throws={[
+                "PermissionError - Missing user-top-read scope"
+              ]}
+            />
+
+            <Method
+              name="getMyTopArtists(params?)"
+              description="Get user's top artists over different time periods."
+              parameters={[
+                {
+                  name: "params",
+                  type: "TopItemsParams",
+                  description: "Parameters for top artists",
+                  required: false
+                }
+              ]}
+              returns={{
+                type: "Promise<PagingObject<Artist>>",
+                description: "User's top artists"
+              }}
+              example={`const topArtists = await spotify.getMyTopArtists({
+  time_range: 'medium_term', // Last 6 months
+  limit: 20
+});
+
+console.log('Your top artists:');
+topArtists.items.forEach((artist, index) => {
+  console.log(\`\${index + 1}. \${artist.name}\`);
+  console.log(\`   Genres: \${artist.genres.slice(0, 3).join(', ')}\`);
+  console.log(\`   Followers: \${artist.followers.total.toLocaleString()}\`);
+});`}
+            />
+
+            <h2 className="text-2xl font-semibold mb-4 mt-8">Advanced Usage Examples</h2>
+
+            <CodeBlock
+              title="Music Discovery Bot"
+              code={`class MusicDiscoveryBot {
+  constructor(spotify) {
+    this.spotify = spotify;
+  }
   
-  if (payload.type === 'block_actions') {
-    const action = payload.actions[0];
-    
-    if (action.action_id === 'approval_approve') {
-      // Handle approval
-      await processApproval(payload.user.id, 'approved');
+  async discoverNewMusic(userId, preferences = {}) {
+    try {
+      // Get user's top artists and tracks as seeds
+      const [topArtists, topTracks] = await Promise.all([
+        this.spotify.getMyTopArtists({ limit: 5 }),
+        this.spotify.getMyTopTracks({ limit: 5 })
+      ]);
       
-      res.json({
-        text: 'Request approved! ✅'
-      });
-    } else if (action.action_id === 'approval_reject') {
-      // Handle rejection
-      await processApproval(payload.user.id, 'rejected');
+      // Extract IDs for recommendations
+      const seedArtists = topArtists.items.slice(0, 2).map(a => a.id);
+      const seedTracks = topTracks.items.slice(0, 2).map(t => t.id);
       
-      res.json({
-        text: 'Request rejected! ❌'
+      // Get recommendations with user preferences
+      const recommendations = await this.spotify.getRecommendations({
+        seed_artists: seedArtists,
+        seed_tracks: seedTracks,
+        limit: 30,
+        target_popularity: preferences.popularity || 50,
+        target_energy: preferences.energy || 0.7,
+        target_danceability: preferences.danceability || 0.6
       });
+      
+      // Filter out tracks user already knows
+      const newTracks = await this.filterKnownTracks(
+        recommendations.tracks,
+        userId
+      );
+      
+      return {
+        recommendations: newTracks.slice(0, 10),
+        totalFound: newTracks.length,
+        basedOn: {
+          artists: topArtists.items.slice(0, 2).map(a => a.name),
+          tracks: topTracks.items.slice(0, 2).map(t => t.name)
+        }
+      };
+    } catch (error) {
+      console.error('Discovery error:', error);
+      throw error;
     }
   }
-});`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Message Management</h2>
-            <CodeBlock
-              title="Update and Delete Messages"
-              code={`// Send message and store timestamp
-const response = await slack.sendMessage('#general', 'Processing...');
-const messageTs = response.ts;
-
-// Update the message
-await slack.updateMessage('#general', messageTs, 'Processing complete! ✅', [
-  {
-    type: 'section',
-    text: {
-      type: 'mrkdwn',
-      text: '*Task completed successfully*\\nAll systems are operational.'
+  
+  async filterKnownTracks(tracks, userId) {
+    // This would typically check against user's saved tracks
+    // For demo, we'll just return all tracks
+    return tracks;
+  }
+  
+  async createDiscoveryPlaylist(userId, tracks, name) {
+    try {
+      // Create new playlist
+      const playlist = await this.spotify.createPlaylist(
+        userId,
+        name || \`Discovery \${new Date().toLocaleDateString()}\`,
+        false, // Private
+        'AI-generated music discovery playlist'
+      );
+      
+      // Add tracks to playlist
+      const trackUris = tracks.map(track => \`spotify:track:\${track.id}\`);
+      await this.spotify.addTracksToPlaylist(playlist.id, trackUris);
+      
+      return {
+        playlist,
+        tracksAdded: tracks.length,
+        url: playlist.external_urls.spotify
+      };
+    } catch (error) {
+      console.error('Playlist creation error:', error);
+      throw error;
     }
   }
-]);
-
-// Delete message
-await slack.deleteMessage('#general', messageTs);
-
-// Add reaction to message
-await slack.addReaction('#general', messageTs, 'thumbsup');
-
-// Remove reaction
-await slack.removeReaction('#general', messageTs, 'thumbsup');`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Search and Discovery</h2>
-            <CodeBlock
-              title="Search Messages and Content"
-              code={`// Search messages
-const searchResults = await slack.searchMessages('deployment status', {
-  count: 20,
-  highlight: true,
-  sortDir: 'desc'
-});
-
-console.log(\`Found \${searchResults.messages.total} messages\`);
-searchResults.messages.matches.forEach(match => {
-  console.log(\`Message: \${match.text}\`);
-  console.log(\`Channel: \${match.channel.name}\`);
-  console.log(\`User: \${match.user}\`);
-});`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Reminders</h2>
-            <CodeBlock
-              title="Setting Reminders"
-              code={`// Set reminder for yourself
-const reminder = await slack.setReminder(
-  'Review pull requests',
-  'in 2 hours'
-);
-
-// Set reminder for another user
-const userReminder = await slack.setReminder(
-  'Team meeting preparation',
-  'tomorrow at 9am',
-  'U1234567890'
-);
-
-console.log(\`Reminder set: \${reminder.text}\`);`}
-            />
-
-            <InfoBox type="success" title="Production Features">
-              The Slack API wrapper includes signature verification, rate limiting, error handling, and automatic retries for production use.
-            </InfoBox>
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Configuration</h2>
-            <CodeBlock
-              title="SlackAPI Configuration"
-              code={`interface SlackConfig {
-  botToken: string;        // Required: Bot User OAuth Token
-  appToken?: string;       // Optional: App-level token for Socket Mode
-  signingSecret?: string;  // Optional: For webhook verification
 }
 
-// Bot token scopes (configure in Slack app settings)
-const requiredScopes = [
-  'chat:write',           // Send messages
-  'channels:read',        // Read channel information
-  'channels:manage',      // Create and manage channels
-  'users:read',          // Read user information
-  'files:write',         // Upload files
-  'commands',            // Slash commands
-  'reactions:write',     // Add/remove reactions
-  'reminders:write'      // Set reminders
-];`}
+// Usage
+const bot = new MusicDiscoveryBot(spotify);
+
+const discovery = await bot.discoverNewMusic('user123', {
+  energy: 0.8,
+  danceability: 0.7,
+  popularity: 60
+});
+
+console.log('Found', discovery.totalFound, 'new tracks');
+console.log('Based on artists:', discovery.basedOn.artists.join(', '));
+
+const playlist = await bot.createDiscoveryPlaylist(
+  'user123',
+  discovery.recommendations,
+  'Weekly Discovery'
+);
+
+console.log('Created playlist:', playlist.url);`}
             />
+
+            <InfoBox type="success" title="Best Practices">
+              <ul className="list-disc list-inside space-y-1">
+                <li>Always handle OAuth flow properly with state parameter</li>
+                <li>Store and refresh tokens securely</li>
+                <li>Respect rate limits (typically 100 requests per minute)</li>
+                <li>Use appropriate scopes - only request what you need</li>
+                <li>Handle premium-required features gracefully</li>
+                <li>Cache expensive operations like search results</li>
+                <li>Implement proper error handling for network issues</li>
+              </ul>
+            </InfoBox>
           </div>
         );
 
-      case 'sendgrid':
-        return (
-          <div>
-            <h1 className="text-4xl font-bold mb-6">
-              <Mail className="inline h-10 w-10 mr-3 text-blue-500" />
-              SendGrid API
-            </h1>
-            
-            <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
-              Production-ready email delivery service with templates, analytics, and advanced email management features.
-            </p>
-
-            <InfoBox type="info" title="SendGrid Account Required">
-              Sign up at <a href="https://sendgrid.com" className="text-primary-600 dark:text-primary-400 hover:underline" target="_blank">SendGrid</a> and get your API key from the dashboard.
-            </InfoBox>
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Basic Setup</h2>
-            <CodeBlock
-              title="SendGrid Client"
-              code={`import { SendGridAPI } from 'macro_api';
-
-const sendgrid = new SendGridAPI({
-  apiKey: process.env.SENDGRID_API_KEY,
-  defaultFromEmail: 'noreply@yourcompany.com',
-  defaultFromName: 'Your Company'
-});`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Sending Emails</h2>
-            <CodeBlock
-              title="Basic Email Sending"
-              code={`// Send simple email
-await sendgrid.sendEmail({
-  to: 'customer@example.com',
-  subject: 'Welcome to our service!',
-  text: 'Thank you for signing up.',
-  html: '<h1>Welcome!</h1><p>Thank you for signing up.</p>'
-});
-
-// Send to multiple recipients
-await sendgrid.sendEmail({
-  to: ['user1@example.com', 'user2@example.com'],
-  cc: ['manager@example.com'],
-  bcc: ['archive@example.com'],
-  subject: 'Team Update',
-  html: '<p>Here\\'s the latest team update...</p>'
-});
-
-// Send with attachments
-await sendgrid.sendEmail({
-  to: 'client@example.com',
-  subject: 'Monthly Report',
-  html: '<p>Please find the monthly report attached.</p>',
-  attachments: [
-    {
-      content: base64FileContent, // Base64 encoded file
-      filename: 'report.pdf',
-      type: 'application/pdf',
-      disposition: 'attachment'
-    }
-  ]
-});`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Email Templates</h2>
-            <CodeBlock
-              title="Dynamic Templates"
-              code={`// Create email template
-const template = await sendgrid.createTemplate(
-  'Welcome Email Template',
-  'dynamic'
-);
-
-// Create template version
-const templateVersion = await sendgrid.createTemplateVersion(
-  template.id,
-  'Welcome Email v1',
-  'Welcome to {{company_name}}!',
-  \`
-  <div style="font-family: Arial, sans-serif;">
-    <h1>Welcome to {{company_name}}!</h1>
-    <p>Hi {{first_name}},</p>
-    <p>Thank you for joining us. Here are your next steps:</p>
-    <ul>
-      {{#each steps}}
-      <li>{{this}}</li>
-      {{/each}}
-    </ul>
-    <p>Best regards,<br>{{sender_name}}</p>
-  </div>
-  \`,
-  'Welcome to {{company_name}}! Hi {{first_name}}, thank you for joining us.'
-);
-
-// Send templated email
-await sendgrid.sendEmail({
-  to: 'newuser@example.com',
-  templateId: template.id,
-  dynamicTemplateData: {
-    company_name: 'Acme Corp',
-    first_name: 'John',
-    sender_name: 'Jane Smith',
-    steps: [
-      'Complete your profile',
-      'Verify your email',
-      'Explore our features'
-    ]
-  }
-});`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Bulk Email Sending</h2>
-            <CodeBlock
-              title="Personalized Bulk Emails"
-              code={`// Send personalized emails to multiple recipients
-const recipients = [
-  {
-    email: 'john@example.com',
-    name: 'John Doe',
-    substitutions: {
-      first_name: 'John',
-      account_type: 'Premium',
-      renewal_date: '2024-12-31'
-    }
-  },
-  {
-    email: 'jane@example.com',
-    name: 'Jane Smith',
-    substitutions: {
-      first_name: 'Jane',
-      account_type: 'Basic',
-      renewal_date: '2024-11-15'
-    }
-  }
-];
-
-await sendgrid.sendTemplateEmail(
-  'your-template-id',
-  recipients,
-  {
-    company_name: 'Your Company',
-    support_email: 'support@yourcompany.com'
-  }
-);`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Contact Management</h2>
-            <CodeBlock
-              title="Managing Contacts and Lists"
-              code={`// Create contact list
-const list = await sendgrid.createList('Newsletter Subscribers');
-
-// Add contacts to list
-const contacts = [
-  {
-    email: 'subscriber1@example.com',
-    firstName: 'John',
-    lastName: 'Doe',
-    customFields: {
-      age: 30,
-      city: 'New York'
-    }
-  },
-  {
-    email: 'subscriber2@example.com',
-    firstName: 'Jane',
-    lastName: 'Smith',
-    customFields: {
-      age: 28,
-      city: 'Los Angeles'
-    }
-  }
-];
-
-await sendgrid.addToList(list.id, contacts);
-
-// Get all lists
-const lists = await sendgrid.getLists();
-lists.result.forEach(list => {
-  console.log(\`List: \${list.name} (\${list.contactCount} contacts)\`);
-});`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Email Scheduling</h2>
-            <CodeBlock
-              title="Scheduled Email Delivery"
-              code={`// Schedule email for future delivery
-const scheduleTime = new Date();
-scheduleTime.setHours(scheduleTime.getHours() + 24); // Tomorrow same time
-
-const scheduledEmail = await sendgrid.scheduleEmail({
-  to: 'customer@example.com',
-  subject: 'Don\\'t forget about your cart!',
-  html: '<p>You have items waiting in your cart...</p>'
-}, scheduleTime);
-
-console.log(\`Email scheduled with batch ID: \${scheduledEmail.batchId}\`);
-
-// Cancel scheduled email
-await sendgrid.cancelScheduledEmail(scheduledEmail.batchId);
-
-// Pause scheduled email
-await sendgrid.pauseScheduledEmail(scheduledEmail.batchId);
-
-// Resume scheduled email
-await sendgrid.resumeScheduledEmail(scheduledEmail.batchId);
-
-// Check status
-const status = await sendgrid.getScheduledEmailStatus(scheduledEmail.batchId);
-console.log(\`Email status: \${status.status}\`);`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Email Analytics</h2>
-            <CodeBlock
-              title="Email Statistics and Analytics"
-              code={`// Get email statistics
-const stats = await sendgrid.getEmailStats(
-  '2024-01-01',    // start date
-  '2024-01-31',    // end date
-  'day'            // aggregation: day, week, month
-);
-
-stats.forEach(stat => {
-  const metrics = stat.stats[0].metrics;
-  console.log(\`Date: \${stat.date}\`);
-  console.log(\`Delivered: \${metrics.delivered}\`);
-  console.log(\`Opens: \${metrics.opens}\`);
-  console.log(\`Clicks: \${metrics.clicks}\`);
-  console.log(\`Bounces: \${metrics.bounces}\`);
-  console.log(\`Unsubscribes: \${metrics.unsubscribes}\`);
-});
-
-// Calculate open rate
-const totalDelivered = stats.reduce((sum, stat) => 
-  sum + stat.stats[0].metrics.delivered, 0);
-const totalOpens = stats.reduce((sum, stat) => 
-  sum + stat.stats[0].metrics.opens, 0);
-const openRate = (totalOpens / totalDelivered * 100).toFixed(2);
-console.log(\`Open rate: \${openRate}%\`);`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Email Validation</h2>
-            <CodeBlock
-              title="Email Address Validation"
-              code={`// Validate email address
-const validation = await sendgrid.validateEmail('user@example.com');
-
-console.log(\`Email: \${validation.email}\`);
-console.log(\`Verdict: \${validation.verdict}\`); // Valid, Risky, or Invalid
-console.log(\`Score: \${validation.score}\`);     // 0-1 confidence score
-
-if (validation.verdict === 'Valid') {
-  console.log('Email is safe to send to');
-} else if (validation.verdict === 'Risky') {
-  console.log('Email might bounce or be spam');
-  if (validation.suggestion) {
-    console.log(\`Suggestion: \${validation.suggestion}\`);
-  }
-} else {
-  console.log('Email is invalid');
-}
-
-// Check specific validation details
-console.log('Domain checks:', validation.checks.domain);
-console.log('Local part checks:', validation.checks.localPart);`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Suppression Management</h2>
-            <CodeBlock
-              title="Managing Suppressions"
-              code={`// Add email to suppression list
-await sendgrid.suppressEmail('spam@example.com', 1); // group ID
-
-// Remove from suppression list
-await sendgrid.unsuppressEmail('user@example.com', 1);
-
-// Get suppression groups
-const groups = await sendgrid.getSuppressionGroups();
-groups.forEach(group => {
-  console.log(\`Group: \${group.name} (ID: \${group.id})\`);
-  console.log(\`Description: \${group.description}\`);
-});`}
-            />
-
-            <InfoBox type="warning" title="Rate Limits">
-              SendGrid has rate limits based on your plan. The API wrapper automatically handles rate limiting and retries.
-            </InfoBox>
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Advanced Features</h2>
-            <CodeBlock
-              title="Advanced Email Options"
-              code={`// Send email with advanced options
-await sendgrid.sendEmail({
-  to: 'customer@example.com',
-  subject: 'Advanced Email Features',
-  html: '<p>This email has advanced features enabled.</p>',
-  customArgs: {
-    campaign_id: 'spring-sale-2024',
-    user_segment: 'premium'
-  },
-  categories: ['marketing', 'sale'],
-  headers: {
-    'X-Campaign-ID': 'spring-sale-2024'
-  },
-  trackingSettings: {
-    clickTracking: { enable: true, enableText: true },
-    openTracking: { enable: true },
-    subscriptionTracking: { 
-      enable: true,
-      text: 'Unsubscribe here: [unsubscribe]',
-      html: '<p><a href="[unsubscribe]">Unsubscribe</a></p>'
-    }
-  },
-  mailSettings: {
-    footer: {
-      enable: true,
-      text: 'This email was sent by Your Company',
-      html: '<p><small>This email was sent by Your Company</small></p>'
-    },
-    spamCheck: {
-      enable: true,
-      threshold: 5
-    }
-  }
-});`}
-            />
-
-            <h2 className="text-2xl font-semibold mb-4 mt-8">Configuration</h2>
-            <CodeBlock
-              title="SendGrid Configuration"
-              code={`interface SendGridConfig {
-  apiKey: string;
-  defaultFromEmail?: string;  // Default sender email
-  defaultFromName?: string;   // Default sender name
-}
-
-// Environment variables
-SENDGRID_API_KEY=SG.your_api_key_here
-SENDGRID_FROM_EMAIL=noreply@yourcompany.com
-SENDGRID_FROM_NAME="Your Company"
-
-const sendgrid = new SendGridAPI({
-  apiKey: process.env.SENDGRID_API_KEY,
-  defaultFromEmail: process.env.SENDGRID_FROM_EMAIL,
-  defaultFromName: process.env.SENDGRID_FROM_NAME
-});`}
-            />
-          </div>
-        );
-
+      // Add more cases for other APIs here...
       default:
         return (
           <div>
-            <h1 className="text-4xl font-bold mb-6">Section Not Found</h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              The requested documentation section could not be found.
+            <h1 className="text-4xl font-bold mb-6">Documentation</h1>
+            <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
+              Select a topic from the sidebar to view detailed documentation and examples.
             </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="border rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <MessageSquare className="h-8 w-8 text-green-600 mb-4" />
+                <h3 className="text-lg font-semibold mb-2">ChatGPT/OpenAI</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                  Complete API wrapper for OpenAI with streaming, function calling, and vision support.
+                </p>
+              </div>
+              
+              <div className="border rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <Music className="h-8 w-8 text-green-600 mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Spotify API</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                  OAuth authentication, playlist management, search, and player controls.
+                </p>
+              </div>
+              
+              <div className="border rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <CreditCard className="h-8 w-8 text-blue-600 mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Stripe API</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                  Complete payment processing with subscriptions, webhooks, and analytics.
+                </p>
+              </div>
+              
+              <div className="border rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <Slack className="h-8 w-8 text-purple-600 mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Slack API</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                  Team communication with messages, files, channels, and slash commands.
+                </p>
+              </div>
+              
+              <div className="border rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <Cloud className="h-8 w-8 text-gray-600 mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Vercel API</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                  Deployment automation, project management, and environment variables.
+                </p>
+              </div>
+              
+              <div className="border rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <Database className="h-8 w-8 text-orange-600 mb-4" />
+                <h3 className="text-lg font-semibold mb-2">AWS S3</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                  Object storage with upload, download, and advanced S3 operations.
+                </p>
+              </div>
+            </div>
           </div>
         );
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Navbar />
-      
-      <div className="flex h-screen pt-20">
-        {/* Mobile Sidebar Overlay */}
-        {sidebarOpen && (
-          <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      {/* Mobile header */}
+      <div className="lg:hidden flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
+        <h1 className="text-xl font-bold flex items-center">
+          <Book className="h-6 w-6 mr-2 text-blue-600" />
+          macro_api docs
+        </h1>
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+        >
+          {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+      </div>
 
+      <div className="flex h-screen">
         {/* Sidebar */}
-        <div className={`fixed lg:static inset-y-0 left-0 z-50 transform ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 transition-transform duration-300 ease-in-out lg:block pt-20 lg:pt-0`}>
+        <div className={`${sidebarOpen ? 'block' : 'hidden'} lg:block fixed lg:relative inset-y-0 left-0 z-50 lg:z-0`}>
           <Sidebar />
         </div>
 
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Mobile Header */}
-          <div className="lg:hidden bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 py-3">
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
-            >
-              <Menu className="h-5 w-5 mr-2" />
-              <span className="font-medium">Documentation</span>
-            </button>
-          </div>
+        {/* Overlay for mobile */}
+        {sidebarOpen && (
+          <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40" onClick={() => setSidebarOpen(false)} />
+        )}
 
-          {/* Content Area */}
-          <div className="flex-1 overflow-y-auto">
-            <div className="max-w-4xl mx-auto px-6 py-8">
-              {renderContent()}
-            </div>
+        {/* Main content */}
+        <div className="flex-1 overflow-auto">
+          <div className="max-w-5xl mx-auto px-6 py-8">
+            {renderContent()}
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
-};
+}

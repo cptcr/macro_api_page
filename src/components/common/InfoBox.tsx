@@ -62,6 +62,54 @@ const InfoBox: React.FC<InfoBoxProps> = ({
         icon: Info,
         defaultTitle: 'Note'
       },
+      warning: {
+        containerClass: 'bg-yellow-50 border-yellow-200 dark:bg-yellow-900/20 dark:border-yellow-800',
+        iconClass: 'text-yellow-600 dark:text-yellow-400',
+        titleClass: 'text-yellow-800 dark:text-yellow-200',
+        textClass: 'text-yellow-700 dark:text-yellow-300',
+        icon: AlertTriangle,
+        defaultTitle: 'Warning'
+      },
+      success: {
+        containerClass: 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800',
+        iconClass: 'text-green-600 dark:text-green-400',
+        titleClass: 'text-green-800 dark:text-green-200',
+        textClass: 'text-green-700 dark:text-green-300',
+        icon: CheckCircle,
+        defaultTitle: 'Success'
+      },
+      error: {
+        containerClass: 'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800',
+        iconClass: 'text-red-600 dark:text-red-400',
+        titleClass: 'text-red-800 dark:text-red-200',
+        textClass: 'text-red-700 dark:text-red-300',
+        icon: XCircle,
+        defaultTitle: 'Error'
+      },
+      tip: {
+        containerClass: 'bg-purple-50 border-purple-200 dark:bg-purple-900/20 dark:border-purple-800',
+        iconClass: 'text-purple-600 dark:text-purple-400',
+        titleClass: 'text-purple-800 dark:text-purple-200',
+        textClass: 'text-purple-700 dark:text-purple-300',
+        icon: Lightbulb,
+        defaultTitle: 'Tip'
+      },
+      note: {
+        containerClass: 'bg-gray-50 border-gray-200 dark:bg-gray-900/20 dark:border-gray-800',
+        iconClass: 'text-gray-600 dark:text-gray-400',
+        titleClass: 'text-gray-800 dark:text-gray-200',
+        textClass: 'text-gray-700 dark:text-gray-300',
+        icon: AlertCircle,
+        defaultTitle: 'Note'
+      },
+      danger: {
+        containerClass: 'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800',
+        iconClass: 'text-red-600 dark:text-red-400',
+        titleClass: 'text-red-800 dark:text-red-200',
+        textClass: 'text-red-700 dark:text-red-300',
+        icon: Zap,
+        defaultTitle: 'Danger'
+      },
       security: {
         containerClass: 'bg-indigo-50 border-indigo-200 dark:bg-indigo-900/20 dark:border-indigo-800',
         iconClass: 'text-indigo-600 dark:text-indigo-400',

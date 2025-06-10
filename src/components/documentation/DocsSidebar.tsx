@@ -58,12 +58,16 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
   searchTerm,
   onSearchChange
 }) => {
-  const [expandedSections, setExpandedSections] = useState({
-    'quick-start': true,
-    'core-features': true,
-    'api-classes': true,
-    'production-apis': true
-  });
+  type ExpandedSections = {
+    [K in 'quick-start' | 'core-features' | 'api-classes' | 'production-apis']: boolean;
+  };
+  
+  const [expandedSections, setExpandedSections] = useState<ExpandedSections>({
+      'quick-start': true,
+      'core-features': true,
+      'api-classes': true,
+      'production-apis': true
+    });
 
   const navigation: NavigationSection[] = [
     {
@@ -136,7 +140,7 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
       .filter(section => section.items.length > 0);
   }, [searchTerm]);
 
-  const toggleSection = (sectionId: string) => {
+  const toggleSection = (sectionId: keyof ExpandedSections) => {
     setExpandedSections(prev => ({
       ...prev,
       [sectionId]: !prev[sectionId]
@@ -164,7 +168,7 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
         {filteredSections.map((section) => (
           <div key={section.id} className="mb-4">
             <button
-              onClick={() => toggleSection(section.id)}
+              onClick={() => toggleSection(section.id as keyof ExpandedSections)}
               className="flex items-center w-full text-left px-2 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors group"
             >
               <section.icon className="h-4 w-4 mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300" />
