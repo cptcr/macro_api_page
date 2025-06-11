@@ -11,8 +11,14 @@ import GettingStartedDocs from '@/components/documentation/sections/GettingStart
 import InstallationDocs from '@/components/documentation/sections/InstallationDocs';
 import BasicUsageDocs from '@/components/documentation/sections/BasicUsageDocs';
 import AuthenticationDocs from '@/components/documentation/sections/AuthenticationDocs';
+
+// Core Infrastructure Documentation (NEW)
+import CoreCacheDocs from '@/components/documentation/core/CoreCacheDocs';
+import CoreUtilsDocs from '@/components/documentation/core/CoreUtilsDocs';
+
+// Legacy core features (keep these for backward compatibility)
 import ErrorHandlingDocs from '@/components/documentation/sections/ErrorHandlingDocs';
-import CachingDocs from '@/components/documentation/sections/CachingDocs';
+import CachingDocs from '@/components/documentation/core/CoreCacheDocs';
 import RetryLogicDocs from '@/components/documentation/sections/RetryLogicDocs';
 import CircuitBreakerDocs from '@/components/documentation/sections/CircuitBreakerDocs';
 
@@ -63,7 +69,7 @@ const DocumentationPage: React.FC = () => {
     }
   };
 
-  // Component mapping
+  // Component mapping - UPDATED with new core infrastructure docs
   const getDocumentationComponent = () => {
     const components: Record<string, React.ComponentType> = {
       // Quick Start
@@ -72,7 +78,11 @@ const DocumentationPage: React.FC = () => {
       'basic-usage': BasicUsageDocs,
       'authentication': AuthenticationDocs,
       
-      // Core Features
+      // Core Infrastructure (NEW SECTION)
+      'core-cache': CoreCacheDocs,
+      'core-utils': CoreUtilsDocs,
+      
+      // Legacy Core Features (for backward compatibility)
       'error-handling': ErrorHandlingDocs,
       'caching': CachingDocs,
       'retry-logic': RetryLogicDocs,
