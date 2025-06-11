@@ -6,39 +6,92 @@ const config: Config = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  darkMode: 'class',
+  darkMode: ['class', 'class'],
   theme: {
-    extend: {
-      colors: {
-        primary: {
-          50: '#f5f7ff',
-          100: '#ebf0fe',
-          200: '#d6e0fd',
-          300: '#b3c7fc',
-          400: '#849ef9',
-          500: '#526ff2',
-          600: '#3d4ce7',
-          700: '#3042d5',
-          800: '#2b37ae',
-          900: '#29328c',
-          950: '#1a1e4c',
-        },
-      },
-      fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
-      },
-      animation: {
-        'fade-in': 'fadeIn 0.5s ease-in-out',
-      },
-      keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
-        },
-      },
-    },
+  	extend: {
+  		colors: {
+  			primary: {
+  				'50': '#f5f7ff',
+  				'100': '#ebf0fe',
+  				'200': '#d6e0fd',
+  				'300': '#b3c7fc',
+  				'400': '#849ef9',
+  				'500': '#526ff2',
+  				'600': '#3d4ce7',
+  				'700': '#3042d5',
+  				'800': '#2b37ae',
+  				'900': '#29328c',
+  				'950': '#1a1e4c',
+  				DEFAULT: 'hsl(var(--primary))',
+  				foreground: 'hsl(var(--primary-foreground))'
+  			},
+  			background: 'hsl(var(--background))',
+  			foreground: 'hsl(var(--foreground))',
+  			card: {
+  				DEFAULT: 'hsl(var(--card))',
+  				foreground: 'hsl(var(--card-foreground))'
+  			},
+  			popover: {
+  				DEFAULT: 'hsl(var(--popover))',
+  				foreground: 'hsl(var(--popover-foreground))'
+  			},
+  			secondary: {
+  				DEFAULT: 'hsl(var(--secondary))',
+  				foreground: 'hsl(var(--secondary-foreground))'
+  			},
+  			muted: {
+  				DEFAULT: 'hsl(var(--muted))',
+  				foreground: 'hsl(var(--muted-foreground))'
+  			},
+  			accent: {
+  				DEFAULT: 'hsl(var(--accent))',
+  				foreground: 'hsl(var(--accent-foreground))'
+  			},
+  			destructive: {
+  				DEFAULT: 'hsl(var(--destructive))',
+  				foreground: 'hsl(var(--destructive-foreground))'
+  			},
+  			border: 'hsl(var(--border))',
+  			input: 'hsl(var(--input))',
+  			ring: 'hsl(var(--ring))',
+  			chart: {
+  				'1': 'hsl(var(--chart-1))',
+  				'2': 'hsl(var(--chart-2))',
+  				'3': 'hsl(var(--chart-3))',
+  				'4': 'hsl(var(--chart-4))',
+  				'5': 'hsl(var(--chart-5))'
+  			}
+  		},
+  		fontFamily: {
+  			sans: [
+  				'Inter',
+  				'ui-sans-serif',
+  				'system-ui',
+  				'-apple-system',
+  				'sans-serif'
+  			]
+  		},
+  		animation: {
+  			'fade-in': 'fadeIn 0.5s ease-in-out'
+  		},
+  		keyframes: {
+  			fadeIn: {
+  				'0%': {
+  					opacity: '0'
+  				},
+  				'100%': {
+  					opacity: '1'
+  				}
+  			}
+  		},
+  		borderRadius: {
+  			lg: 'var(--radius)',
+  			md: 'calc(var(--radius) - 2px)',
+  			sm: 'calc(var(--radius) - 4px)'
+  		}
+  	}
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 }
 
 export default config

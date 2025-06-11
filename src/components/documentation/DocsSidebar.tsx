@@ -29,7 +29,10 @@ import {
   Server,
   ChevronRight,
   ChevronDown,
-  Search
+  Search,
+  Wrench,
+  Zap,
+  RefreshCw
 } from 'lucide-react';
 
 interface NavigationItem {
@@ -64,11 +67,13 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
   
   const [expandedSections, setExpandedSections] = useState<ExpandedSections>({
     'quick-start': true,
+    'core-infrastructure': true, // NEW SECTION
     'core-features': true,
     'api-classes': true,
     'production-apis': true
   });
 
+  // UPDATED navigation with new Core Infrastructure section
   const navigation: NavigationSection[] = [
     {
       id: 'quick-start',
@@ -82,13 +87,23 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
       ]
     },
     {
+      id: 'core-infrastructure', // NEW SECTION
+      title: 'Core Infrastructure',
+      icon: Wrench,
+      items: [
+        { id: 'core-cache', title: 'Cache System', icon: Database },
+        { id: 'core-errors', title: 'Error Handling', icon: AlertCircle },
+        { id: 'core-utils', title: 'Utilities & Entry Point', icon: Settings }
+      ]
+    },
+    {
       id: 'core-features',
-      title: 'Core Features',
+      title: 'Core Features', // Legacy section for backward compatibility
       icon: Layers,
       items: [
-        { id: 'error-handling', title: 'Error Handling', icon: AlertCircle },
-        { id: 'caching', title: 'Caching System', icon: Database },
-        { id: 'retry-logic', title: 'Retry Logic', icon: Settings },
+        { id: 'error-handling', title: 'Error Handling (Legacy)', icon: AlertCircle },
+        { id: 'caching', title: 'Caching System (Legacy)', icon: Database },
+        { id: 'retry-logic', title: 'Retry Logic', icon: RefreshCw },
         { id: 'circuit-breaker', title: 'Circuit Breaker', icon: Shield }
       ]
     },
@@ -232,6 +247,11 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
           <div className="flex items-center justify-between">
             <span>Last updated</span>
             <span>June 2025</span>
+          </div>
+          <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+            <div className="text-xs text-primary-600 dark:text-primary-400">
+              📚 Core Infrastructure docs added
+            </div>
           </div>
         </div>
       </div>
