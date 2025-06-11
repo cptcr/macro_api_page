@@ -1,3 +1,5 @@
+// src/types/apiService.ts
+
 export interface ApiMethod {
   name: string;
   description?: string;
@@ -27,6 +29,7 @@ export interface ApiService {
     title: string;
     steps: string[];
     url: string;
+    expiryInfo: string; // This line is added to fix the error
   };
   examples: {
     typescript: string;

@@ -59,15 +59,15 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
   onSearchChange
 }) => {
   type ExpandedSections = {
-    [K in 'quick-start' | 'core-features' | 'api-classes' | 'production-apis']: boolean;
+    [key: string]: boolean;
   };
   
   const [expandedSections, setExpandedSections] = useState<ExpandedSections>({
-      'quick-start': true,
-      'core-features': true,
-      'api-classes': true,
-      'production-apis': true
-    });
+    'quick-start': true,
+    'core-features': true,
+    'api-classes': true,
+    'production-apis': true
+  });
 
   const navigation: NavigationSection[] = [
     {
@@ -140,7 +140,7 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
       .filter(section => section.items.length > 0);
   }, [searchTerm]);
 
-  const toggleSection = (sectionId: keyof ExpandedSections) => {
+  const toggleSection = (sectionId: string) => {
     setExpandedSections(prev => ({
       ...prev,
       [sectionId]: !prev[sectionId]
@@ -165,10 +165,10 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
 
       {/* Navigation */}
       <nav className="p-4">
-        {filteredSections.map((section) => (
+        {(filteredSections.length > 0 ? filteredSections : navigation).map((section) => (
           <div key={section.id} className="mb-4">
             <button
-              onClick={() => toggleSection(section.id as keyof ExpandedSections)}
+              onClick={() => toggleSection(section.id)}
               className="flex items-center w-full text-left px-2 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors group"
             >
               <section.icon className="h-4 w-4 mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300" />
@@ -231,7 +231,7 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
           </div>
           <div className="flex items-center justify-between">
             <span>Last updated</span>
-            <span>Dec 2024</span>
+            <span>June 2025</span>
           </div>
         </div>
       </div>
