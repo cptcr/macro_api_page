@@ -1,4 +1,3 @@
-// src/components/common/Footer.tsx
 'use client';
 
 import React from 'react';
@@ -16,7 +15,11 @@ import {
   MessageSquare,
   Mail,
   Twitter,
-  Linkedin
+  Linkedin,
+  Star,
+  Users,
+  Globe,
+  Shield
 } from 'lucide-react';
 
 const Footer: React.FC = () => {
@@ -69,189 +72,204 @@ const Footer: React.FC = () => {
   ];
 
   const supportedApis = [
-    'OpenAI', 'Spotify', 'Stripe', 'GitHub', 'Slack', 'Vercel'
+    'OpenAI', 'Spotify', 'Stripe', 'GitHub', 'Slack', 'Vercel', 'PayPal', 'Notion'
   ];
   
   return (
-    <footer className="relative bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-32 w-96 h-96 bg-gradient-to-r from-blue-400 to-purple-600 rounded-full opacity-5 blur-3xl" />
-        <div className="absolute -bottom-40 -left-32 w-96 h-96 bg-gradient-to-r from-purple-400 to-pink-600 rounded-full opacity-5 blur-3xl" />
+    <footer className="relative overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-950 dark:via-blue-950/30 dark:to-purple-950/20" />
+        
+        {/* Animated background elements */}
+        <div className="absolute -top-20 -right-16 sm:-top-40 sm:-right-32 w-48 h-48 sm:w-96 sm:h-96 bg-gradient-to-r from-blue-400 to-purple-600 rounded-full opacity-10 blur-3xl animate-float" />
+        <div className="absolute -bottom-20 -left-16 sm:-bottom-40 sm:-left-32 w-48 h-48 sm:w-96 sm:h-96 bg-gradient-to-r from-purple-400 to-pink-600 rounded-full opacity-10 blur-3xl animate-float" style={{ animationDelay: '-3s' }} />
       </div>
 
       <div className="relative z-10">
         {/* Main footer content */}
-        <div className="container mx-auto px-4 md:px-6 max-w-7xl">
-          <div className="py-16">
-            {/* Top section */}
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 mb-12">
-              {/* Brand section */}
-              <div className="lg:col-span-2">
-                <Link href="/" className="flex items-center group mb-6">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg opacity-0 group-hover:opacity-20 blur transition-opacity duration-300" />
-                    <div className="relative bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
-                      <Database className="h-6 w-6 text-white" />
-                    </div>
-                  </div>
-                  <span className="ml-3 text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
-                    macro_api
-                  </span>
-                </Link>
-                
-                <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed max-w-md">
-                  The most comprehensive TypeScript/JavaScript library for API integrations. 
-                  Simplify your development workflow with our unified interface.
+        <div className="container-responsive py-12 sm:py-16 lg:py-20">
+          {/* Newsletter Section */}
+          <div className="text-center mb-12 sm:mb-16">
+            <div className="glass-card p-6 sm:p-8 lg:p-12 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-purple-600/10 rounded-3xl" />
+              <div className="relative z-10">
+                <div className="flex items-center justify-center mb-4">
+                  <MessageSquare className="h-6 w-6 text-primary mr-2 animate-pulse" />
+                  <span className="text-sm font-medium text-primary uppercase tracking-wide">Stay Connected</span>
+                </div>
+                <h3 className="text-responsive-md font-bold mb-4 text-gradient">
+                  Stay Updated with macro_api
+                </h3>
+                <p className="text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto text-sm sm:text-base">
+                  Get notified about new API integrations, features, and updates. Join our community of developers.
                 </p>
-
-                {/* Quick stats */}
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-                    <div className="flex items-center mb-2">
-                      <Zap className="h-4 w-4 text-blue-600 dark:text-blue-400 mr-2" />
-                      <span className="text-sm font-medium text-gray-900 dark:text-gray-100">APIs</span>
-                    </div>
-                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">10+</div>
-                  </div>
-                  <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-                    <div className="flex items-center mb-2">
-                      <Github className="h-4 w-4 text-blue-600 dark:text-blue-400 mr-2" />
-                      <span className="text-sm font-medium text-gray-900 dark:text-gray-100">Stars</span>
-                    </div>
-                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">1.2k+</div>
-                  </div>
+                <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    className="input-glass flex-1 text-sm sm:text-base"
+                  />
+                  <button className="btn btn-primary px-6 py-3 text-sm sm:text-base whitespace-nowrap">
+                    Subscribe
+                  </button>
                 </div>
-
-                {/* Social links */}
-                <div className="flex space-x-4">
-                  {socialLinks.map((social) => (
-                    <a
-                      key={social.label}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center w-10 h-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200"
-                      aria-label={social.label}
-                    >
-                      <social.icon className="h-5 w-5" />
-                    </a>
-                  ))}
-                </div>
-              </div>
-
-              {/* Navigation sections */}
-              <div className="lg:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-8">
-                {footerSections.map((section) => (
-                  <div key={section.title}>
-                    <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wide mb-4">
-                      {section.title}
-                    </h3>
-                    <ul className="space-y-3">
-                      {section.links.map((link) => (
-                        <li key={link.href}>
-                          {link.external ? (
-                            <a
-                              href={link.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 group"
-                            >
-                              <span>{link.label}</span>
-                              <ExternalLink className="h-3 w-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                            </a>
-                          ) : (
-                            <Link
-                              href={link.href}
-                              className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
-                            >
-                              {link.label}
-                            </Link>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Supported APIs showcase */}
-            <div className="mb-12">
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wide mb-4 text-center">
-                Supported APIs
-              </h3>
-              <div className="flex flex-wrap justify-center gap-3">
-                {supportedApis.map((api) => (
-                  <div
-                    key={api}
-                    className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-sm text-gray-600 dark:text-gray-400"
-                  >
-                    {api}
-                  </div>
-                ))}
-                <div className="px-3 py-1.5 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-800 rounded-full text-sm text-blue-800 dark:text-blue-300 font-medium">
-                  +4 more
-                </div>
-              </div>
-            </div>
-
-            {/* Newsletter signup */}
-            <div className="mb-12">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-center text-white relative overflow-hidden">
-                <div className="absolute inset-0 bg-grid-pattern opacity-10" />
-                <div className="relative z-10">
-                  <h3 className="text-2xl font-bold mb-2">Stay Updated</h3>
-                  <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
-                    Get notified about new API integrations, features, and updates.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                    <input
-                      type="email"
-                      placeholder="Enter your email"
-                      className="flex-1 px-4 py-3 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50"
-                    />
-                    <button className="px-6 py-3 bg-white text-blue-600 rounded-lg font-medium hover:bg-blue-50 transition-colors duration-200 whitespace-nowrap">
-                      Subscribe
-                    </button>
-                  </div>
-                  <p className="text-xs text-blue-200 mt-3">
-                    No spam, unsubscribe at any time.
-                  </p>
-                </div>
+                <p className="text-xs text-muted-foreground mt-3">
+                  No spam, unsubscribe at any time.
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Bottom section */}
-          <div className="py-6 border-t border-gray-200 dark:border-gray-800">
+          {/* Top section */}
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 sm:gap-12 mb-12 sm:mb-16">
+            {/* Brand section */}
+            <div className="lg:col-span-2">
+              <Link href="/" className="flex items-center group mb-6">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl opacity-0 group-hover:opacity-20 blur transition-opacity duration-300" />
+                  <div className="relative bg-gradient-to-r from-blue-600 to-purple-600 p-3 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
+                    <Database className="h-6 w-6 text-white" />
+                  </div>
+                </div>
+                <div className="ml-3">
+                  <span className="text-2xl font-bold text-gradient block">
+                    macro_api
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    API Integration Library
+                  </span>
+                </div>
+              </Link>
+              
+              <p className="text-muted-foreground mb-6 leading-relaxed max-w-md text-sm sm:text-base">
+                The most comprehensive TypeScript/JavaScript library for API integrations. 
+                Simplify your development workflow with our unified interface.
+              </p>
+
+              {/* Quick stats */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="glass-card p-4 text-center hover:scale-105 transition-all duration-300">
+                  <div className="flex items-center justify-center mb-2">
+                    <Zap className="h-4 w-4 text-primary mr-2" />
+                    <span className="text-sm font-medium text-foreground">APIs</span>
+                  </div>
+                  <div className="text-xl sm:text-2xl font-bold text-foreground">10+</div>
+                </div>
+                <div className="glass-card p-4 text-center hover:scale-105 transition-all duration-300">
+                  <div className="flex items-center justify-center mb-2">
+                    <Star className="h-4 w-4 text-primary mr-2" />
+                    <span className="text-sm font-medium text-foreground">Stars</span>
+                  </div>
+                  <div className="text-xl sm:text-2xl font-bold text-foreground">1.2k+</div>
+                </div>
+              </div>
+
+              {/* Social links */}
+              <div className="flex space-x-3">
+                {socialLinks.map((social) => (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="glass-nav p-2.5 hover:scale-110 transition-all duration-300 group"
+                    aria-label={social.label}
+                  >
+                    <social.icon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Navigation sections */}
+            <div className="lg:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+              {footerSections.map((section, index) => (
+                <div key={section.title} style={{ animationDelay: `${index * 0.1}s` }}>
+                  <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-4">
+                    {section.title}
+                  </h3>
+                  <ul className="space-y-3">
+                    {section.links.map((link) => (
+                      <li key={link.href}>
+                        {link.external ? (
+                          <a
+                            href={link.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center text-muted-foreground hover:text-primary transition-colors duration-300 group text-sm"
+                          >
+                            <span>{link.label}</span>
+                            <ExternalLink className="h-3 w-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                          </a>
+                        ) : (
+                          <Link
+                            href={link.href}
+                            className="text-muted-foreground hover:text-primary transition-colors duration-300 text-sm"
+                          >
+                            {link.label}
+                          </Link>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Supported APIs showcase */}
+          <div className="mb-12 sm:mb-16">
+            <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-6 text-center">
+              Supported APIs
+            </h3>
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+              {supportedApis.map((api, index) => (
+                <div
+                  key={api}
+                  className="glass px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm text-muted-foreground hover:text-primary hover:scale-105 transition-all duration-300"
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                >
+                  {api}
+                </div>
+              ))}
+              <div className="glass px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm text-primary font-medium border border-primary/20 hover:scale-105 transition-all duration-300">
+                +2 more
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom section */}
+        <div className="border-t border-white/20 dark:border-white/10">
+          <div className="container-responsive py-6 sm:py-8">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-              <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
+              <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 text-sm text-muted-foreground">
                 <span>© {currentYear} macro_api. All rights reserved.</span>
-                <span className="hidden md:inline">•</span>
+                <span className="hidden sm:inline">•</span>
                 <div className="flex items-center">
                   <span>Made with</span>
-                  <Heart className="h-4 w-4 mx-1 text-red-500 fill-current" />
+                  <Heart className="h-4 w-4 mx-1 text-red-500 fill-current animate-pulse" />
                   <span>by developers, for developers</span>
                 </div>
               </div>
               
-              <div className="flex items-center space-x-6 text-sm">
+              <div className="flex flex-wrap justify-center items-center space-x-4 sm:space-x-6 text-sm">
                 <Link 
                   href="https://github.com/cptcr/macro_api/blob/main/PRIVACY.md"
-                  className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-300"
                 >
                   Privacy Policy
                 </Link>
                 <Link 
                   href="https://github.com/cptcr/macro_api/blob/main/TERMS.md"
-                  className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-300"
                 >
                   Terms of Service
                 </Link>
-                <div className="flex items-center text-gray-500 dark:text-gray-400">
-                  <Code className="h-4 w-4 mr-1" />
-                  <span>Apache 2.0 License</span>
+                <div className="flex items-center text-muted-foreground">
+                  <Shield className="h-4 w-4 mr-1" />
+                  <span>MIT License</span>
                 </div>
               </div>
             </div>
