@@ -32,7 +32,8 @@ import {
   Search,
   Wrench,
   Zap,
-  RefreshCw
+  RefreshCw,
+  Sparkles
 } from 'lucide-react';
 
 interface NavigationItem {
@@ -163,9 +164,20 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
   };
 
   return (
-    <div className="w-80 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 h-full overflow-y-auto">
-      {/* Search */}
-      <div className="p-4 border-b border-gray-200 dark:border-gray-800 sticky top-0 bg-white dark:bg-gray-900 z-10">
+    <div className="w-80 h-screen overflow-hidden flex flex-col bg-gradient-to-b from-white/50 to-white/30 dark:from-gray-900/50 dark:to-gray-900/30 backdrop-glass">
+      {/* Enhanced Header with gradient */}
+      <div className="p-6 border-b border-white/20 dark:border-white/10 bg-gradient-to-r from-blue-500/10 to-purple-500/10">
+        <div className="flex items-center space-x-3 mb-4">
+          <div className="p-2 glass rounded-xl">
+            <BookOpen className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-gradient">Documentation</h2>
+            <p className="text-xs text-gray-600 dark:text-gray-400">Complete API Reference</p>
+          </div>
+        </div>
+        
+        {/* Enhanced Search with glassmorphism */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           <input
@@ -173,46 +185,61 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
             placeholder="Search documentation..."
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+            className="w-full pl-10 pr-4 py-3 text-sm input-glass placeholder:text-gray-500 dark:placeholder:text-gray-400 
+                     focus:ring-2 focus:ring-blue-500/50 focus:border-transparent"
           />
+          {searchTerm && (
+            <button
+              onClick={() => onSearchChange('')}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            >
+              ×
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Navigation */}
-      <nav className="p-4">
+      {/* Enhanced Navigation */}
+      <nav className="flex-1 overflow-y-auto scrollbar-modern p-4 space-y-2">
         {(filteredSections.length > 0 ? filteredSections : navigation).map((section) => (
-          <div key={section.id} className="mb-4">
+          <div key={section.id} className="mb-2">
             <button
               onClick={() => toggleSection(section.id)}
-              className="flex items-center w-full text-left px-2 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors group"
+              className="flex items-center w-full text-left px-3 py-3 text-sm font-semibold 
+                       glass-button hover:bg-white/20 dark:hover:bg-white/10 rounded-xl 
+                       transition-all duration-300 group border border-white/20 dark:border-white/10"
             >
-              <section.icon className="h-4 w-4 mr-3 text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300" />
-              <span className="flex-1">{section.title}</span>
-              {expandedSections[section.id] ? (
-                <ChevronDown className="h-4 w-4 text-gray-400" />
-              ) : (
+              <section.icon className="h-5 w-5 mr-3 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform" />
+              <span className="flex-1 text-gray-900 dark:text-gray-100">{section.title}</span>
+              <div className={`transition-transform duration-300 ${expandedSections[section.id] ? 'rotate-90' : ''}`}>
                 <ChevronRight className="h-4 w-4 text-gray-400" />
-              )}
+              </div>
             </button>
             
             {expandedSections[section.id] && (
-              <div className="ml-7 mt-2 space-y-1">
+              <div className="ml-4 mt-2 space-y-1 animate-slide-up">
                 {section.items.map((item) => (
                   <button
                     key={item.id}
                     onClick={() => onSectionChange(item.id)}
-                    className={`flex items-center w-full text-left px-3 py-2 text-sm rounded-md transition-colors group ${
+                    className={`flex items-center w-full text-left px-4 py-3 text-sm rounded-xl 
+                              transition-all duration-300 group border ${
                       activeSection === item.id
-                        ? 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 font-medium'
-                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100'
+                        ? 'glass bg-gradient-to-r from-blue-500/20 to-purple-500/20 border-blue-500/30 dark:border-blue-400/30 text-blue-700 dark:text-blue-300 font-medium shadow-lg'
+                        : 'border-transparent hover:glass hover:bg-white/10 dark:hover:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
                     }`}
                   >
-                    <item.icon className={`h-4 w-4 mr-3 ${
+                    <item.icon className={`h-4 w-4 mr-3 transition-all duration-300 ${
                       activeSection === item.id
-                        ? 'text-primary-600 dark:text-primary-400'
-                        : 'text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300'
+                        ? 'text-blue-600 dark:text-blue-400 scale-110'
+                        : 'text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 group-hover:scale-105'
                     }`} />
                     <span className="truncate">{item.title}</span>
+                    {activeSection === item.id && (
+                      <div className="ml-auto">
+                        <Sparkles className="h-3 w-3 text-blue-500 animate-pulse" />
+                      </div>
+                    )}
                   </button>
                 ))}
               </div>
@@ -220,38 +247,61 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
           </div>
         ))}
 
-        {/* No results message */}
+        {/* Enhanced No results message */}
         {searchTerm && filteredSections.length === 0 && (
-          <div className="text-center py-8">
-            <Search className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              No documentation found for "{searchTerm}"
-            </p>
-            <button
-              onClick={() => onSearchChange('')}
-              className="text-sm text-primary-600 dark:text-primary-400 hover:underline mt-2"
-            >
-              Clear search
-            </button>
+          <div className="text-center py-12 animate-fade-in">
+            <div className="glass-card p-6 border border-white/20 dark:border-white/10">
+              <Search className="h-8 w-8 text-gray-400 mx-auto mb-3" />
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                No documentation found for "{searchTerm}"
+              </p>
+              <button
+                onClick={() => onSearchChange('')}
+                className="btn-secondary text-sm px-4 py-2"
+              >
+                Clear search
+              </button>
+            </div>
           </div>
         )}
       </nav>
 
-      {/* Footer info */}
-      <div className="border-t border-gray-200 dark:border-gray-800 p-4 mt-auto">
-        <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
+      {/* Enhanced Footer with version info and glassmorphism */}
+      <div className="border-t border-white/20 dark:border-white/10 p-4">
+        <div className="glass-card p-4 text-xs text-gray-500 dark:text-gray-400 space-y-2">
           <div className="flex items-center justify-between">
-            <span>Version</span>
-            <span className="font-mono">3.0.0</span>
+            <span className="font-medium">Version</span>
+            <span className="font-mono bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded-lg text-blue-700 dark:text-blue-300">3.0.0</span>
           </div>
           <div className="flex items-center justify-between">
-            <span>Last updated</span>
+            <span className="font-medium">Last updated</span>
             <span>June 2025</span>
           </div>
-          <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
-            <div className="text-xs text-primary-600 dark:text-primary-400">
-              📚 Core Infrastructure docs added
+          <div className="mt-3 pt-3 border-t border-white/20 dark:border-gray-700">
+            <div className="flex items-center space-x-2 text-blue-600 dark:text-blue-400">
+              <Sparkles className="h-3 w-3" />
+              <span className="text-xs font-medium">Core Infrastructure docs added</span>
             </div>
+          </div>
+          
+          {/* Quick actions with enhanced styling */}
+          <div className="flex space-x-2 mt-3">
+            <a
+              href="https://github.com/cptcr/macro_api"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 btn-ghost text-xs py-2 text-center rounded-lg hover:bg-blue-500/10"
+            >
+              GitHub
+            </a>
+            <a
+              href="https://github.com/cptcr/macro_api/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 btn-ghost text-xs py-2 text-center rounded-lg hover:bg-red-500/10"
+            >
+              Issues
+            </a>
           </div>
         </div>
       </div>

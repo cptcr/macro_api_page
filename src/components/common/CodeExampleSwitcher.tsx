@@ -1,10 +1,8 @@
+// src/components/common/CodeExampleSwitcher.tsx
 'use client';
 
 import React, { useState } from 'react';
-import { Copy, Check, Code } from 'lucide-react';
-import { useTheme } from '@/context/ThemeContext';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus, vs } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Copy, Check, Code, FileCode, Download, ExternalLink, Play } from 'lucide-react';
 
 interface CodeExampleSwitcherProps {
   typescript: string;
@@ -12,127 +10,185 @@ interface CodeExampleSwitcherProps {
   esm?: string;
   title?: string;
   description?: string;
+  showCopy?: boolean;
+  showTitle?: boolean;
+  className?: string;
 }
-
-type CodeLanguage = 'typescript' | 'javascript' | 'esm';
 
 const CodeExampleSwitcher: React.FC<CodeExampleSwitcherProps> = ({
   typescript,
   javascript,
   esm,
   title,
-  description
+  description,
+  showCopy = true,
+  showTitle = true,
+  className = ''
 }) => {
-  const [activeTab, setActiveTab] = useState<CodeLanguage>('typescript');
+  const [activeTab, setActiveTab] = useState<'typescript' | 'javascript' | 'esm'>('typescript');
   const [copied, setCopied] = useState(false);
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === 'dark';
 
-  const handleCopy = async () => {
-    const codeToCopy = activeTab === 'typescript' 
-      ? typescript 
-      : activeTab === 'javascript' 
-        ? javascript 
-        : esm || '';
-    
-    await navigator.clipboard.writeText(codeToCopy);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const getActiveCode = () => {
+  const getCode = () => {
     switch (activeTab) {
       case 'typescript':
         return typescript;
       case 'javascript':
         return javascript;
       case 'esm':
-        return esm || '';
+        return esm || typescript;
       default:
         return typescript;
     }
   };
 
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(getCode());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
+
+  const tabs = [
+    { id: 'typescript' as const, label: 'TypeScript', icon: FileCode, available: !!typescript },
+    { id: 'javascript' as const, label: 'JavaScript', icon: Code, available: !!javascript },
+    ...(esm ? [{ id: 'esm' as const, label: 'ESM', icon: Download, available: true }] : [])
+  ];
+
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 mb-8">
-      {(title || description) && (
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-          {title && <h3 className="text-xl font-semibold mb-2">{title}</h3>}
-          {description && <p className="text-gray-600 dark:text-gray-300">{description}</p>}
+    <div className={`w-full my-6 ${className}`}>
+      {/* Enhanced Header */}
+      {(showTitle && title) && (
+        <div className="mb-4">
+          <div className="flex items-center space-x-3 mb-2">
+            <div className="p-2 glass rounded-lg">
+              <Code className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              {title}
+            </h3>
+          </div>
+          {description && (
+            <p className="text-sm text-gray-600 dark:text-gray-400 ml-11">
+              {description}
+            </p>
+          )}
         </div>
       )}
-      
-      <div className="flex border-b border-gray-200 dark:border-gray-700">
-        <button 
-          className={`py-3 px-6 font-medium transition-colors ${
-            activeTab === 'typescript' 
-              ? 'bg-primary-600 text-white dark:bg-primary-500' 
-              : 'hover:bg-gray-100 dark:hover:bg-gray-700'
-          }`}
-          onClick={() => setActiveTab('typescript')}
-        >
-          TypeScript
-        </button>
-        <button 
-          className={`py-3 px-6 font-medium transition-colors ${
-            activeTab === 'javascript' 
-              ? 'bg-primary-600 text-white dark:bg-primary-500' 
-              : 'hover:bg-gray-100 dark:hover:bg-gray-700'
-          }`}
-          onClick={() => setActiveTab('javascript')}
-        >
-          JavaScript
-        </button>
-        {esm && (
-          <button 
-            className={`py-3 px-6 font-medium transition-colors ${
-              activeTab === 'esm' 
-                ? 'bg-primary-600 text-white dark:bg-primary-500' 
-                : 'hover:bg-gray-100 dark:hover:bg-gray-700'
-            }`}
-            onClick={() => setActiveTab('esm')}
-          >
-            ES Modules
-          </button>
-        )}
-        
-        <div className="ml-auto flex items-center mr-4">
-          <button
-            onClick={handleCopy}
-            className="flex items-center text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none p-1 rounded"
-            aria-label="Copy code"
-          >
-            {copied ? (
-              <>
-                <Check className="h-4 w-4 mr-1" />
-                <span>Copied!</span>
-              </>
-            ) : (
-              <>
-                <Copy className="h-4 w-4 mr-1" />
-                <span>Copy</span>
-              </>
-            )}
-          </button>
+
+      {/* Enhanced Code Block Container */}
+      <div className="glass-card border border-white/20 dark:border-white/10 overflow-hidden shadow-xl">
+        {/* Enhanced Tab Header */}
+        <div className="bg-gradient-to-r from-gray-50/50 to-gray-100/50 dark:from-gray-800/50 dark:to-gray-900/50 border-b border-white/20 dark:border-white/10 px-4 py-3">
+          <div className="flex items-center justify-between">
+            {/* Language Tabs */}
+            <div className="flex space-x-1">
+              {tabs.filter(tab => tab.available).map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
+                    activeTab === tab.id
+                      ? 'glass bg-white/20 dark:bg-white/10 text-blue-700 dark:text-blue-300 border border-blue-500/30 dark:border-blue-400/30 shadow-lg'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-white/10 dark:hover:bg-white/5'
+                  }`}
+                >
+                  <tab.icon className="h-4 w-4" />
+                  <span>{tab.label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center space-x-2">
+              {/* Run Button (Visual only) */}
+              <button className="btn-ghost p-2 rounded-lg hover:bg-green-500/10 group">
+                <Play className="h-4 w-4 text-gray-500 group-hover:text-green-600 dark:group-hover:text-green-400" />
+              </button>
+
+              {/* Copy Button */}
+              {showCopy && (
+                <button
+                  onClick={copyToClipboard}
+                  className={`btn-ghost p-2 rounded-lg transition-all duration-300 ${
+                    copied
+                      ? 'bg-green-500/10 text-green-600 dark:text-green-400'
+                      : 'hover:bg-blue-500/10 text-gray-500 hover:text-blue-600 dark:hover:text-blue-400'
+                  }`}
+                  title={copied ? 'Copied!' : 'Copy code'}
+                >
+                  {copied ? (
+                    <Check className="h-4 w-4" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </button>
+              )}
+
+              {/* External Link Button */}
+              <button className="btn-ghost p-2 rounded-lg hover:bg-purple-500/10 group">
+                <ExternalLink className="h-4 w-4 text-gray-500 group-hover:text-purple-600 dark:group-hover:text-purple-400" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Enhanced Code Content */}
+        <div className="relative">
+          {/* Code Block */}
+          <pre className="overflow-x-auto p-6 text-sm leading-relaxed scrollbar-modern bg-gradient-to-br from-gray-50/30 to-white/30 dark:from-gray-900/30 dark:to-gray-800/30">
+            <code className={`language-${activeTab === 'esm' ? 'javascript' : activeTab} text-gray-800 dark:text-gray-200`}>
+              {getCode()}
+            </code>
+          </pre>
+
+          {/* Language Badge */}
+          <div className="absolute top-4 right-4">
+            <span className="glass px-3 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 rounded-full border border-white/20 dark:border-white/10">
+              {tabs.find(tab => tab.id === activeTab)?.label || 'Code'}
+            </span>
+          </div>
+
+          {/* Copy Success Overlay */}
+          {copied && (
+            <div className="absolute inset-0 bg-green-500/10 flex items-center justify-center rounded-lg animate-fade-in">
+              <div className="glass-card px-4 py-2 border border-green-500/30">
+                <div className="flex items-center space-x-2 text-green-700 dark:text-green-300">
+                  <Check className="h-4 w-4" />
+                  <span className="text-sm font-medium">Copied to clipboard!</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Enhanced Footer with Syntax Info */}
+        <div className="bg-gradient-to-r from-gray-50/30 to-gray-100/30 dark:from-gray-800/30 dark:to-gray-900/30 border-t border-white/20 dark:border-white/10 px-4 py-2">
+          <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+            <span className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span>Syntax highlighted</span>
+            </span>
+            <span className="font-mono">
+              {getCode().split('\n').length} lines
+            </span>
+          </div>
         </div>
       </div>
-      
-      <div className="relative">
-        <SyntaxHighlighter
-          language={activeTab === 'esm' ? 'javascript' : activeTab}
-          style={isDark ? vscDarkPlus : vs}
-          showLineNumbers={true}
-          customStyle={{
-            margin: 0,
-            padding: '1.5rem',
-            fontSize: '0.875rem',
-            lineHeight: 1.5,
-            borderRadius: 0,
-          }}
-        >
-          {getActiveCode()}
-        </SyntaxHighlighter>
-      </div>
+
+      {/* Enhanced Copy Notification */}
+      {copied && (
+        <div className="fixed top-4 right-4 z-50 animate-slide-up">
+          <div className="glass-card px-4 py-3 border border-green-500/30 shadow-2xl">
+            <div className="flex items-center space-x-2 text-green-700 dark:text-green-300">
+              <Check className="h-4 w-4" />
+              <span className="text-sm font-medium">Code copied successfully!</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

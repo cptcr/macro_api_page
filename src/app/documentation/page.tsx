@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Navbar from '@/components/common/Navbar';
+import Footer from '@/components/common/Footer';
 import DocsSidebar from '@/components/documentation/DocsSidebar';
 import TableOfContents from '@/components/documentation/TableOfContents';
 import { useReadingProgress } from '@/components/documentation/TableOfContents';
@@ -112,32 +114,62 @@ const DocumentationPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="flex h-screen">
-        {/* Sidebar */}
-        <DocsSidebar
-          activeSection={activeSection}
-          onSectionChange={handleSectionChange}
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-        />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-blue-950">
+      {/* Enhanced Navbar with backdrop blur */}
+      <div className="sticky top-0 z-50 backdrop-glass border-b border-white/20 dark:border-white/10">
+        <Navbar />
+      </div>
+
+      <div className="flex min-h-screen">
+        {/* Enhanced Sidebar with glassmorphism */}
+        <div className="glass border-r border-white/20 dark:border-white/10 backdrop-glass-strong">
+          <DocsSidebar
+            activeSection={activeSection}
+            onSectionChange={handleSectionChange}
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+          />
+        </div>
         
-        {/* Main Content */}
+        {/* Main Content Area with enhanced styling */}
         <div className="flex-1 flex overflow-hidden">
-          {/* Documentation Content */}
+          {/* Documentation Content with glassmorphism background */}
           <main 
             id="documentation-content"
-            className="flex-1 overflow-y-auto"
+            className="flex-1 overflow-y-auto scrollbar-modern"
             data-content-area
           >
-            <div className="max-w-4xl mx-auto px-8 py-12">
-              {getDocumentationComponent()}
+            <div className="relative">
+              {/* Content container with enhanced padding and max-width */}
+              <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+                {/* Background decorative elements */}
+                <div className="absolute inset-0 -z-10 overflow-hidden">
+                  <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-float"></div>
+                  <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
+                </div>
+
+                {/* Enhanced content wrapper */}
+                <div className="relative z-10">
+                  <div className="glass-card border border-white/20 dark:border-white/10 shadow-2xl">
+                    {getDocumentationComponent()}
+                  </div>
+                </div>
+              </div>
             </div>
           </main>
           
-          {/* Table of Contents */}
-          <TableOfContents activeSection={activeSection} />
+          {/* Enhanced Table of Contents */}
+          <div className="hidden xl:block sticky top-0 h-screen">
+            <div className="glass-nav border-l border-white/20 dark:border-white/10 backdrop-glass h-full">
+              <TableOfContents activeSection={activeSection} />
+            </div>
+          </div>
         </div>
+      </div>
+
+      {/* Enhanced Footer with glassmorphism */}
+      <div className="glass border-t border-white/20 dark:border-white/10 backdrop-glass-strong">
+        <Footer />
       </div>
     </div>
   );
