@@ -1,1494 +1,515 @@
-import React from 'react';
-import CodeExampleSwitcher from '@/components/common/CodeExampleSwitcher';
-import InfoBox from '@/components/common/InfoBox';
-import { ExternalLink, Key, Shield, AlertCircle, CheckCircle, Zap, Database, Users, FileText, Calendar } from 'lucide-react';
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Copy, Music, Play, Search, User, Album, Heart, List, CheckCircle, ExternalLink, Code, Download, Sparkles, ArrowRight, Key, Shield, FileText, Database, Users } from 'lucide-react';
 
 const NotionDocs: React.FC = () => {
-  return (
-    <div className="prose prose-gray dark:prose-invert max-w-none">
-      {/* Header */}
-      <div className="not-prose mb-8">
-        <div className="flex items-center mb-4">
-          <div className="mr-4 text-gray-800 dark:text-gray-200">
-            <FileText className="h-10 w-10" />
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+
+  const copyToClipboard = (code: string, id: string) => {
+    navigator.clipboard.writeText(code);
+    setCopiedCode(id);
+    setTimeout(() => setCopiedCode(null), 2000);
+  };
+
+  const CodeBlock = ({ code, language = 'typescript', id }: { code: string; language?: string; id: string }) => (
+    <div className="relative glass-card">
+      <div className="flex items-center justify-between p-4 border-b border-white/10">
+        <div className="flex items-center space-x-3">
+          <div className="flex space-x-1">
+            <div className="w-3 h-3 bg-red-400 rounded-full" />
+            <div className="w-3 h-3 bg-yellow-400 rounded-full" />
+            <div className="w-3 h-3 bg-green-400 rounded-full" />
           </div>
-          <div>
-            <h1 className="text-4xl font-bold mb-2">Notion API</h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300">
-              Complete workspace and database management with the Notion API
-            </p>
-          </div>
+          <span className="text-sm font-medium text-muted-foreground">{language}</span>
         </div>
-        
-        <div className="flex flex-wrap gap-2 mb-6">
-          <span className="px-3 py-1 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 rounded-full text-sm">
-            Database Operations
-          </span>
-          <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm">
-            Page Management
-          </span>
-          <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full text-sm">
-            Block Editing
-          </span>
-          <span className="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm">
-            User Management
-          </span>
-        </div>
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-8 w-8 p-0 glass-button"
+          onClick={() => copyToClipboard(code, id)}
+        >
+          <Copy className="h-3 w-3" />
+        </Button>
       </div>
-
-      ## Overview
-
-      The Notion API wrapper provides comprehensive access to Notion's workspace functionality. Create and manage databases, pages, blocks, and user permissions programmatically with full TypeScript support.
-
-      ### Key Features
-
-      <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <Database className="h-6 w-6 text-blue-600 mb-2" />
-          <h3 className="font-semibold mb-1">Database Operations</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Create, query, and manage Notion databases</p>
+      <pre className="bg-gray-900 text-gray-100 p-4 rounded-b-lg overflow-x-auto text-sm scrollbar-modern">
+        <code className={`language-${language}`}>{code}</code>
+      </pre>
+      {copiedCode === id && (
+        <div className="absolute top-2 right-12 glass px-2 py-1 rounded text-xs text-green-500 border border-green-500/20">
+          Copied!
         </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <FileText className="h-6 w-6 text-green-600 mb-2" />
-          <h3 className="font-semibold mb-1">Page Management</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Create, update, and organize pages</p>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <Zap className="h-6 w-6 text-purple-600 mb-2" />
-          <h3 className="font-semibold mb-1">Block Editing</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Manipulate page content with blocks</p>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <Users className="h-6 w-6 text-orange-600 mb-2" />
-          <h3 className="font-semibold mb-1">User Management</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Manage workspace users and permissions</p>
-        </div>
-      </div>
-
-      ## Installation
-
-      <CodeExampleSwitcher
-        typescript="npm install macro_api"
-        javascript="npm install macro_api"
-        title="Install the package"
-      />
-
-      ## Quick Start
-
-      <CodeExampleSwitcher
-        typescript={`import { NotionAPI } from 'macro_api';
-
-// Initialize the client
-const notion = new NotionAPI({
-  apiKey: process.env.NOTION_API_KEY
-});
-
-// Create a new page
-async function createPage() {
-  try {
-    const page = await notion.createPage({
-      parent: {
-        database_id: 'your-database-id'
-      },
-      properties: {
-        Name: {
-          title: [
-            {
-              text: {
-                content: 'My New Page'
-              }
-            }
-          ]
-        }
-      }
-    });
-    console.log('Page created:', page.id);
-  } catch (error) {
-    console.error('Error:', error);
-  }
-}`}
-        javascript={`const { NotionAPI } = require('macro_api');
-
-// Initialize the client
-const notion = new NotionAPI({
-  apiKey: process.env.NOTION_API_KEY
-});
-
-// Create a new page
-async function createPage() {
-  try {
-    const page = await notion.createPage({
-      parent: {
-        database_id: 'your-database-id'
-      },
-      properties: {
-        Name: {
-          title: [
-            {
-              text: {
-                content: 'My New Page'
-              }
-            }
-          ]
-        }
-      }
-    });
-    console.log('Page created:', page.id);
-  } catch (error) {
-    console.error('Error:', error);
-  }
-}`}
-        title="Basic usage example"
-      />
-
-      ## Authentication
-
-      <InfoBox type="info" title="API Key Required">
-        You need a Notion integration and API key to use the Notion API service.
-      </InfoBox>
-
-      ### Getting Your Notion API Key
-
-      1. Go to [My Integrations](https://www.notion.so/my-integrations) in your Notion workspace
-      2. Click "Create new integration"
-      3. Fill in the integration details (name, logo, etc.)
-      4. Select the capabilities your integration needs
-      5. Choose the content capabilities (Read content, Update content, Insert content)
-      6. Submit and copy your Internal Integration Token
-      7. Share your database or pages with your integration
-
-      <CodeExampleSwitcher
-        typescript={`// .env file
-NOTION_API_KEY=secret_your_notion_integration_token_here
-
-// In your application
-import { NotionAPI } from 'macro_api';
-
-const notion = new NotionAPI({
-  apiKey: process.env.NOTION_API_KEY
-});`}
-        javascript={`// .env file
-NOTION_API_KEY=secret_your_notion_integration_token_here
-
-// In your application
-const { NotionAPI } = require('macro_api');
-
-const notion = new NotionAPI({
-  apiKey: process.env.NOTION_API_KEY
-});`}
-        title="Environment setup"
-      />
-
-      <InfoBox type="security" title="Integration Permissions">
-        Remember to share your databases and pages with your integration. Without proper sharing, your integration won't be able to access the content.
-      </InfoBox>
-
-      ## Configuration
-
-      ### Constructor Options
-
-      <div className="not-prose overflow-x-auto my-6">
-        <table className="w-full text-sm border-collapse border border-gray-300 dark:border-gray-600">
-          <thead>
-            <tr className="bg-gray-50 dark:bg-gray-800">
-              <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Property</th>
-              <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Type</th>
-              <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Required</th>
-              <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2 font-mono">apiKey</td>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">string</td>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">✅ Yes</td>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">Your Notion integration token</td>
-            </tr>
-            <tr>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2 font-mono">version</td>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">string</td>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">❌ No</td>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">API version (defaults to 2022-06-28)</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      ## Core Methods
-
-      ### Database Operations
-
-      <CodeExampleSwitcher
-        typescript={`// Get database information
-async function getDatabase(databaseId: string) {
-  const database = await notion.getDatabase(databaseId);
-  console.log('Database:', database.title);
-  console.log('Properties:', Object.keys(database.properties));
-  return database;
-}
-
-// Query database entries
-async function queryDatabase(databaseId: string) {
-  const response = await notion.queryDatabase(databaseId, {
-    filter: {
-      property: 'Status',
-      select: {
-        equals: 'Done'
-      }
-    },
-    sorts: [
-      {
-        property: 'Created',
-        direction: 'descending'
-      }
-    ],
-    page_size: 50
-  });
-  
-  console.log(\`Found \${response.results.length} entries\`);
-  return response.results;
-}
-
-// Create a new database
-async function createDatabase(parentPageId: string) {
-  const database = await notion.createDatabase({
-    parent: {
-      page_id: parentPageId
-    },
-    title: [
-      {
-        text: {
-          content: 'Task Database'
-        }
-      }
-    ],
-    properties: {
-      Name: {
-        title: {}
-      },
-      Status: {
-        select: {
-          options: [
-            { name: 'Not started', color: 'gray' },
-            { name: 'In progress', color: 'yellow' },
-            { name: 'Done', color: 'green' }
-          ]
-        }
-      },
-      Priority: {
-        select: {
-          options: [
-            { name: 'Low', color: 'green' },
-            { name: 'Medium', color: 'yellow' },
-            { name: 'High', color: 'red' }
-          ]
-        }
-      },
-      'Due Date': {
-        date: {}
-      },
-      Notes: {
-        rich_text: {}
-      }
-    }
-  });
-  
-  console.log('Database created:', database.id);
-  return database;
-}`}
-        javascript={`// Get database information
-async function getDatabase(databaseId) {
-  const database = await notion.getDatabase(databaseId);
-  console.log('Database:', database.title);
-  console.log('Properties:', Object.keys(database.properties));
-  return database;
-}
-
-// Query database entries
-async function queryDatabase(databaseId) {
-  const response = await notion.queryDatabase(databaseId, {
-    filter: {
-      property: 'Status',
-      select: {
-        equals: 'Done'
-      }
-    },
-    sorts: [
-      {
-        property: 'Created',
-        direction: 'descending'
-      }
-    ],
-    page_size: 50
-  });
-  
-  console.log(\`Found \${response.results.length} entries\`);
-  return response.results;
-}
-
-// Create a new database
-async function createDatabase(parentPageId) {
-  const database = await notion.createDatabase({
-    parent: {
-      page_id: parentPageId
-    },
-    title: [
-      {
-        text: {
-          content: 'Task Database'
-        }
-      }
-    ],
-    properties: {
-      Name: {
-        title: {}
-      },
-      Status: {
-        select: {
-          options: [
-            { name: 'Not started', color: 'gray' },
-            { name: 'In progress', color: 'yellow' },
-            { name: 'Done', color: 'green' }
-          ]
-        }
-      },
-      Priority: {
-        select: {
-          options: [
-            { name: 'Low', color: 'green' },
-            { name: 'Medium', color: 'yellow' },
-            { name: 'High', color: 'red' }
-          ]
-        }
-      },
-      'Due Date': {
-        date: {}
-      },
-      Notes: {
-        rich_text: {}
-      }
-    }
-  });
-  
-  console.log('Database created:', database.id);
-  return database;
-}`}
-        title="Database operations"
-      />
-
-      ### Page Management
-
-      <CodeExampleSwitcher
-        typescript={`// Get page information
-async function getPage(pageId: string) {
-  const page = await notion.getPage(pageId);
-  console.log('Page title:', page.properties?.Name?.title?.[0]?.text?.content);
-  return page;
-}
-
-// Create a new page in a database
-async function createDatabasePage(databaseId: string) {
-  const page = await notion.createPage({
-    parent: {
-      database_id: databaseId
-    },
-    properties: {
-      Name: {
-        title: [
-          {
-            text: {
-              content: 'Complete project documentation'
-            }
-          }
-        ]
-      },
-      Status: {
-        select: {
-          name: 'In progress'
-        }
-      },
-      Priority: {
-        select: {
-          name: 'High'
-        }
-      },
-      'Due Date': {
-        date: {
-          start: '2024-12-31'
-        }
-      },
-      Notes: {
-        rich_text: [
-          {
-            text: {
-              content: 'This task involves writing comprehensive documentation for the new project features.'
-            }
-          }
-        ]
-      }
-    }
-  });
-  
-  console.log('Page created:', page.id);
-  return page;
-}
-
-// Create a standalone page
-async function createStandalonePage(parentPageId: string) {
-  const page = await notion.createPage({
-    parent: {
-      page_id: parentPageId
-    },
-    properties: {
-      title: [
-        {
-          text: {
-            content: 'Meeting Notes - Project Kickoff'
-          }
-        }
-      ]
-    }
-  });
-  
-  console.log('Standalone page created:', page.id);
-  return page;
-}
-
-// Update page properties
-async function updatePage(pageId: string) {
-  const updatedPage = await notion.updatePage(pageId, {
-    properties: {
-      Status: {
-        select: {
-          name: 'Done'
-        }
-      },
-      Notes: {
-        rich_text: [
-          {
-            text: {
-              content: 'Task completed successfully. All documentation has been updated.'
-            }
-          }
-        ]
-      }
-    }
-  });
-  
-  console.log('Page updated:', updatedPage.id);
-  return updatedPage;
-}`}
-        javascript={`// Get page information
-async function getPage(pageId) {
-  const page = await notion.getPage(pageId);
-  console.log('Page title:', page.properties?.Name?.title?.[0]?.text?.content);
-  return page;
-}
-
-// Create a new page in a database
-async function createDatabasePage(databaseId) {
-  const page = await notion.createPage({
-    parent: {
-      database_id: databaseId
-    },
-    properties: {
-      Name: {
-        title: [
-          {
-            text: {
-              content: 'Complete project documentation'
-            }
-          }
-        ]
-      },
-      Status: {
-        select: {
-          name: 'In progress'
-        }
-      },
-      Priority: {
-        select: {
-          name: 'High'
-        }
-      },
-      'Due Date': {
-        date: {
-          start: '2024-12-31'
-        }
-      },
-      Notes: {
-        rich_text: [
-          {
-            text: {
-              content: 'This task involves writing comprehensive documentation.'
-            }
-          }
-        ]
-      }
-    }
-  });
-  
-  console.log('Page created:', page.id);
-  return page;
-}
-
-// Update page properties
-async function updatePage(pageId) {
-  const updatedPage = await notion.updatePage(pageId, {
-    properties: {
-      Status: {
-        select: {
-          name: 'Done'
-        }
-      }
-    }
-  });
-  
-  console.log('Page updated:', updatedPage.id);
-  return updatedPage;
-}`}
-        title="Page management"
-      />
-
-      ### Block Operations
-
-      <CodeExampleSwitcher
-        typescript={`// Get page blocks
-async function getPageBlocks(pageId: string) {
-  const blocks = await notion.getBlocks(pageId);
-  console.log(\`Found \${blocks.results.length} blocks\`);
-  
-  blocks.results.forEach((block, index) => {
-    console.log(\`Block \${index + 1}: \${block.type}\`);
-  });
-  
-  return blocks.results;
-}
-
-// Add content blocks to a page
-async function addContentBlocks(pageId: string) {
-  const blocks = await notion.appendBlocks(pageId, {
-    children: [
-      {
-        object: 'block',
-        type: 'heading_1',
-        heading_1: {
-          rich_text: [
-            {
-              type: 'text',
-              text: {
-                content: 'Project Overview'
-              }
-            }
-          ]
-        }
-      },
-      {
-        object: 'block',
-        type: 'paragraph',
-        paragraph: {
-          rich_text: [
-            {
-              type: 'text',
-              text: {
-                content: 'This document outlines the key objectives and deliverables for our upcoming project.'
-              }
-            }
-          ]
-        }
-      },
-      {
-        object: 'block',
-        type: 'bulleted_list_item',
-        bulleted_list_item: {
-          rich_text: [
-            {
-              type: 'text',
-              text: {
-                content: 'Complete requirements analysis'
-              }
-            }
-          ]
-        }
-      },
-      {
-        object: 'block',
-        type: 'bulleted_list_item',
-        bulleted_list_item: {
-          rich_text: [
-            {
-              type: 'text',
-              text: {
-                content: 'Develop prototype'
-              }
-            }
-          ]
-        }
-      },
-      {
-        object: 'block',
-        type: 'to_do',
-        to_do: {
-          rich_text: [
-            {
-              type: 'text',
-              text: {
-                content: 'Review and approve final design'
-              }
-            }
-          ],
-          checked: false
-        }
-      }
-    ]
-  });
-  
-  console.log(\`Added \${blocks.results.length} blocks\`);
-  return blocks;
-}
-
-// Update a specific block
-async function updateBlock(blockId: string) {
-  const updatedBlock = await notion.updateBlock(blockId, {
-    paragraph: {
-      rich_text: [
-        {
-          type: 'text',
-          text: {
-            content: 'This paragraph has been updated with new content.'
-          }
-        }
-      ]
-    }
-  });
-  
-  console.log('Block updated:', updatedBlock.id);
-  return updatedBlock;
-}
-
-// Delete a block
-async function deleteBlock(blockId: string) {
-  const deletedBlock = await notion.deleteBlock(blockId);
-  console.log('Block deleted:', deletedBlock.id);
-  return deletedBlock;
-}`}
-        javascript={`// Get page blocks
-async function getPageBlocks(pageId) {
-  const blocks = await notion.getBlocks(pageId);
-  console.log(\`Found \${blocks.results.length} blocks\`);
-  
-  blocks.results.forEach((block, index) => {
-    console.log(\`Block \${index + 1}: \${block.type}\`);
-  });
-  
-  return blocks.results;
-}
-
-// Add content blocks to a page
-async function addContentBlocks(pageId) {
-  const blocks = await notion.appendBlocks(pageId, {
-    children: [
-      {
-        object: 'block',
-        type: 'heading_1',
-        heading_1: {
-          rich_text: [
-            {
-              type: 'text',
-              text: {
-                content: 'Project Overview'
-              }
-            }
-          ]
-        }
-      },
-      {
-        object: 'block',
-        type: 'paragraph',
-        paragraph: {
-          rich_text: [
-            {
-              type: 'text',
-              text: {
-                content: 'This document outlines the key objectives.'
-              }
-            }
-          ]
-        }
-      },
-      {
-        object: 'block',
-        type: 'to_do',
-        to_do: {
-          rich_text: [
-            {
-              type: 'text',
-              text: {
-                content: 'Review and approve final design'
-              }
-            }
-          ],
-          checked: false
-        }
-      }
-    ]
-  });
-  
-  console.log(\`Added \${blocks.results.length} blocks\`);
-  return blocks;
-}`}
-        title="Block operations"
-      />
-
-      ### User Management
-
-      <CodeExampleSwitcher
-        typescript={`// Get current user (the integration)
-async function getCurrentUser() {
-  const user = await notion.getCurrentUser();
-  console.log('Current user:', user.name);
-  console.log('User type:', user.type);
-  return user;
-}
-
-// List all users in the workspace
-async function listUsers() {
-  const users = await notion.listUsers();
-  console.log(\`Found \${users.results.length} users\`);
-  
-  users.results.forEach(user => {
-    console.log(\`- \${user.name} (\${user.type})\`);
-  });
-  
-  return users.results;
-}
-
-// Get specific user information
-async function getUser(userId: string) {
-  const user = await notion.getUser(userId);
-  console.log('User details:', user);
-  return user;
-}
-
-// Search for users (if you have workspace admin permissions)
-async function searchUsers(query: string) {
-  const users = await notion.searchUsers({
-    query: query,
-    page_size: 10
-  });
-  
-  console.log(\`Found \${users.results.length} users matching "\${query}"\`);
-  return users.results;
-}`}
-        javascript={`// Get current user (the integration)
-async function getCurrentUser() {
-  const user = await notion.getCurrentUser();
-  console.log('Current user:', user.name);
-  console.log('User type:', user.type);
-  return user;
-}
-
-// List all users in the workspace
-async function listUsers() {
-  const users = await notion.listUsers();
-  console.log(\`Found \${users.results.length} users\`);
-  
-  users.results.forEach(user => {
-    console.log(\`- \${user.name} (\${user.type})\`);
-  });
-  
-  return users.results;
-}
-
-// Get specific user information
-async function getUser(userId) {
-  const user = await notion.getUser(userId);
-  console.log('User details:', user);
-  return user;
-}`}
-        title="User management"
-      />
-
-      ### Search Functionality
-
-      <CodeExampleSwitcher
-        typescript={`// Search across the workspace
-async function searchWorkspace(query: string) {
-  const results = await notion.search({
-    query: query,
-    filter: {
-      value: 'page',
-      property: 'object'
-    },
-    sort: {
-      direction: 'descending',
-      timestamp: 'last_edited_time'
-    },
-    page_size: 20
-  });
-  
-  console.log(\`Found \${results.results.length} pages matching "\${query}"\`);
-  
-  results.results.forEach(page => {
-    const title = page.properties?.title?.title?.[0]?.text?.content || 
-                 page.properties?.Name?.title?.[0]?.text?.content || 
-                 'Untitled';
-    console.log(\`- \${title}\`);
-  });
-  
-  return results.results;
-}
-
-// Search for databases only
-async function searchDatabases(query?: string) {
-  const results = await notion.search({
-    query: query,
-    filter: {
-      value: 'database',
-      property: 'object'
-    },
-    page_size: 50
-  });
-  
-  console.log(\`Found \${results.results.length} databases\`);
-  
-  results.results.forEach(database => {
-    const title = database.title?.[0]?.text?.content || 'Untitled Database';
-    console.log(\`- \${title}\`);
-  });
-  
-  return results.results;
-}
-
-// Search with pagination
-async function searchWithPagination(query: string) {
-  let allResults: any[] = [];
-  let hasMore = true;
-  let startCursor: string | undefined;
-  
-  while (hasMore) {
-    const response = await notion.search({
-      query: query,
-      start_cursor: startCursor,
-      page_size: 100
-    });
-    
-    allResults.push(...response.results);
-    hasMore = response.has_more;
-    startCursor = response.next_cursor || undefined;
-  }
-  
-  console.log(\`Total results found: \${allResults.length}\`);
-  return allResults;
-}`}
-        javascript={`// Search across the workspace
-async function searchWorkspace(query) {
-  const results = await notion.search({
-    query: query,
-    filter: {
-      value: 'page',
-      property: 'object'
-    },
-    sort: {
-      direction: 'descending',
-      timestamp: 'last_edited_time'
-    },
-    page_size: 20
-  });
-  
-  console.log(\`Found \${results.results.length} pages matching "\${query}"\`);
-  return results.results;
-}
-
-// Search for databases only
-async function searchDatabases(query) {
-  const results = await notion.search({
-    query: query,
-    filter: {
-      value: 'database',
-      property: 'object'
-    },
-    page_size: 50
-  });
-  
-  console.log(\`Found \${results.results.length} databases\`);
-  return results.results;
-}`}
-        title="Search functionality"
-      />
-
-      ## Error Handling
-
-      <InfoBox type="warning" title="Rate Limits">
-        The Notion API has rate limits. Implement proper error handling to manage rate limit responses gracefully.
-      </InfoBox>
-
-      <CodeExampleSwitcher
-        typescript={`import { NotionAPI } from 'macro_api';
-
-const notion = new NotionAPI({
-  apiKey: process.env.NOTION_API_KEY
-});
-
-// Comprehensive error handling
-async function safeNotionOperation() {
-  try {
-    const databases = await notion.search({
-      filter: {
-        value: 'database',
-        property: 'object'
-      }
-    });
-    
-    return databases;
-  } catch (error) {
-    if (error instanceof Error) {
-      // Handle specific error types
-      if (error.message.includes('429')) {
-        console.error('Rate limit exceeded. Please wait before making more requests.');
-        // Implement retry logic with exponential backoff
-        return await retryWithBackoff(() => notion.search({
-          filter: { value: 'database', property: 'object' }
-        }));
-      } else if (error.message.includes('401')) {
-        console.error('Unauthorized. Please check your API key.');
-        throw new Error('Authentication failed');
-      } else if (error.message.includes('403')) {
-        console.error('Forbidden. Check if the integration has access to the resource.');
-        throw new Error('Access denied');
-      } else if (error.message.includes('404')) {
-        console.error('Resource not found. Check your database/page IDs.');
-        return null;
-      } else {
-        console.error('Notion API Error:', error.message);
-      }
-    }
-    
-    throw error;
-  }
-}
-
-// Retry with exponential backoff
-async function retryWithBackoff(
-  apiCall: () => Promise<any>,
-  maxRetries = 3,
-  baseDelay = 1000
-) {
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      return await apiCall();
-    } catch (error) {
-      if (attempt === maxRetries) {
-        throw error;
-      }
-      
-      const delay = baseDelay * Math.pow(2, attempt - 1);
-      console.log(\`Retry attempt \${attempt} in \${delay}ms...\`);
-      await new Promise(resolve => setTimeout(resolve, delay));
-    }
-  }
-}
-
-// Usage with error handling
-async function robustDataSync() {
-  try {
-    const [databases, users, recentPages] = await Promise.allSettled([
-      safeNotionOperation(),
-      notion.listUsers(),
-      notion.search({ 
-        sort: { direction: 'descending', timestamp: 'last_edited_time' },
-        page_size: 10 
-      })
-    ]);
-    
-    console.log('Sync results:', { databases, users, recentPages });
-  } catch (error) {
-    console.error('Failed to sync data:', error);
-  }
-}`}
-        javascript={`const { NotionAPI } = require('macro_api');
-
-const notion = new NotionAPI({
-  apiKey: process.env.NOTION_API_KEY
-});
-
-// Comprehensive error handling
-async function safeNotionOperation() {
-  try {
-    const databases = await notion.search({
-      filter: {
-        value: 'database',
-        property: 'object'
-      }
-    });
-    
-    return databases;
-  } catch (error) {
-    if (error instanceof Error) {
-      // Handle specific error types
-      if (error.message.includes('429')) {
-        console.error('Rate limit exceeded. Please wait.');
-        return await retryWithBackoff(() => notion.search({
-          filter: { value: 'database', property: 'object' }
-        }));
-      } else if (error.message.includes('401')) {
-        console.error('Unauthorized. Check your API key.');
-        throw new Error('Authentication failed');
-      } else if (error.message.includes('404')) {
-        console.error('Resource not found.');
-        return null;
-      } else {
-        console.error('Notion API Error:', error.message);
-      }
-    }
-    
-    throw error;
-  }
-}
-
-// Retry with exponential backoff
-async function retryWithBackoff(apiCall, maxRetries = 3, baseDelay = 1000) {
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      return await apiCall();
-    } catch (error) {
-      if (attempt === maxRetries) {
-        throw error;
-      }
-      
-      const delay = baseDelay * Math.pow(2, attempt - 1);
-      console.log(\`Retry attempt \${attempt} in \${delay}ms...\`);
-      await new Promise(resolve => setTimeout(resolve, delay));
-    }
-  }
-}`}
-        title="Robust error handling and retry logic"
-      />
-
-      ## Advanced Examples
-
-      ### Building a Task Management System
-
-      <CodeExampleSwitcher
-        typescript={`// Complete task management system example
-class NotionTaskManager {
-  private notion: NotionAPI;
-  private taskDatabaseId: string;
-
-  constructor(apiKey: string, taskDatabaseId: string) {
-    this.notion = new NotionAPI({ apiKey });
-    this.taskDatabaseId = taskDatabaseId;
-  }
-
-  // Create a new task
-  async createTask(task: {
-    title: string;
-    description?: string;
-    priority: 'Low' | 'Medium' | 'High';
-    dueDate?: string;
-    assignee?: string;
-  }) {
-    const page = await this.notion.createPage({
-      parent: {
-        database_id: this.taskDatabaseId
-      },
-      properties: {
-        Name: {
-          title: [{ text: { content: task.title } }]
-        },
-        Status: {
-          select: { name: 'Not started' }
-        },
-        Priority: {
-          select: { name: task.priority }
-        },
-        ...(task.dueDate && {
-          'Due Date': {
-            date: { start: task.dueDate }
-          }
-        }),
-        ...(task.assignee && {
-          Assignee: {
-            people: [{ id: task.assignee }]
-          }
-        })
-      }
-    });
-
-    // Add description as page content
-    if (task.description) {
-      await this.notion.appendBlocks(page.id, {
-        children: [
-          {
-            object: 'block',
-            type: 'paragraph',
-            paragraph: {
-              rich_text: [{ text: { content: task.description } }]
-            }
-          }
-        ]
-      });
-    }
-
-    return page;
-  }
-
-  // Get tasks by status
-  async getTasksByStatus(status: string) {
-    const response = await this.notion.queryDatabase(this.taskDatabaseId, {
-      filter: {
-        property: 'Status',
-        select: { equals: status }
-      },
-      sorts: [
-        {
-          property: 'Priority',
-          direction: 'ascending'
-        },
-        {
-          property: 'Due Date',
-          direction: 'ascending'
-        }
-      ]
-    });
-
-    return response.results;
-  }
-
-  // Update task status
-  async updateTaskStatus(taskId: string, status: string) {
-    return await this.notion.updatePage(taskId, {
-      properties: {
-        Status: {
-          select: { name: status }
-        }
-      }
-    });
-  }
-
-  // Get overdue tasks
-  async getOverdueTasks() {
-    const today = new Date().toISOString().split('T')[0];
-    
-    const response = await this.notion.queryDatabase(this.taskDatabaseId, {
-      filter: {
-        and: [
-          {
-            property: 'Due Date',
-            date: { before: today }
-          },
-          {
-            property: 'Status',
-            select: { does_not_equal: 'Done' }
-          }
-        ]
-      }
-    });
-
-    return response.results;
-  }
-
-  // Generate task summary
-  async generateTaskSummary() {
-    const [notStarted, inProgress, done, overdue] = await Promise.all([
-      this.getTasksByStatus('Not started'),
-      this.getTasksByStatus('In progress'),
-      this.getTasksByStatus('Done'),
-      this.getOverdueTasks()
-    ]);
-
-    return {
-      notStarted: notStarted.length,
-      inProgress: inProgress.length,
-      done: done.length,
-      overdue: overdue.length,
-      total: notStarted.length + inProgress.length + done.length
-    };
-  }
-}
-
-// Usage example
-async function taskManagementExample() {
-  const taskManager = new NotionTaskManager(
-    process.env.NOTION_API_KEY!,
-    'your-task-database-id'
+      )}
+    </div>
   );
 
-  // Create a new task
-  const newTask = await taskManager.createTask({
-    title: 'Implement user authentication',
-    description: 'Add JWT-based authentication to the application',
-    priority: 'High',
-    dueDate: '2024-01-15'
-  });
+  const installCode = `npm install macro_api`;
 
-  console.log('Task created:', newTask.id);
+  const basicSetupCode = `import { NotionAPI } from 'macro_api';
 
-  // Get task summary
-  const summary = await taskManager.generateTaskSummary();
-  console.log('Task Summary:', summary);
+// Initialize the client
+const notion = new NotionAPI({
+  apiKey: process.env.NOTION_API_KEY
+});
 
-  // Update task status
-  await taskManager.updateTaskStatus(newTask.id, 'In progress');
-  console.log('Task status updated');
-}`}
-        javascript={`// Complete task management system example
-class NotionTaskManager {
-  constructor(apiKey, taskDatabaseId) {
-    this.notion = new NotionAPI({ apiKey });
-    this.taskDatabaseId = taskDatabaseId;
-  }
-
-  // Create a new task
-  async createTask(task) {
-    const page = await this.notion.createPage({
+// Create a new page
+async function createPage() {
+  try {
+    const page = await notion.createPage({
       parent: {
-        database_id: this.taskDatabaseId
+        database_id: 'your-database-id'
       },
       properties: {
         Name: {
-          title: [{ text: { content: task.title } }]
-        },
-        Status: {
-          select: { name: 'Not started' }
-        },
-        Priority: {
-          select: { name: task.priority }
+          title: [
+            {
+              text: {
+                content: 'My New Page'
+              }
+            }
+          ]
         }
       }
     });
+    console.log('Page created:', page.id);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}`;
 
-    // Add description as page content
-    if (task.description) {
-      await this.notion.appendBlocks(page.id, {
-        children: [
-          {
-            object: 'block',
-            type: 'paragraph',
-            paragraph: {
-              rich_text: [{ text: { content: task.description } }]
-            }
-          }
-        ]
-      });
+  const authorizationCode = `// Get authorization URL for OAuth flow
+const scopes = ['user-read-private', 'user-read-email', 'playlist-read-private'];
+const authUrl = notion.getAuthorizationUrl(scopes, 'random-state-string');
+
+// Redirect user to authUrl, then handle callback
+await notion.exchangeCode(authorizationCode);
+
+// Or set access token manually
+notion.setAccessToken('access-token', 3600, 'refresh-token');`;
+
+  const userExampleCode = `// Get current user profile
+const user = await notion.getCurrentUser();
+console.log(user);
+
+// Get another user's profile
+const userProfile = await notion.getUser('notion-user-id');`;
+
+  const trackExampleCode = `// Get a single page
+const page = await notion.getPage('page-id');
+
+// Get multiple pages
+const pages = await notion.getPages(['page-id-1', 'page-id-2']);`;
+
+  const methods = [
+    {
+      name: 'getAuthorizationUrl',
+      description: 'Generate OAuth authorization URL',
+      params: 'scopes: string[], state?: string',
+      returns: 'string',
+      icon: <User className="h-4 w-4" />
+    },
+    {
+      name: 'exchangeCode',
+      description: 'Exchange authorization code for access token',
+      params: 'code: string',
+      returns: 'Promise<void>',
+      icon: <User className="h-4 w-4" />
+    },
+    {
+      name: 'getCurrentUser',
+      description: 'Get current user profile',
+      params: 'None',
+      returns: 'Promise<User>',
+      icon: <User className="h-4 w-4" />
+    },
+    {
+      name: 'getPage',
+      description: 'Get page by ID',
+      params: 'pageId: string',
+      returns: 'Promise<Page>',
+      icon: <FileText className="h-4 w-4" />
+    },
+    {
+      name: 'getPages',
+      description: 'Get multiple pages by IDs',
+      params: 'pageIds: string[]',
+      returns: 'Promise<PageResponse>',
+      icon: <FileText className="h-4 w-4" />
+    },
+    {
+      name: 'getDatabase',
+      description: 'Get database by ID',
+      params: 'databaseId: string',
+      returns: 'Promise<Database>',
+      icon: <Database className="h-4 w-4" />
+    },
+    {
+      name: 'createPage',
+      description: 'Create new page',
+      params: 'pageData: CreatePageParams',
+      returns: 'Promise<Page>',
+      icon: <FileText className="h-4 w-4" />
+    },
+    {
+      name: 'search',
+      description: 'Search Notion workspace',
+      params: 'query: string, options?: SearchOptions',
+      returns: 'Promise<SearchResults>',
+      icon: <Search className="h-4 w-4" />
     }
+  ];
 
-    return page;
-  }
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50/50 via-white to-purple-50/50 dark:from-gray-950 dark:via-blue-950/30 dark:to-purple-950/20 relative overflow-hidden">
+      {/* Background effects matching main page */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-gradient-to-r from-blue-400 to-purple-600 rounded-full opacity-10 blur-3xl animate-float" />
+        <div className="absolute bottom-1/4 right-1/4 w-32 h-32 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-gradient-to-r from-purple-400 to-pink-600 rounded-full opacity-10 blur-3xl animate-float" style={{ animationDelay: '-3s' }} />
+        <div 
+          className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]" 
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='none' fill-rule='evenodd'%3e%3cg fill='%23000' fill-opacity='0.4'%3e%3ccircle cx='7' cy='7' r='1'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e")`
+          }} 
+        />
+      </div>
 
-  // Get tasks by status
-  async getTasksByStatus(status) {
-    const response = await this.notion.queryDatabase(this.taskDatabaseId, {
-      filter: {
-        property: 'Status',
-        select: { equals: status }
-      }
-    });
-
-    return response.results;
-  }
-
-  // Generate task summary
-  async generateTaskSummary() {
-    const [notStarted, inProgress, done] = await Promise.all([
-      this.getTasksByStatus('Not started'),
-      this.getTasksByStatus('In progress'),
-      this.getTasksByStatus('Done')
-    ]);
-
-    return {
-      notStarted: notStarted.length,
-      inProgress: inProgress.length,
-      done: done.length,
-      total: notStarted.length + inProgress.length + done.length
-    };
-  }
-}`}
-        title="Task management system"
-      />
-
-      ## Best Practices
-
-      <InfoBox type="tip" title="Performance Tips">
-        - Use pagination for large datasets to avoid timeouts
-        - Cache frequently accessed data to reduce API calls
-        - Implement proper error handling for rate limits
-        - Use specific property filters to reduce response size
-      </InfoBox>
-
-      ### Caching Example
-
-      <CodeExampleSwitcher
-        typescript={`// Simple in-memory cache for Notion data
-class NotionCache {
-  private cache = new Map<string, { data: any; timestamp: number; ttl: number }>();
-
-  set(key: string, data: any, ttlMinutes = 30) {
-    this.cache.set(key, {
-      data,
-      timestamp: Date.now(),
-      ttl: ttlMinutes * 60 * 1000
-    });
-  }
-
-  get(key: string) {
-    const item = this.cache.get(key);
-    if (!item) return null;
-
-    if (Date.now() - item.timestamp > item.ttl) {
-      this.cache.delete(key);
-      return null;
-    }
-
-    return item.data;
-  }
-}
-
-// Cached Notion operations
-class CachedNotionAPI {
-  private notion: NotionAPI;
-  private cache = new NotionCache();
-
-  constructor(apiKey: string) {
-    this.notion = new NotionAPI({ apiKey });
-  }
-
-  async getCachedDatabase(databaseId: string) {
-    const cacheKey = \`database-\${databaseId}\`;
-    
-    let database = this.cache.get(cacheKey);
-    if (!database) {
-      database = await this.notion.getDatabase(databaseId);
-      this.cache.set(cacheKey, database, 60); // Cache for 1 hour
-    }
-    
-    return database;
-  }
-
-  async getCachedUsers() {
-    const cacheKey = 'users-list';
-    
-    let users = this.cache.get(cacheKey);
-    if (!users) {
-      users = await this.notion.listUsers();
-      this.cache.set(cacheKey, users, 30); // Cache for 30 minutes
-    }
-    
-    return users;
-  }
-}`}
-        javascript={`// Simple in-memory cache for Notion data
-class NotionCache {
-  constructor() {
-    this.cache = new Map();
-  }
-
-  set(key, data, ttlMinutes = 30) {
-    this.cache.set(key, {
-      data,
-      timestamp: Date.now(),
-      ttl: ttlMinutes * 60 * 1000
-    });
-  }
-
-  get(key) {
-    const item = this.cache.get(key);
-    if (!item) return null;
-
-    if (Date.now() - item.timestamp > item.ttl) {
-      this.cache.delete(key);
-      return null;
-    }
-
-    return item.data;
-  }
-}
-
-// Cached Notion operations
-class CachedNotionAPI {
-  constructor(apiKey) {
-    this.notion = new NotionAPI({ apiKey });
-    this.cache = new NotionCache();
-  }
-
-  async getCachedDatabase(databaseId) {
-    const cacheKey = \`database-\${databaseId}\`;
-    
-    let database = this.cache.get(cacheKey);
-    if (!database) {
-      database = await this.notion.getDatabase(databaseId);
-      this.cache.set(cacheKey, database, 60); // Cache for 1 hour
-    }
-    
-    return database;
-  }
-}`}
-        title="Simple caching implementation"
-      />
-
-      ## Common Property Types
-
-      <div className="not-prose my-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-          <h3 className="text-lg font-semibold mb-4">Notion Property Types Reference</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <h4 className="font-medium mb-2">Basic Types</h4>
-              <ul className="space-y-1">
-                <li><code>title</code> - Page title (required)</li>
-                <li><code>rich_text</code> - Formatted text</li>
-                <li><code>number</code> - Numeric values</li>
-                <li><code>select</code> - Single select dropdown</li>
-                <li><code>multi_select</code> - Multiple select</li>
-                <li><code>date</code> - Date and time</li>
-                <li><code>checkbox</code> - Boolean values</li>
-                <li><code>url</code> - Web links</li>
-                <li><code>email</code> - Email addresses</li>
-                <li><code>phone_number</code> - Phone numbers</li>
-              </ul>
+      <div className="relative z-10 container-responsive section-padding">
+        {/* Header */}
+        <div className="text-center section-margin-sm">
+          <div className="glass-nav inline-flex items-center mb-6 sm:mb-8">
+            <FileText className="h-4 w-4 mr-2 text-primary animate-pulse" />
+            <span className="text-sm font-medium text-foreground">
+              API Integration
+            </span>
+          </div>
+          
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="bg-gray-800 p-3 rounded-full">
+              <FileText className="h-8 w-8 text-white" />
             </div>
-            <div>
-              <h4 className="font-medium mb-2">Advanced Types</h4>
-              <ul className="space-y-1">
-                <li><code>people</code> - User references</li>
-                <li><code>files</code> - File attachments</li>
-                <li><code>relation</code> - Links to other pages</li>
-                <li><code>rollup</code> - Calculated from relations</li>
-                <li><code>formula</code> - Computed values</li>
-                <li><code>created_time</code> - Auto-generated</li>
-                <li><code>created_by</code> - Auto-generated</li>
-                <li><code>last_edited_time</code> - Auto-generated</li>
-                <li><code>last_edited_by</code> - Auto-generated</li>
-              </ul>
+            <div className="text-left">
+              <h1 className="text-responsive-lg font-bold bg-gradient-to-r from-gray-600 to-gray-400 bg-clip-text text-transparent">
+                Notion API
+              </h1>
+              <p className="text-responsive-xs text-muted-foreground">
+                Complete workspace and database management with the Notion API
+              </p>
             </div>
+          </div>
+
+          <p className="text-responsive-sm text-muted-foreground max-w-3xl mx-auto mb-6">
+            Complete workspace and database management with the Notion API. Create and manage databases, pages, blocks, and user permissions programmatically with full TypeScript support.
+          </p>
+
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-gray-600 dark:text-gray-400 border border-gray-500/20">Database Operations</span>
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-blue-600 dark:text-blue-400 border border-blue-500/20">Page Management</span>
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-purple-600 dark:text-purple-400 border border-purple-500/20">Block Editing</span>
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-green-600 dark:text-green-400 border border-green-500/20">User Management</span>
+          </div>
+        </div>
+
+        {/* Installation */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient flex items-center">
+            <Download className="h-6 w-6 mr-2" />
+            Installation
+          </h2>
+          <CodeBlock code={installCode} language="bash" id="install" />
+        </div>
+
+        {/* Main Content Tabs */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <Tabs defaultValue="quickstart" className="space-y-6">
+            <div className="flex flex-wrap gap-2 mb-6">
+              <TabsTrigger value="quickstart" className="glass-button">Quick Start</TabsTrigger>
+              <TabsTrigger value="authentication" className="glass-button">Auth</TabsTrigger>
+              <TabsTrigger value="examples" className="glass-button">Examples</TabsTrigger>
+              <TabsTrigger value="methods" className="glass-button">Methods</TabsTrigger>
+              <TabsTrigger value="advanced" className="glass-button">Advanced</TabsTrigger>
+            </div>
+
+            {/* Quick Start */}
+            <TabsContent value="quickstart" className="space-y-6">
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                    <Code className="h-5 w-5 mr-2 text-primary" />
+                    Basic Setup
+                  </h3>
+                  <p className="text-muted-foreground mb-4">Initialize the Notion API client</p>
+                  <CodeBlock code={basicSetupCode} id="basic-setup" />
+                </div>
+
+                <div className="glass-card bg-gradient-to-r from-gray-500/10 to-blue-500/10 border-gray-500/20 dark:border-gray-400/20">
+                  <div className="flex items-start space-x-4">
+                    <FileText className="h-6 w-6 text-gray-600 mt-1" />
+                    <div>
+                      <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">Notion Integration Required</h4>
+                      <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                        You'll need to create a Notion integration at <a href="https://developers.notion.com/" className="underline" target="_blank" rel="noopener noreferrer">developers.notion.com</a> to get your API key.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                    <Play className="h-5 w-5 mr-2 text-primary" />
+                    Simple Example
+                  </h3>
+                  <p className="text-muted-foreground mb-4">Get page information</p>
+                  <CodeBlock 
+                    code={`// After setting up authentication
+const page = await notion.getPage('page-id-here');
+console.log(\`Page title: \${page.properties?.title}\`);`}
+                    id="simple-example"
+                  />
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* Authentication */}
+            <TabsContent value="authentication" className="space-y-6">
+              <div>
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                  <Key className="h-5 w-5 mr-2 text-primary" />
+                  API Setup
+                </h3>
+                <p className="text-muted-foreground mb-4">Complete API key setup and configuration</p>
+                <CodeBlock code={authorizationCode} id="oauth-flow" />
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="glass-card bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
+                  <h4 className="font-semibold text-green-600 mb-4 flex items-center">
+                    <Shield className="h-5 w-5 mr-2" />
+                    Required Permissions
+                  </h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <code className="glass px-2 py-1 rounded text-xs">Read content</code>
+                      <span className="ml-2 text-muted-foreground">- Access pages and databases</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <code className="glass px-2 py-1 rounded text-xs">Update content</code>
+                      <span className="ml-2 text-muted-foreground">- Modify existing content</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <code className="glass px-2 py-1 rounded text-xs">Insert content</code>
+                      <span className="ml-2 text-muted-foreground">- Create new pages and entries</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <code className="glass px-2 py-1 rounded text-xs">User information</code>
+                      <span className="ml-2 text-muted-foreground">- Access user data</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
+                  <h4 className="font-semibold text-blue-600 mb-4 flex items-center">
+                    <Sparkles className="h-5 w-5 mr-2" />
+                    Features
+                  </h4>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <span>Database operations</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <span>Page management</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <span>Block editing</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <span>User management</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <span>Search functionality</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* Examples */}
+            <TabsContent value="examples" className="space-y-6">
+              <div className="grid gap-6">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                    <User className="h-5 w-5 mr-2 text-primary" />
+                    User Operations
+                  </h3>
+                  <CodeBlock code={userExampleCode} id="user-examples" />
+                </div>
+
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                    <FileText className="h-5 w-5 mr-2 text-primary" />
+                    Page Operations
+                  </h3>
+                  <CodeBlock code={trackExampleCode} id="track-examples" />
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* Methods */}
+            <TabsContent value="methods" className="space-y-6">
+              <div>
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                  <Code className="h-5 w-5 mr-2 text-primary" />
+                  Available Methods
+                </h3>
+                <p className="text-muted-foreground mb-6">Complete list of Notion API methods</p>
+                <div className="grid gap-4">
+                  {methods.map((method, index) => (
+                    <div key={index} className="glass-card group hover:scale-[1.01] transition-all duration-300">
+                      <div className="flex items-start space-x-4">
+                        <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                          {method.icon}
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-blue-600 mb-2 group-hover:text-primary transition-colors">
+                            {method.name}
+                          </h4>
+                          <p className="text-muted-foreground text-sm mb-3">{method.description}</p>
+                          <div className="grid md:grid-cols-2 gap-2 text-xs">
+                            <div><strong>Parameters:</strong> <code className="glass px-1 py-0.5 rounded text-xs">{method.params}</code></div>
+                            <div><strong>Returns:</strong> <code className="glass px-1 py-0.5 rounded text-xs">{method.returns}</code></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* Advanced */}
+            <TabsContent value="advanced" className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="glass-card bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/20">
+                  <h4 className="font-semibold text-orange-600 mb-4 flex items-center">
+                    <Sparkles className="h-5 w-5 mr-2" />
+                    Features
+                  </h4>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <span>Database operations</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <span>Page management</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <span>Block editing</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <span>User management</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <span>Search functionality</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <span>Error handling</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <span>Rate limiting</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <span>TypeScript support</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="glass-card bg-gradient-to-r from-red-500/10 to-pink-500/10 border-red-500/20">
+                  <h4 className="font-semibold text-red-600 mb-4 flex items-center">
+                    <Shield className="h-5 w-5 mr-2" />
+                    Common Errors
+                  </h4>
+                  <ul className="space-y-2 text-sm">
+                    <li><strong>401:</strong> Invalid or expired token</li>
+                    <li><strong>403:</strong> Insufficient permissions</li>
+                    <li><strong>404:</strong> Resource not found</li>
+                    <li><strong>429:</strong> Rate limit exceeded</li>
+                    <li><strong>500:</strong> Notion server error</li>
+                    <li><strong>503:</strong> Service unavailable</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="glass-card bg-gradient-to-r from-green-500/10 to-blue-500/10 border-green-500/20">
+                <div className="flex items-start space-x-4">
+                  <FileText className="h-6 w-6 text-green-600 mt-1" />
+                  <div>
+                    <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">Production Ready</h4>
+                    <p className="text-green-700 dark:text-green-300 text-sm leading-relaxed">
+                      The Notion API class includes built-in error handling, rate limiting, and comprehensive TypeScript support for production applications.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* Next Steps */}
+        <div className="glass-card">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Next Steps</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <a href="/documentation?section=basic-usage" className="glass-card group hover:scale-[1.02] transition-all duration-300">
+              <div className="flex items-start space-x-4">
+                <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                  <Code className="h-6 w-6 text-blue-600" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">Explore More APIs</h3>
+                  <p className="text-muted-foreground text-sm mb-3">Discover other API integrations available in macro_api</p>
+                  <div className="flex items-center text-primary text-sm font-medium">
+                    <span>View All APIs</span>
+                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </div>
+            </a>
+
+            <a href="/documentation?section=core-cache" className="glass-card group hover:scale-[1.02] transition-all duration-300">
+              <div className="flex items-start space-x-4">
+                <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                  <Sparkles className="h-6 w-6 text-green-600" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">Caching Guide</h3>
+                  <p className="text-muted-foreground text-sm mb-3">Learn how to optimize performance with caching</p>
+                  <div className="flex items-center text-primary text-sm font-medium">
+                    <span>Learn Caching</span>
+                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </div>
+            </a>
           </div>
         </div>
       </div>
-
-      ## API Reference
-
-      For complete API documentation and additional endpoints, visit the [official Notion API documentation](https://developers.notion.com/).
-
-      ### Rate Limits
-
-      The Notion API has the following rate limits:
-      - **Personal**: 3 requests per second
-      - **Internal Integrations**: 3 requests per second
-      - **Public Integrations**: 3 requests per second (subject to approval)
-
-      ### Integration Capabilities
-
-      When creating your integration, you can choose from these capabilities:
-      - **Read content** - Access to pages and databases
-      - **Update content** - Modify existing content
-      - **Insert content** - Create new pages and database entries
-      - **User information** - Access to user data
-
-      ### Support
-
-      - [Notion Developer Documentation](https://developers.notion.com/)
-      - [Notion API Changelog](https://developers.notion.com/changelog)
-      - [GitHub Issues](https://github.com/cptcr/macro_api/issues)
     </div>
   );
 };

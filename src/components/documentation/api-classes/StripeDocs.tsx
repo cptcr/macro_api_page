@@ -1,82 +1,51 @@
-import React from 'react';
-import CodeExampleSwitcher from '@/components/common/CodeExampleSwitcher';
-import InfoBox from '@/components/common/InfoBox';
-import { ExternalLink, Key, Shield, AlertCircle, CheckCircle, Zap, Database, Users, CreditCard, Building, Globe } from 'lucide-react';
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Copy, CreditCard, Building, Globe, Play, Search, User, Code, Download, Sparkles, ArrowRight, Key, Shield, Zap, Database, Users, CheckCircle, ExternalLink, RefreshCw } from 'lucide-react';
 
 const StripeDocs: React.FC = () => {
-  return (
-    <div className="prose prose-gray dark:prose-invert max-w-none">
-      {/* Header */}
-      <div className="not-prose mb-8">
-        <div className="flex items-center mb-4">
-          <div className="mr-4 text-blue-600 dark:text-blue-400">
-            <CreditCard className="h-10 w-10" />
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+
+  const copyToClipboard = (code: string, id: string) => {
+    navigator.clipboard.writeText(code);
+    setCopiedCode(id);
+    setTimeout(() => setCopiedCode(null), 2000);
+  };
+
+  const CodeBlock = ({ code, language = 'typescript', id }: { code: string; language?: string; id: string }) => (
+    <div className="relative glass-card">
+      <div className="flex items-center justify-between p-4 border-b border-white/10">
+        <div className="flex items-center space-x-3">
+          <div className="flex space-x-1">
+            <div className="w-3 h-3 bg-red-400 rounded-full" />
+            <div className="w-3 h-3 bg-yellow-400 rounded-full" />
+            <div className="w-3 h-3 bg-green-400 rounded-full" />
           </div>
-          <div>
-            <h1 className="text-4xl font-bold mb-2">Stripe API</h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300">
-              Complete payment processing solution with subscriptions, webhooks, and comprehensive financial operations
-            </p>
-          </div>
+          <span className="text-sm font-medium text-muted-foreground">{language}</span>
         </div>
-        
-        <div className="flex flex-wrap gap-2 mb-6">
-          <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm">
-            Payment Processing
-          </span>
-          <span className="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm">
-            Subscriptions
-          </span>
-          <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full text-sm">
-            Webhooks
-          </span>
-          <span className="px-3 py-1 bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 rounded-full text-sm">
-            Multi-currency
-          </span>
-        </div>
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-8 w-8 p-0 glass-button"
+          onClick={() => copyToClipboard(code, id)}
+        >
+          <Copy className="h-3 w-3" />
+        </Button>
       </div>
-
-      ## Overview
-
-      The Stripe API wrapper provides comprehensive payment processing capabilities for modern applications. Handle one-time payments, recurring subscriptions, customer management, and complex financial operations with ease.
-
-      ### Key Features
-
-      <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <CreditCard className="h-6 w-6 text-blue-600 mb-2" />
-          <h3 className="font-semibold mb-1">Payment Processing</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Accept payments from customers worldwide</p>
+      <pre className="bg-gray-900 text-gray-100 p-4 rounded-b-lg overflow-x-auto text-sm scrollbar-modern">
+        <code className={`language-${language}`}>{code}</code>
+      </pre>
+      {copiedCode === id && (
+        <div className="absolute top-2 right-12 glass px-2 py-1 rounded text-xs text-green-500 border border-green-500/20">
+          Copied!
         </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <Users className="h-6 w-6 text-green-600 mb-2" />
-          <h3 className="font-semibold mb-1">Customer Management</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Store and manage customer information securely</p>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <Building className="h-6 w-6 text-purple-600 mb-2" />
-          <h3 className="font-semibold mb-1">Subscription Billing</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Flexible recurring billing and subscription management</p>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <Globe className="h-6 w-6 text-yellow-600 mb-2" />
-          <h3 className="font-semibold mb-1">Global Commerce</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Support for 135+ currencies and global payment methods</p>
-        </div>
-      </div>
+      )}
+    </div>
+  );
 
-      ## Installation
+  const installCode = `npm install macro_api`;
 
-      <CodeExampleSwitcher
-        typescript="npm install macro_api"
-        javascript="npm install macro_api"
-        title="Install the package"
-      />
-
-      ## Quick Start
-
-      <CodeExampleSwitcher
-        typescript={`import { StripeAPI } from 'macro_api';
+  const basicSetupCode = `import { StripeAPI } from 'macro_api';
 
 // Initialize the client
 const stripe = new StripeAPI({
@@ -98,84 +67,9 @@ async function createPayment() {
   } catch (error) {
     console.error('Payment failed:', error);
   }
-}`}
-        javascript={`const { StripeAPI } = require('macro_api');
+}`;
 
-// Initialize the client
-const stripe = new StripeAPI({
-  secretKey: process.env.STRIPE_SECRET_KEY
-});
-
-// Create a simple payment intent
-async function createPayment() {
-  try {
-    const paymentIntent = await stripe.createPaymentIntent({
-      amount: 2000, // $20.00 in cents
-      currency: 'usd',
-      payment_method_types: ['card'],
-      description: 'Payment for premium subscription'
-    });
-    
-    console.log('Payment Intent created:', paymentIntent.client_secret);
-    return paymentIntent;
-  } catch (error) {
-    console.error('Payment failed:', error);
-  }
-}`}
-        title="Basic payment processing"
-      />
-
-      ## Authentication
-
-      <InfoBox type="info" title="API Key Required">
-        You need a valid Stripe secret key to use the Stripe API. Never expose your secret key in client-side code.
-      </InfoBox>
-
-      ### Getting Your Stripe API Key
-
-      1. Sign up for a Stripe account at [stripe.com](https://stripe.com)
-      2. Go to your Stripe Dashboard
-      3. Navigate to Developers {'>'} API keys
-      4. Copy your Secret key (starts with `sk_test_` for test mode)
-      5. For production, use your live Secret key (starts with `sk_live_`)
-      6. Add the key to your environment variables
-
-      <CodeExampleSwitcher
-        typescript={`// .env file
-STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key_here
-STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key_here
-STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
-
-// In your application
-import { StripeAPI } from 'macro_api';
-
-const stripe = new StripeAPI({
-  secretKey: process.env.STRIPE_SECRET_KEY
-});`}
-        javascript={`// .env file
-STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key_here
-STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key_here
-STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
-
-// In your application
-const { StripeAPI } = require('macro_api');
-
-const stripe = new StripeAPI({
-  secretKey: process.env.STRIPE_SECRET_KEY
-});`}
-        title="Environment setup"
-      />
-
-      <InfoBox type="security" title="Security Best Practice">
-        Always use environment variables for API keys. The secret key should only be used in server-side code. For client-side applications, use Stripe's publishable key with Stripe.js.
-      </InfoBox>
-
-      ## Core Methods
-
-      ### Customer Management
-
-      <CodeExampleSwitcher
-        typescript={`// Create a customer
+  const customerCode = `// Create a customer
 async function createCustomer() {
   const customer = await stripe.createCustomer({
     email: 'customer@example.com',
@@ -200,14 +94,14 @@ async function createCustomer() {
 }
 
 // Retrieve a customer
-async function getCustomer(customerId: string) {
+async function getCustomer(customerId) {
   const customer = await stripe.getCustomer(customerId);
   console.log('Customer:', customer);
   return customer;
 }
 
 // Update customer information
-async function updateCustomer(customerId: string) {
+async function updateCustomer(customerId) {
   const updatedCustomer = await stripe.updateCustomer(customerId, {
     name: 'John Smith',
     email: 'johnsmith@example.com',
@@ -217,166 +111,10 @@ async function updateCustomer(customerId: string) {
   });
   
   return updatedCustomer;
-}
+}`;
 
-// List customers with pagination
-async function listCustomers() {
-  const customers = await stripe.listCustomers({
-    limit: 10,
-    created: {
-      gte: Math.floor(Date.now() / 1000) - 30 * 24 * 60 * 60 // Last 30 days
-    }
-  });
-  
-  console.log(\`Found \${customers.data.length} customers\`);
-  return customers;
-}
-
-// Delete a customer
-async function deleteCustomer(customerId: string) {
-  const deleted = await stripe.deleteCustomer(customerId);
-  console.log('Customer deleted:', deleted.deleted);
-  return deleted;
-}`}
-        javascript={`// Create a customer
-async function createCustomer() {
-  const customer = await stripe.createCustomer({
-    email: 'customer@example.com',
-    name: 'John Doe',
-    description: 'Premium customer',
-    phone: '+1234567890',
-    address: {
-      line1: '123 Main St',
-      city: 'San Francisco',
-      state: 'CA',
-      postal_code: '94111',
-      country: 'US'
-    },
-    metadata: {
-      userId: '12345',
-      plan: 'premium'
-    }
-  });
-  
-  console.log('Customer created:', customer.id);
-  return customer;
-}
-
-// Retrieve and update customers
-async function getCustomer(customerId) {
-  const customer = await stripe.getCustomer(customerId);
-  return customer;
-}
-
-async function updateCustomer(customerId) {
-  const updatedCustomer = await stripe.updateCustomer(customerId, {
-    name: 'John Smith',
-    email: 'johnsmith@example.com'
-  });
-  
-  return updatedCustomer;
-}`}
-        title="Customer management operations"
-      />
-
-      ### Payment Processing
-
-      <CodeExampleSwitcher
-        typescript={`// Create a payment intent for one-time payments
-async function createPaymentIntent() {
-  const paymentIntent = await stripe.createPaymentIntent({
-    amount: 5000, // $50.00
-    currency: 'usd',
-    customer: 'cus_customer_id',
-    payment_method_types: ['card'],
-    description: 'Premium plan subscription',
-    receipt_email: 'customer@example.com',
-    metadata: {
-      orderId: 'order_123',
-      productId: 'premium_plan'
-    },
-    shipping: {
-      name: 'John Doe',
-      address: {
-        line1: '123 Main St',
-        city: 'San Francisco',
-        state: 'CA',
-        postal_code: '94111',
-        country: 'US'
-      }
-    }
-  });
-  
-  return paymentIntent;
-}
-
-// Confirm a payment intent
-async function confirmPayment(paymentIntentId: string, paymentMethodId: string) {
-  const confirmedPayment = await stripe.confirmPaymentIntent(paymentIntentId, {
-    payment_method: paymentMethodId,
-    return_url: 'https://your-website.com/return'
-  });
-  
-  console.log('Payment status:', confirmedPayment.status);
-  return confirmedPayment;
-}
-
-// Capture a payment (for manual capture)
-async function capturePayment(paymentIntentId: string) {
-  const capturedPayment = await stripe.capturePaymentIntent(paymentIntentId, {
-    amount_to_capture: 5000
-  });
-  
-  return capturedPayment;
-}
-
-// Cancel a payment intent
-async function cancelPayment(paymentIntentId: string) {
-  const canceledPayment = await stripe.cancelPaymentIntent(paymentIntentId, {
-    cancellation_reason: 'requested_by_customer'
-  });
-  
-  return canceledPayment;
-}
-
-// List payment intents
-async function listPayments() {
-  const payments = await stripe.listPaymentIntents({
-    limit: 20,
-    customer: 'cus_customer_id'
-  });
-  
-  return payments;
-}`}
-        javascript={`// Create and manage payment intents
-async function createPaymentIntent() {
-  const paymentIntent = await stripe.createPaymentIntent({
-    amount: 5000, // $50.00
-    currency: 'usd',
-    customer: 'cus_customer_id',
-    payment_method_types: ['card'],
-    description: 'Premium plan subscription'
-  });
-  
-  return paymentIntent;
-}
-
-async function confirmPayment(paymentIntentId, paymentMethodId) {
-  const confirmedPayment = await stripe.confirmPaymentIntent(paymentIntentId, {
-    payment_method: paymentMethodId,
-    return_url: 'https://your-website.com/return'
-  });
-  
-  return confirmedPayment;
-}`}
-        title="Payment intent operations"
-      />
-
-      ### Subscription Management
-
-      <CodeExampleSwitcher
-        typescript={`// Create a subscription
-async function createSubscription(customerId: string, priceId: string) {
+  const subscriptionCode = `// Create a subscription
+async function createSubscription(customerId, priceId) {
   const subscription = await stripe.createSubscription({
     customer: customerId,
     items: [
@@ -399,7 +137,7 @@ async function createSubscription(customerId: string, priceId: string) {
 }
 
 // Update a subscription
-async function updateSubscription(subscriptionId: string) {
+async function updateSubscription(subscriptionId) {
   const updatedSubscription = await stripe.updateSubscription(subscriptionId, {
     items: [
       {
@@ -419,7 +157,7 @@ async function updateSubscription(subscriptionId: string) {
 }
 
 // Cancel a subscription
-async function cancelSubscription(subscriptionId: string, immediate = false) {
+async function cancelSubscription(subscriptionId, immediate = false) {
   if (immediate) {
     // Cancel immediately
     const canceledSubscription = await stripe.cancelSubscription(subscriptionId);
@@ -431,787 +169,302 @@ async function cancelSubscription(subscriptionId: string, immediate = false) {
     });
     return subscription;
   }
-}
+}`;
 
-// List subscriptions
-async function listSubscriptions(customerId?: string) {
-  const subscriptions = await stripe.listSubscriptions({
-    customer: customerId,
-    status: 'active',
-    limit: 50
-  });
-  
-  console.log(\`Found \${subscriptions.data.length} active subscriptions\`);
-  return subscriptions;
-}
-
-// Get subscription details
-async function getSubscription(subscriptionId: string) {
-  const subscription = await stripe.getSubscription(subscriptionId);
-  
-  console.log('Subscription status:', subscription.status);
-  console.log('Current period:', {
-    start: new Date(subscription.current_period_start * 1000),
-    end: new Date(subscription.current_period_end * 1000)
-  });
-  
-  return subscription;
-}`}
-        javascript={`// Subscription management
-async function createSubscription(customerId, priceId) {
-  const subscription = await stripe.createSubscription({
-    customer: customerId,
-    items: [{ price: priceId }],
-    trial_period_days: 14
-  });
-  
-  return subscription;
-}
-
-async function cancelSubscription(subscriptionId, immediate = false) {
-  if (immediate) {
-    return await stripe.cancelSubscription(subscriptionId);
-  } else {
-    return await stripe.updateSubscription(subscriptionId, {
-      cancel_at_period_end: true
-    });
-  }
-}`}
-        title="Subscription lifecycle management"
-      />
-
-      ### Product and Pricing
-
-      <CodeExampleSwitcher
-        typescript={`// Create a product
-async function createProduct() {
-  const product = await stripe.createProduct({
-    name: 'Premium Plan',
-    description: 'Full access to all premium features',
-    images: ['https://example.com/product-image.jpg'],
-    metadata: {
-      category: 'subscription',
-      features: 'unlimited_usage,priority_support'
+  const features = [
+    {
+      name: 'Payment Processing',
+      description: 'Accept payments from customers worldwide',
+      icon: <CreditCard className="h-4 w-4" />
     },
-    statement_descriptor: 'PREMIUM PLAN'
-  });
-  
-  console.log('Product created:', product.id);
-  return product;
-}
-
-// Create pricing for a product
-async function createPrice(productId: string) {
-  const price = await stripe.createPrice({
-    product: productId,
-    unit_amount: 2999, // $29.99
-    currency: 'usd',
-    recurring: {
-      interval: 'month',
-      interval_count: 1,
-      usage_type: 'licensed'
+    {
+      name: 'Customer Management',
+      description: 'Store and manage customer information securely',
+      icon: <Users className="h-4 w-4" />
     },
-    metadata: {
-      plan: 'premium_monthly'
-    }
-  });
-  
-  console.log('Price created:', price.id);
-  return price;
-}
-
-// Create usage-based pricing
-async function createUsageBasedPrice(productId: string) {
-  const price = await stripe.createPrice({
-    product: productId,
-    currency: 'usd',
-    recurring: {
-      interval: 'month',
-      usage_type: 'metered'
+    {
+      name: 'Subscription Billing',
+      description: 'Flexible recurring billing and subscription management',
+      icon: <Building className="h-4 w-4" />
     },
-    billing_scheme: 'per_unit',
-    unit_amount: 500, // $5.00 per unit
-    metadata: {
-      billing_type: 'usage_based'
+    {
+      name: 'Global Commerce',
+      description: 'Support for 135+ currencies and global payment methods',
+      icon: <Globe className="h-4 w-4" />
     }
-  });
-  
-  return price;
-}
+  ];
 
-// List products and prices
-async function listProducts() {
-  const products = await stripe.listProducts({
-    active: true,
-    limit: 20
-  });
-  
-  for (const product of products.data) {
-    const prices = await stripe.listPrices({
-      product: product.id,
-      active: true
-    });
-    
-    console.log(\`Product: \${product.name} has \${prices.data.length} prices\`);
-  }
-  
-  return products;
-}
+  const rateLimits = [
+    { tier: 'Test mode', limit: '25 requests per second' },
+    { tier: 'Live mode', limit: '100 requests per second (can be increased)' },
+    { tier: 'Webhook endpoints', limit: '100 requests per second' }
+  ];
 
-// Update product information
-async function updateProduct(productId: string) {
-  const updatedProduct = await stripe.updateProduct(productId, {
-    name: 'Premium Plan Pro',
-    description: 'Enhanced premium features with AI support',
-    metadata: {
-      lastUpdated: new Date().toISOString(),
-      version: '2.0'
-    }
-  });
-  
-  return updatedProduct;
-}`}
-        javascript={`// Product and pricing management
-async function createProduct() {
-  const product = await stripe.createProduct({
-    name: 'Premium Plan',
-    description: 'Full access to all premium features'
-  });
-  
-  return product;
-}
-
-async function createPrice(productId) {
-  const price = await stripe.createPrice({
-    product: productId,
-    unit_amount: 2999, // $29.99
-    currency: 'usd',
-    recurring: {
-      interval: 'month'
-    }
-  });
-  
-  return price;
-}`}
-        title="Product catalog management"
-      />
-
-      ### Webhook Handling
-
-      <CodeExampleSwitcher
-        typescript={`import express from 'express';
-import { StripeAPI } from 'macro_api';
-
-const app = express();
-const stripe = new StripeAPI({
-  secretKey: process.env.STRIPE_SECRET_KEY
-});
-
-// Webhook endpoint
-app.post('/stripe/webhook', express.raw({ type: 'application/json' }), (req, res) => {
-  const signature = req.headers['stripe-signature'] as string;
-  
-  try {
-    // Verify and parse the webhook
-    const event = stripe.constructWebhookEvent(
-      req.body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    );
-    
-    // Handle different event types
-    switch (event.type) {
-      case 'payment_intent.succeeded':
-        const paymentIntent = event.data.object;
-        console.log(\`Payment \${paymentIntent.id} succeeded!\`);
-        // Update your database, send confirmation email, etc.
-        break;
-        
-      case 'payment_intent.payment_failed':
-        const failedPayment = event.data.object;
-        console.log(\`Payment \${failedPayment.id} failed:\`, failedPayment.last_payment_error);
-        // Handle failed payment, notify customer, etc.
-        break;
-        
-      case 'customer.subscription.created':
-        const newSubscription = event.data.object;
-        console.log(\`New subscription \${newSubscription.id} created\`);
-        // Activate user account, send welcome email
-        break;
-        
-      case 'customer.subscription.updated':
-        const updatedSubscription = event.data.object;
-        console.log(\`Subscription \${updatedSubscription.id} updated\`);
-        // Update user plan, handle upgrades/downgrades
-        break;
-        
-      case 'customer.subscription.deleted':
-        const canceledSubscription = event.data.object;
-        console.log(\`Subscription \${canceledSubscription.id} canceled\`);
-        // Deactivate user account, send cancellation email
-        break;
-        
-      case 'invoice.payment_succeeded':
-        const paidInvoice = event.data.object;
-        console.log(\`Invoice \${paidInvoice.id} paid\`);
-        // Extend subscription, send receipt
-        break;
-        
-      case 'invoice.payment_failed':
-        const unpaidInvoice = event.data.object;
-        console.log(\`Invoice \${unpaidInvoice.id} payment failed\`);
-        // Handle dunning, send payment retry email
-        break;
-        
-      default:
-        console.log(\`Unhandled event type: \${event.type}\`);
-    }
-    
-    res.status(200).json({ received: true });
-  } catch (error) {
-    console.error('Webhook error:', error);
-    res.status(400).send('Webhook Error');
-  }
-});
-
-// Start server
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
-});`}
-        javascript={`const express = require('express');
-const { StripeAPI } = require('macro_api');
-
-const app = express();
-const stripe = new StripeAPI({
-  secretKey: process.env.STRIPE_SECRET_KEY
-});
-
-// Webhook endpoint
-app.post('/stripe/webhook', express.raw({ type: 'application/json' }), (req, res) => {
-  const signature = req.headers['stripe-signature'];
-  
-  try {
-    const event = stripe.constructWebhookEvent(
-      req.body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-    
-    // Handle events
-    switch (event.type) {
-      case 'payment_intent.succeeded':
-        console.log('Payment succeeded!');
-        break;
-      case 'customer.subscription.created':
-        console.log('New subscription created');
-        break;
-      default:
-        console.log(\`Unhandled event: \${event.type}\`);
-    }
-    
-    res.status(200).json({ received: true });
-  } catch (error) {
-    console.error('Webhook error:', error);
-    res.status(400).send('Webhook Error');
-  }
-});`}
-        title="Webhook event handling"
-      />
-
-      ## Advanced Features
-
-      ### Refunds and Disputes
-
-      <CodeExampleSwitcher
-        typescript={`// Create a refund
-async function createRefund(paymentIntentId: string, amount?: number) {
-  const refund = await stripe.createRefund({
-    payment_intent: paymentIntentId,
-    amount: amount, // Optional: partial refund
-    reason: 'requested_by_customer',
-    metadata: {
-      refundDate: new Date().toISOString(),
-      processedBy: 'customer_service'
-    }
-  });
-  
-  console.log('Refund created:', refund.id);
-  return refund;
-}
-
-// List refunds
-async function listRefunds(chargeId?: string) {
-  const refunds = await stripe.listRefunds({
-    charge: chargeId,
-    limit: 50
-  });
-  
-  return refunds;
-}
-
-// Update refund metadata
-async function updateRefund(refundId: string) {
-  const updatedRefund = await stripe.updateRefund(refundId, {
-    metadata: {
-      status: 'processed',
-      notes: 'Customer service approved refund'
-    }
-  });
-  
-  return updatedRefund;
-}`}
-        javascript={`// Refund management
-async function createRefund(paymentIntentId, amount) {
-  const refund = await stripe.createRefund({
-    payment_intent: paymentIntentId,
-    amount: amount,
-    reason: 'requested_by_customer'
-  });
-  
-  return refund;
-}
-
-async function listRefunds(chargeId) {
-  return await stripe.listRefunds({
-    charge: chargeId,
-    limit: 50
-  });
-}`}
-        title="Refund processing"
-      />
-
-      ### Payment Methods
-
-      <CodeExampleSwitcher
-        typescript={`// Create a payment method
-async function createPaymentMethod() {
-  const paymentMethod = await stripe.createPaymentMethod({
-    type: 'card',
-    card: {
-      number: '4242424242424242',
-      exp_month: 12,
-      exp_year: 2025,
-      cvc: '123'
-    },
-    billing_details: {
-      name: 'John Doe',
-      email: 'john@example.com',
-      address: {
-        line1: '123 Main St',
-        city: 'San Francisco',
-        state: 'CA',
-        postal_code: '94111',
-        country: 'US'
-      }
-    }
-  });
-  
-  return paymentMethod;
-}
-
-// Attach payment method to customer
-async function attachPaymentMethod(paymentMethodId: string, customerId: string) {
-  const attachedPaymentMethod = await stripe.attachPaymentMethod(paymentMethodId, {
-    customer: customerId
-  });
-  
-  return attachedPaymentMethod;
-}
-
-// List customer's payment methods
-async function listPaymentMethods(customerId: string) {
-  const paymentMethods = await stripe.listPaymentMethods({
-    customer: customerId,
-    type: 'card'
-  });
-  
-  console.log(\`Customer has \${paymentMethods.data.length} saved cards\`);
-  return paymentMethods;
-}
-
-// Detach payment method
-async function detachPaymentMethod(paymentMethodId: string) {
-  const detachedPaymentMethod = await stripe.detachPaymentMethod(paymentMethodId);
-  return detachedPaymentMethod;
-}`}
-        javascript={`// Payment method management
-async function createPaymentMethod() {
-  const paymentMethod = await stripe.createPaymentMethod({
-    type: 'card',
-    card: {
-      number: '4242424242424242',
-      exp_month: 12,
-      exp_year: 2025,
-      cvc: '123'
-    }
-  });
-  
-  return paymentMethod;
-}
-
-async function attachPaymentMethod(paymentMethodId, customerId) {
-  return await stripe.attachPaymentMethod(paymentMethodId, {
-    customer: customerId
-  });
-}`}
-        title="Payment method management"
-      />
-
-      ## Error Handling
-
-      <InfoBox type="warning" title="Rate Limits">
-        Stripe has rate limits on API requests. The macro_api wrapper includes automatic retry logic for rate-limited requests.
-      </InfoBox>
-
-      <CodeExampleSwitcher
-        typescript={`import { StripeAPI, MacroApiError } from 'macro_api';
-
-const stripe = new StripeAPI({
-  secretKey: process.env.STRIPE_SECRET_KEY
-});
-
-// Comprehensive error handling
-async function robustPaymentProcessing() {
-  try {
-    const paymentIntent = await stripe.createPaymentIntent({
-      amount: 2000,
-      currency: 'usd',
-      payment_method_types: ['card']
-    });
-    
-    return paymentIntent;
-  } catch (error) {
-    if (error instanceof MacroApiError) {
-      // Handle specific Stripe errors
-      switch (error.code) {
-        case 'card_declined':
-          console.error('Card was declined:', error.message);
-          // Show user-friendly message
-          break;
-        case 'insufficient_funds':
-          console.error('Insufficient funds:', error.message);
-          // Suggest alternative payment method
-          break;
-        case 'authentication_required':
-          console.error('Authentication required:', error.message);
-          // Redirect to 3D Secure
-          break;
-        case 'rate_limit_error':
-          console.error('Rate limit exceeded:', error.message);
-          // Implement exponential backoff
-          break;
-        default:
-          console.error('Stripe error:', error.message);
-      }
-    } else {
-      console.error('Unexpected error:', error);
-    }
-    
-    throw error;
-  }
-}
-
-// Retry logic for network issues
-async function retryableStripeOperation<T>(
-  operation: () => Promise<T>,
-  maxRetries = 3
-): Promise<T> {
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      return await operation();
-    } catch (error) {
-      if (error instanceof MacroApiError && 
-          error.statusCode === 429 && 
-          attempt < maxRetries) {
-        const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
-        console.log(\`Rate limited, retrying in \${delay}ms...\`);
-        await new Promise(resolve => setTimeout(resolve, delay));
-        continue;
-      }
-      throw error;
-    }
-  }
-  
-  throw new Error('Max retries exceeded');
-}
-
-// Usage with retry logic
-async function createPaymentWithRetry() {
-  return await retryableStripeOperation(() => 
-    stripe.createPaymentIntent({
-      amount: 5000,
-      currency: 'usd'
-    })
-  );
-}`}
-        javascript={`const { StripeAPI, MacroApiError } = require('macro_api');
-
-const stripe = new StripeAPI({
-  secretKey: process.env.STRIPE_SECRET_KEY
-});
-
-// Error handling
-async function robustPaymentProcessing() {
-  try {
-    const paymentIntent = await stripe.createPaymentIntent({
-      amount: 2000,
-      currency: 'usd',
-      payment_method_types: ['card']
-    });
-    
-    return paymentIntent;
-  } catch (error) {
-    if (error instanceof MacroApiError) {
-      switch (error.code) {
-        case 'card_declined':
-          console.error('Card declined:', error.message);
-          break;
-        case 'rate_limit_error':
-          console.error('Rate limit exceeded');
-          break;
-        default:
-          console.error('Stripe error:', error.message);
-      }
-    }
-    throw error;
-  }
-}`}
-        title="Robust error handling"
-      />
-
-      ## Testing
-
-      <InfoBox type="tip" title="Test Mode">
-        Always test your integration using Stripe's test mode before going live. Use test card numbers and API keys that start with `sk_test_`.
-      </InfoBox>
-
-      ### Test Card Numbers
-
-      <div className="not-prose my-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-          <h3 className="text-lg font-semibold mb-4">Common Test Cards</h3>
-          <div className="space-y-3 text-sm font-mono">
-            <div className="flex justify-between">
-              <span>4242424242424242</span>
-              <span className="text-gray-500">Visa - Always succeeds</span>
-            </div>
-            <div className="flex justify-between">
-              <span>4000000000000002</span>
-              <span className="text-gray-500">Visa - Always declined</span>
-            </div>
-            <div className="flex justify-between">
-              <span>4000000000009995</span>
-              <span className="text-gray-500">Visa - Always fails with insufficient funds</span>
-            </div>
-            <div className="flex justify-between">
-              <span>4000002500003155</span>
-              <span className="text-gray-500">Visa - Requires authentication (3D Secure)</span>
-            </div>
-            <div className="flex justify-between">
-              <span>5555555555554444</span>
-              <span className="text-gray-500">Mastercard - Always succeeds</span>
-            </div>
-          </div>
-          <p className="text-xs text-gray-500 mt-4">
-            Use any future expiry date and any 3-digit CVC for test cards.
-          </p>
-        </div>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50/50 via-white to-purple-50/50 dark:from-gray-950 dark:via-blue-950/30 dark:to-purple-950/20 relative overflow-hidden">
+      {/* Background effects matching main page */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-gradient-to-r from-blue-400 to-purple-600 rounded-full opacity-10 blur-3xl animate-float" />
+        <div className="absolute bottom-1/4 right-1/4 w-32 h-32 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-gradient-to-r from-purple-400 to-pink-600 rounded-full opacity-10 blur-3xl animate-float" style={{ animationDelay: '-3s' }} />
+        <div 
+          className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]" 
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='none' fill-rule='evenodd'%3e%3cg fill='%23000' fill-opacity='0.4'%3e%3ccircle cx='7' cy='7' r='1'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e")`
+          }} 
+        />
       </div>
 
-      <CodeExampleSwitcher
-        typescript={`// Test payment creation
-async function testPayment() {
-  const testPayment = await stripe.createPaymentIntent({
-    amount: 1000, // $10.00
-    currency: 'usd',
-    payment_method_types: ['card'],
-    confirm: true,
-    payment_method: {
-      type: 'card',
-      card: {
-        number: '4242424242424242', // Test card
-        exp_month: 12,
-        exp_year: 2025,
-        cvc: '123'
-      }
-    },
-    return_url: 'https://your-website.com/return'
-  });
-  
-  console.log('Test payment status:', testPayment.status);
-  return testPayment;
-}
+      <div className="relative z-10 container-responsive section-padding">
+        {/* Header */}
+        <div className="text-center section-margin-sm">
+          <div className="glass-nav inline-flex items-center mb-6 sm:mb-8">
+            <CreditCard className="h-4 w-4 mr-2 text-primary animate-pulse" />
+            <span className="text-sm font-medium text-foreground">
+              Payment Processing
+            </span>
+          </div>
+          
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="bg-blue-500 p-3 rounded-full">
+              <CreditCard className="h-8 w-8 text-white" />
+            </div>
+            <div className="text-left">
+              <h1 className="text-responsive-lg font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+                Stripe API
+              </h1>
+              <p className="text-responsive-xs text-muted-foreground">
+                Complete payment processing solution with subscriptions, webhooks, and comprehensive financial operations
+              </p>
+            </div>
+          </div>
 
-// Test webhook locally with Stripe CLI
-// Install: npm install -g stripe-cli
-// Login: stripe login
-// Forward webhooks: stripe listen --forward-to localhost:3000/stripe/webhook`}
-        javascript={`// Test payment creation
-async function testPayment() {
-  const testPayment = await stripe.createPaymentIntent({
-    amount: 1000,
-    currency: 'usd',
-    payment_method_types: ['card'],
-    confirm: true,
-    payment_method: {
-      type: 'card',
-      card: {
-        number: '4242424242424242',
-        exp_month: 12,
-        exp_year: 2025,
-        cvc: '123'
-      }
-    }
-  });
-  
-  return testPayment;
-}`}
-        title="Testing payments"
-      />
+          <p className="text-responsive-sm text-muted-foreground max-w-3xl mx-auto mb-6">
+            The Stripe API wrapper provides comprehensive payment processing capabilities for modern applications. 
+            Handle one-time payments, recurring subscriptions, customer management, and complex financial operations with ease.
+          </p>
 
-      ## Best Practices
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-blue-600 dark:text-blue-400 border border-blue-500/20">Payment Processing</span>
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-green-600 dark:text-green-400 border border-green-500/20">Subscriptions</span>
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-purple-600 dark:text-purple-400 border border-purple-500/20">Webhooks</span>
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-orange-600 dark:text-orange-400 border border-orange-500/20">Multi-currency</span>
+          </div>
+        </div>
 
-      <InfoBox type="tip" title="Performance Tips">
-        - Use idempotency keys for critical operations to prevent duplicate charges
-        - Implement webhook handling for reliable event processing
-        - Store Stripe IDs in your database for easy reference
-        - Use metadata to link Stripe objects to your application data
-      </InfoBox>
+        {/* Key Features */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient flex items-center">
+            <Sparkles className="h-6 w-6 mr-2" />
+            Key Features
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {features.map((feature, index) => (
+              <div key={index} className="glass-card group hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-start space-x-4">
+                  <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                    {feature.icon}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold mb-2 group-hover:text-primary transition-colors">
+                      {feature.name}
+                    </h3>
+                    <p className="text-muted-foreground text-sm">{feature.description}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
-      ### Security Considerations
+        {/* Installation */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient flex items-center">
+            <Download className="h-6 w-6 mr-2" />
+            Installation
+          </h2>
+          <CodeBlock code={installCode} language="bash" id="install" />
+        </div>
 
-      <CodeExampleSwitcher
-        typescript={`// Best practices for secure Stripe integration
+        {/* Main Content Tabs */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <Tabs defaultValue="quickstart" className="space-y-6">
+            <div className="flex flex-wrap gap-2 mb-6">
+              <TabsTrigger value="quickstart" className="glass-button">Quick Start</TabsTrigger>
+              <TabsTrigger value="authentication" className="glass-button">Authentication</TabsTrigger>
+              <TabsTrigger value="customers" className="glass-button">Customers</TabsTrigger>
+              <TabsTrigger value="subscriptions" className="glass-button">Subscriptions</TabsTrigger>
+              <TabsTrigger value="advanced" className="glass-button">Advanced</TabsTrigger>
+            </div>
 
-// 1. Always validate webhooks
-function validateWebhook(payload: Buffer, signature: string): boolean {
-  try {
-    stripe.constructWebhookEvent(payload, signature, process.env.STRIPE_WEBHOOK_SECRET!);
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
+            {/* Quick Start */}
+            <TabsContent value="quickstart" className="space-y-6">
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                    <Code className="h-5 w-5 mr-2 text-primary" />
+                    Basic Setup
+                  </h3>
+                  <p className="text-muted-foreground mb-4">Initialize the Stripe API client for payment processing</p>
+                  <CodeBlock code={basicSetupCode} id="basic-setup" />
+                </div>
 
-// 2. Use idempotency keys for critical operations
-async function idempotentPayment(customerId: string, amount: number) {
-  const idempotencyKey = \`payment_\${customerId}_\${amount}_\${Date.now()}\`;
-  
-  const paymentIntent = await stripe.createPaymentIntent({
-    amount,
-    currency: 'usd',
-    customer: customerId
-  }, {
-    idempotencyKey // Prevents duplicate charges
-  });
-  
-  return paymentIntent;
-}
+                <div className="glass-card bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-blue-500/20 dark:border-blue-400/20">
+                  <div className="flex items-start space-x-4">
+                    <Key className="h-6 w-6 text-blue-600 mt-1" />
+                    <div>
+                      <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">API Key Required</h4>
+                      <p className="text-blue-700 dark:text-blue-300 text-sm leading-relaxed">
+                        You need a valid Stripe secret key to use the Stripe API. Never expose your secret key in client-side code.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
 
-// 3. Store minimal PII, use Stripe Customer objects
-async function createSecureCustomer(email: string, name: string) {
-  // Store sensitive data in Stripe, reference by ID
-  const customer = await stripe.createCustomer({
-    email,
-    name,
-    metadata: {
-      internalUserId: 'user_12345' // Your internal reference
-    }
-  });
-  
-  // Store only the Stripe customer ID in your database
-  await database.users.update('user_12345', {
-    stripeCustomerId: customer.id
-  });
-  
-  return customer;
-}
+            {/* Authentication */}
+            <TabsContent value="authentication" className="space-y-6">
+              <div>
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                  <Key className="h-5 w-5 mr-2 text-primary" />
+                  Getting Your Stripe API Key
+                </h3>
+                <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
+                  <div className="space-y-3 text-sm">
+                    <div className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
+                      <span>Sign up for a Stripe account at <a href="https://stripe.com" className="underline" target="_blank" rel="noopener noreferrer">stripe.com</a></span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
+                      <span>Go to your Stripe Dashboard</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
+                      <span>Navigate to Developers {'>'} API keys</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
+                      <span>Copy your Secret key (starts with `sk_test_` for test mode)</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
+                      <span>For production, use your live Secret key (starts with `sk_live_`)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
 
-// 4. Implement proper error boundaries
-class PaymentService {
-  private stripe: StripeAPI;
-  
-  constructor() {
-    this.stripe = new StripeAPI({
-      secretKey: process.env.STRIPE_SECRET_KEY!
-    });
-  }
-  
-  async processPayment(amount: number, customerId: string) {
-    try {
-      const paymentIntent = await this.stripe.createPaymentIntent({
-        amount,
-        currency: 'usd',
-        customer: customerId,
-        confirmation_method: 'manual',
-        capture_method: 'manual' // Manual capture for review
-      });
-      
-      // Log successful payment creation
-      console.log(\`Payment intent created: \${paymentIntent.id}\`);
-      
-      return paymentIntent;
-    } catch (error) {
-      // Log error for monitoring
-      console.error('Payment creation failed:', {
-        error: error instanceof Error ? error.message : 'Unknown error',
-        customerId,
-        amount,
-        timestamp: new Date().toISOString()
-      });
-      
-      throw error;
-    }
-  }
-}`}
-        javascript={`// Security best practices
+            {/* Customers */}
+            <TabsContent value="customers" className="space-y-6">
+              <div>
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                  <Users className="h-5 w-5 mr-2 text-primary" />
+                  Customer Management
+                </h3>
+                <p className="text-muted-foreground mb-4">Create and manage customer information securely</p>
+                <CodeBlock code={customerCode} id="customer-examples" />
+              </div>
+            </TabsContent>
 
-// Validate webhooks
-function validateWebhook(payload, signature) {
-  try {
-    stripe.constructWebhookEvent(payload, signature, process.env.STRIPE_WEBHOOK_SECRET);
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
+            {/* Subscriptions */}
+            <TabsContent value="subscriptions" className="space-y-6">
+              <div>
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                  <RefreshCw className="h-5 w-5 mr-2 text-primary" />
+                  Subscription Management
+                </h3>
+                <p className="text-muted-foreground mb-4">Handle recurring billing and subscription lifecycle</p>
+                <CodeBlock code={subscriptionCode} id="subscription-examples" />
+              </div>
+            </TabsContent>
 
-// Use idempotency keys
-async function idempotentPayment(customerId, amount) {
-  const idempotencyKey = \`payment_\${customerId}_\${amount}_\${Date.now()}\`;
-  
-  const paymentIntent = await stripe.createPaymentIntent({
-    amount,
-    currency: 'usd',
-    customer: customerId
-  }, {
-    idempotencyKey
-  });
-  
-  return paymentIntent;
-}`}
-        title="Security and reliability patterns"
-      />
+            {/* Advanced */}
+            <TabsContent value="advanced" className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="glass-card bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
+                  <h4 className="font-semibold text-green-600 mb-4 flex items-center">
+                    <Sparkles className="h-5 w-5 mr-2" />
+                    Advanced Features
+                  </h4>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <span>Multi-currency support</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <span>Webhook event handling</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <span>Marketplace payments</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <span>Advanced fraud protection</span>
+                    </li>
+                  </ul>
+                </div>
 
-      ## API Reference
+                <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
+                  <h4 className="font-semibold text-blue-600 mb-4 flex items-center">
+                    <Shield className="h-5 w-5 mr-2" />
+                    Rate Limits
+                  </h4>
+                  <div className="space-y-2 text-sm">
+                    {rateLimits.map((limit, index) => (
+                      <div key={index} className="flex justify-between">
+                        <span className="font-medium">{limit.tier}:</span>
+                        <span>{limit.limit}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
 
-      For complete API documentation and additional endpoints, visit the [official Stripe API documentation](https://stripe.com/docs/api).
+        {/* Next Steps */}
+        <div className="glass-card">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Next Steps</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <a href="/documentation?section=paypal" className="glass-card group hover:scale-[1.02] transition-all duration-300">
+              <div className="flex items-start space-x-4">
+                <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                  <CreditCard className="h-6 w-6 text-yellow-600" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">PayPal API</h3>
+                  <p className="text-muted-foreground text-sm mb-3">Explore PayPal integration for additional payment options</p>
+                  <div className="flex items-center text-primary text-sm font-medium">
+                    <span>Learn More</span>
+                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </div>
+            </a>
 
-      ### Rate Limits
-
-      - Test mode: 25 requests per second
-      - Live mode: 100 requests per second (can be increased)
-      - Webhook endpoints: 100 requests per second
-
-      ### Supported Currencies
-
-      Stripe supports 135+ currencies including USD, EUR, GBP, JPY, CAD, AUD, and many more. Check the [supported currencies list](https://stripe.com/docs/currencies) for the complete list.
-
-      ### Support
-
-      - [Stripe API Documentation](https://stripe.com/docs/api)
-      - [Stripe Dashboard](https://dashboard.stripe.com/)
-      - [GitHub Issues](https://github.com/cptcr/macro_api/issues)
+            <a href="/documentation?section=core-cache" className="glass-card group hover:scale-[1.02] transition-all duration-300">
+              <div className="flex items-start space-x-4">
+                <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                  <Sparkles className="h-6 w-6 text-purple-600" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">Caching Guide</h3>
+                  <p className="text-muted-foreground text-sm mb-3">Learn how to optimize performance with caching</p>
+                  <div className="flex items-center text-primary text-sm font-medium">
+                    <span>Learn Caching</span>
+                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
