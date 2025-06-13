@@ -1,4 +1,3 @@
-// src/components/documentation/DocsSidebar.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -36,7 +35,11 @@ import {
   Sparkles,
   Star,
   TrendingUp,
-  Clock
+  Clock,
+  Users,
+  Globe,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 
 interface NavigationItem {
@@ -172,16 +175,16 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
   };
 
   return (
-    <div className="h-screen overflow-hidden flex flex-col bg-gradient-to-b from-white/50 to-white/30 dark:from-gray-900/50 dark:to-gray-900/30">
+    <div className="h-screen overflow-hidden flex flex-col bg-gradient-to-b from-white/50 to-white/30 dark:from-gray-900/50 dark:to-gray-900/30 backdrop-glass">
       {/* Enhanced Header */}
       <div className="p-4 sm:p-6 border-b border-white/20 dark:border-white/10 bg-gradient-to-r from-blue-500/10 to-purple-500/10">
         <div className="flex items-center space-x-3 mb-4 sm:mb-6">
-          <div className="p-2 glass rounded-xl">
+          <div className="glass rounded-xl p-2">
             <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600 dark:text-blue-400" />
           </div>
           <div className="flex-1">
             <h2 className="text-base sm:text-lg font-bold text-gradient">Documentation</h2>
-            <p className="text-xs text-gray-600 dark:text-gray-400">Complete API Reference</p>
+            <p className="text-xs text-muted-foreground">Complete API Reference</p>
           </div>
           <div className="flex items-center space-x-1">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -191,19 +194,19 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
         
         {/* Enhanced Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
             type="text"
             placeholder="Search docs..."
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 sm:py-3 text-sm input-glass placeholder:text-gray-500 dark:placeholder:text-gray-400 
+            className="w-full pl-10 pr-4 py-2.5 sm:py-3 text-sm input-glass placeholder:text-muted-foreground 
                      focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-all duration-300"
           />
           {searchTerm && (
             <button
               onClick={() => onSearchChange('')}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
             >
               ×
             </button>
@@ -212,15 +215,15 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
 
         {/* Quick stats */}
         <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-          <div className="glass rounded-lg p-2">
+          <div className="glass rounded-lg p-2 hover:scale-105 transition-all duration-300">
             <div className="text-sm font-bold text-foreground">15+</div>
             <div className="text-xs text-muted-foreground">APIs</div>
           </div>
-          <div className="glass rounded-lg p-2">
+          <div className="glass rounded-lg p-2 hover:scale-105 transition-all duration-300">
             <div className="text-sm font-bold text-foreground">100+</div>
             <div className="text-xs text-muted-foreground">Methods</div>
           </div>
-          <div className="glass rounded-lg p-2">
+          <div className="glass rounded-lg p-2 hover:scale-105 transition-all duration-300">
             <div className="text-sm font-bold text-foreground">1.2K+</div>
             <div className="text-xs text-muted-foreground">Stars</div>
           </div>
@@ -230,7 +233,7 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
       {/* Enhanced Navigation */}
       <nav className="flex-1 overflow-y-auto scrollbar-modern p-3 sm:p-4 space-y-2">
         {(filteredSections.length > 0 ? filteredSections : navigation).map((section, sectionIndex) => (
-          <div key={section.id} className="mb-2" style={{ animationDelay: `${sectionIndex * 0.05}s` }}>
+          <div key={section.id} className="mb-2 animate-fade-in" style={{ animationDelay: `${sectionIndex * 0.05}s` }}>
             <button
               onClick={() => toggleSection(section.id)}
               className="flex items-center w-full text-left px-3 py-2.5 sm:py-3 text-sm font-semibold 
@@ -238,7 +241,7 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
                        transition-all duration-300 group border border-white/20 dark:border-white/10 hover:scale-[1.02]"
             >
               <section.icon className="h-4 w-4 sm:h-5 sm:w-5 mr-3 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform" />
-              <span className="flex-1 text-gray-900 dark:text-gray-100">{section.title}</span>
+              <span className="flex-1 text-foreground">{section.title}</span>
               
               {/* Section badges */}
               {section.badge && (
@@ -248,7 +251,7 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
               )}
               
               <div className={`transition-transform duration-300 ${expandedSections[section.id] ? 'rotate-90' : ''}`}>
-                <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
+                <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
               </div>
             </button>
             
@@ -262,14 +265,14 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
                               transition-all duration-300 group border ${
                       activeSection === item.id
                         ? 'glass bg-gradient-to-r from-blue-500/20 to-purple-500/20 border-blue-500/30 dark:border-blue-400/30 text-blue-700 dark:text-blue-300 font-medium shadow-lg scale-[1.02]'
-                        : 'border-transparent hover:glass hover:bg-white/10 dark:hover:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:scale-[1.01]'
+                        : 'border-transparent hover:glass hover:bg-white/10 dark:hover:bg-white/5 text-muted-foreground hover:text-foreground hover:scale-[1.01]'
                     }`}
                     style={{ animationDelay: `${itemIndex * 0.02}s` }}
                   >
                     <item.icon className={`h-3 w-3 sm:h-4 sm:w-4 mr-2 sm:mr-3 transition-all duration-300 ${
                       activeSection === item.id
                         ? 'text-blue-600 dark:text-blue-400 scale-110'
-                        : 'text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 group-hover:scale-105'
+                        : 'text-muted-foreground group-hover:text-foreground group-hover:scale-105'
                     }`} />
                     <span className="truncate flex-1">{item.title}</span>
                     
@@ -302,8 +305,8 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
         {searchTerm && filteredSections.length === 0 && (
           <div className="text-center py-8 sm:py-12 animate-fade-in">
             <div className="glass-card p-4 sm:p-6 border border-white/20 dark:border-white/10">
-              <Search className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400 mx-auto mb-3" />
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+              <Search className="h-6 w-6 sm:h-8 sm:w-8 text-muted-foreground mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground mb-2">
                 No documentation found for "{searchTerm}"
               </p>
               <button
@@ -319,12 +322,12 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
 
       {/* Enhanced Footer */}
       <div className="border-t border-white/20 dark:border-white/10 p-3 sm:p-4">
-        <div className="glass-card p-3 sm:p-4 text-xs text-gray-500 dark:text-gray-400 space-y-3">
+        <div className="glass-card p-3 sm:p-4 text-xs text-muted-foreground space-y-3">
           {/* Version and status */}
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <span className="font-medium">Version</span>
-              <span className="font-mono bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded-lg text-blue-700 dark:text-blue-300">3.0.0</span>
+              <span className="font-mono glass px-2 py-1 rounded-lg text-blue-700 dark:text-blue-300 border border-blue-500/20">3.0.0</span>
             </div>
             <div className="flex items-center space-x-1">
               <Clock className="h-3 w-3 text-green-500" />
@@ -344,9 +347,18 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
               <span className="text-xs font-medium">What's New</span>
             </div>
             <ul className="text-xs space-y-1 text-muted-foreground">
-              <li>• Core Infrastructure docs</li>
-              <li>• Docker Hub API added</li>
-              <li>• Enhanced error handling</li>
+              <li className="flex items-center">
+                <div className="w-1 h-1 bg-blue-500 rounded-full mr-2"></div>
+                Core Infrastructure docs
+              </li>
+              <li className="flex items-center">
+                <div className="w-1 h-1 bg-green-500 rounded-full mr-2"></div>
+                Docker Hub API added
+              </li>
+              <li className="flex items-center">
+                <div className="w-1 h-1 bg-purple-500 rounded-full mr-2"></div>
+                Enhanced error handling
+              </li>
             </ul>
           </div>
           
@@ -356,18 +368,18 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
               href="https://github.com/cptcr/macro_api"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 btn-ghost text-xs py-2 text-center rounded-lg hover:bg-blue-500/10 flex items-center justify-center space-x-1"
+              className="flex-1 glass-button text-xs py-2 text-center rounded-lg hover:bg-blue-500/10 flex items-center justify-center space-x-1 group"
             >
-              <Github className="h-3 w-3" />
+              <Github className="h-3 w-3 group-hover:scale-110 transition-transform" />
               <span>GitHub</span>
             </a>
             <a
               href="https://github.com/cptcr/macro_api/issues"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 btn-ghost text-xs py-2 text-center rounded-lg hover:bg-red-500/10 flex items-center justify-center space-x-1"
+              className="flex-1 glass-button text-xs py-2 text-center rounded-lg hover:bg-red-500/10 flex items-center justify-center space-x-1 group"
             >
-              <AlertCircle className="h-3 w-3" />
+              <AlertCircle className="h-3 w-3 group-hover:scale-110 transition-transform" />
               <span>Issues</span>
             </a>
           </div>
@@ -375,11 +387,27 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
           {/* Progress indicator */}
           <div className="pt-3 border-t border-white/20 dark:border-gray-700">
             <div className="flex items-center justify-between text-xs mb-1">
-              <span>Documentation Progress</span>
+              <span className="flex items-center">
+                <TrendingUp className="h-3 w-3 mr-1" />
+                Documentation Progress
+              </span>
               <span>95%</span>
             </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-              <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-1.5 rounded-full transition-all duration-500" style={{ width: '95%' }}></div>
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-1.5 rounded-full transition-all duration-500 relative" style={{ width: '95%' }}>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Community stats */}
+          <div className="pt-3 border-t border-white/20 dark:border-gray-700 text-center">
+            <div className="glass rounded-full px-3 py-2 inline-flex items-center space-x-2 text-xs text-muted-foreground hover:scale-105 transition-all duration-300">
+              <Users className="h-3 w-3" />
+              <span>Used in 50+ countries</span>
+              <span className="text-muted-foreground">•</span>
+              <Star className="h-3 w-3 text-yellow-500" />
+              <span>1.2K+ stars</span>
             </div>
           </div>
         </div>

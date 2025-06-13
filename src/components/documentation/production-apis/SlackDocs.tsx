@@ -1,83 +1,143 @@
 import React from 'react';
 import CodeExampleSwitcher from '@/components/common/CodeExampleSwitcher';
 import InfoBox from '@/components/common/InfoBox';
-import { ExternalLink, Key, Shield, AlertCircle, CheckCircle, Zap, Database, Users, MessageSquare, Hash, Bell } from 'lucide-react';
+import { ExternalLink, Key, Shield, AlertCircle, CheckCircle, Zap, Database, Users, MessageSquare, Hash, Bell, Sparkles, ArrowRight, Code, Download } from 'lucide-react';
 
 const SlackDocs: React.FC = () => {
   return (
-    <div className="prose prose-gray dark:prose-invert max-w-none">
-      {/* Header */}
-      <div className="not-prose mb-8">
-        <div className="flex items-center mb-4">
-          <div className="mr-4 text-purple-600 dark:text-purple-400">
-            <MessageSquare className="h-10 w-10" />
-          </div>
-          <div>
-            <h1 className="text-4xl font-bold mb-2">Slack API</h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300">
-              Team communication and workflow automation
-            </p>
-          </div>
-        </div>
-        
-        <div className="flex flex-wrap gap-2 mb-6">
-          <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full text-sm">
-            Messages
-          </span>
-          <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm">
-            File Sharing
-          </span>
-          <span className="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm">
-            Channel Management
-          </span>
-          <span className="px-3 py-1 bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 rounded-full text-sm">
-            Slash Commands
-          </span>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50/50 via-white to-purple-50/50 dark:from-gray-950 dark:via-blue-950/30 dark:to-purple-950/20 relative overflow-hidden">
+      {/* Background effects matching main page */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-gradient-to-r from-blue-400 to-purple-600 rounded-full opacity-10 blur-3xl animate-float" />
+        <div className="absolute bottom-1/4 right-1/4 w-32 h-32 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-gradient-to-r from-purple-400 to-pink-600 rounded-full opacity-10 blur-3xl animate-float" style={{ animationDelay: '-3s' }} />
+        <div 
+          className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]" 
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='none' fill-rule='evenodd'%3e%3cg fill='%23000' fill-opacity='0.4'%3e%3ccircle cx='7' cy='7' r='1'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e")`
+          }} 
+        />
       </div>
 
-      ## Overview
-
-      The Slack API wrapper provides comprehensive integration for team communication, file sharing, and workflow automation. 
-      Build powerful Slack bots, automate team notifications, and create custom slash commands with ease.
-
-      ### Key Features
-
-      <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <MessageSquare className="h-6 w-6 text-blue-600 mb-2" />
-          <h3 className="font-semibold mb-1">Message Sending</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Send rich messages with attachments and formatting</p>
+      <div className="relative z-10 container-responsive section-padding">
+        {/* Header Section */}
+        <div className="text-center section-margin-sm">
+          <div className="glass-nav inline-flex items-center mb-6 sm:mb-8">
+            <MessageSquare className="h-4 w-4 mr-2 text-primary animate-pulse" />
+            <span className="text-sm font-medium text-foreground">
+              Production APIs
+            </span>
+          </div>
+          
+          <div className="flex items-center justify-center mb-6">
+            <div className="mr-4 sm:mr-6 text-purple-600 dark:text-purple-400">
+              <MessageSquare className="h-12 w-12 sm:h-16 sm:w-16" />
+            </div>
+            <div className="text-left">
+              <h1 className="text-responsive-lg font-bold mb-2 text-gradient-secondary">
+                Slack API
+              </h1>
+              <p className="text-responsive-xs text-muted-foreground">
+                Team communication and workflow automation
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8">
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-purple-600 dark:text-purple-400 border border-purple-500/20">
+              Messages
+            </span>
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-blue-600 dark:text-blue-400 border border-blue-500/20">
+              File Sharing
+            </span>
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-green-600 dark:text-green-400 border border-green-500/20">
+              Channel Management
+            </span>
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-orange-600 dark:text-orange-400 border border-orange-500/20">
+              Slash Commands
+            </span>
+          </div>
         </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <Database className="h-6 w-6 text-green-600 mb-2" />
-          <h3 className="font-semibold mb-1">File Sharing</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Upload and share files in channels</p>
+
+        {/* Overview Section */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Overview</h2>
+          <p className="text-responsive-sm text-muted-foreground leading-relaxed mb-8">
+            The Slack API wrapper provides comprehensive integration for team communication, file sharing, and workflow automation. 
+            Build powerful Slack bots, automate team notifications, and create custom slash commands with ease.
+          </p>
+
+          <div className="mb-8">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-6 flex items-center">
+              <Sparkles className="h-6 w-6 mr-2 text-primary" />
+              Key Features
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              <div className="glass-card group hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-start space-x-4">
+                  <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                    <MessageSquare className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2">Message Sending</h4>
+                    <p className="text-sm text-muted-foreground">Send rich messages with attachments and formatting</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="glass-card group hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-start space-x-4">
+                  <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                    <Database className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2">File Sharing</h4>
+                    <p className="text-sm text-muted-foreground">Upload and share files in channels</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="glass-card group hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-start space-x-4">
+                  <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                    <Hash className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2">Channel Management</h4>
+                    <p className="text-sm text-muted-foreground">Create and manage channels programmatically</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="glass-card group hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-start space-x-4">
+                  <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                    <Users className="h-6 w-6 text-yellow-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2">User Management</h4>
+                    <p className="text-sm text-muted-foreground">Get user info and manage interactions</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <Hash className="h-6 w-6 text-purple-600 mb-2" />
-          <h3 className="font-semibold mb-1">Channel Management</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Create and manage channels programmatically</p>
+
+        {/* Installation Section */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Installation</h2>
+          <CodeExampleSwitcher
+            typescript="npm install macro_api"
+            javascript="npm install macro_api"
+            title="Install the package"
+          />
         </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <Users className="h-6 w-6 text-yellow-600 mb-2" />
-          <h3 className="font-semibold mb-1">User Management</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Get user info and manage interactions</p>
-        </div>
-      </div>
 
-      ## Installation
-
-      <CodeExampleSwitcher
-        typescript="npm install macro_api"
-        javascript="npm install macro_api"
-        title="Install the package"
-      />
-
-      ## Quick Start
-
-      <CodeExampleSwitcher
-        typescript={`import { SlackAPI } from 'macro_api';
+        {/* Quick Start Section */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Quick Start</h2>
+          <CodeExampleSwitcher
+            typescript={`import { SlackAPI } from 'macro_api';
 
 // Initialize the client
 const slack = new SlackAPI({
@@ -94,7 +154,7 @@ async function sendMessage() {
     console.error('Error sending message:', error);
   }
 }`}
-        javascript={`const { SlackAPI } = require('macro_api');
+            javascript={`const { SlackAPI } = require('macro_api');
 
 // Initialize the client
 const slack = new SlackAPI({
@@ -111,30 +171,75 @@ async function sendMessage() {
     console.error('Error sending message:', error);
   }
 }`}
-        title="Basic usage example"
-      />
+            title="Basic usage example"
+          />
+        </div>
 
-      ## Authentication
+        {/* Authentication Section */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Authentication</h2>
 
-      <InfoBox type="info" title="Slack App Required">
-        You need to create a Slack app and configure bot permissions to use the Slack API.
-      </InfoBox>
+          <InfoBox type="info" title="Slack App Required">
+            You need to create a Slack app and configure bot permissions to use the Slack API.
+          </InfoBox>
 
-      ### Setting Up Your Slack App
+          <div className="mt-8">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-6 flex items-center">
+              <Key className="h-5 w-5 mr-2 text-primary" />
+              Setting Up Your Slack App
+            </h3>
+            
+            <div className="glass-card bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-blue-500/20 dark:border-blue-400/20 mb-6">
+              <ol className="space-y-4 text-sm">
+                <li className="flex items-start">
+                  <span className="flex-shrink-0 w-6 h-6 bg-primary text-white rounded-full text-xs font-medium flex items-center justify-center mr-3 mt-0.5">1</span>
+                  <span>Go to <a href="https://api.slack.com/apps" className="text-primary underline">Slack API Apps</a> and click "Create New App"</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="flex-shrink-0 w-6 h-6 bg-primary text-white rounded-full text-xs font-medium flex items-center justify-center mr-3 mt-0.5">2</span>
+                  <span>Choose "From scratch" and enter your app name and workspace</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="flex-shrink-0 w-6 h-6 bg-primary text-white rounded-full text-xs font-medium flex items-center justify-center mr-3 mt-0.5">3</span>
+                  <div>
+                    <span>Go to "OAuth & Permissions" and add required scopes:</span>
+                    <ul className="mt-2 ml-4 space-y-1">
+                      <li className="flex items-center text-sm">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-xs">chat:write</code> - Send messages
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-xs">files:write</code> - Upload files
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-xs">channels:manage</code> - Create and manage channels
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-xs">users:read</code> - Read user information
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <span className="flex-shrink-0 w-6 h-6 bg-primary text-white rounded-full text-xs font-medium flex items-center justify-center mr-3 mt-0.5">4</span>
+                  <span>Install the app to your workspace</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="flex-shrink-0 w-6 h-6 bg-primary text-white rounded-full text-xs font-medium flex items-center justify-center mr-3 mt-0.5">5</span>
+                  <span>Copy the "Bot User OAuth Token" (starts with <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-xs">xoxb-</code>)</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="flex-shrink-0 w-6 h-6 bg-primary text-white rounded-full text-xs font-medium flex items-center justify-center mr-3 mt-0.5">6</span>
+                  <span>Go to "Basic Information" and copy the "Signing Secret"</span>
+                </li>
+              </ol>
+            </div>
 
-      1. Go to [Slack API Apps](https://api.slack.com/apps) and click "Create New App"
-      2. Choose "From scratch" and enter your app name and workspace
-      3. Go to "OAuth & Permissions" and add required scopes:
-         - `chat:write` - Send messages
-         - `files:write` - Upload files
-         - `channels:manage` - Create and manage channels
-         - `users:read` - Read user information
-      4. Install the app to your workspace
-      5. Copy the "Bot User OAuth Token" (starts with `xoxb-`)
-      6. Go to "Basic Information" and copy the "Signing Secret"
-
-      <CodeExampleSwitcher
-        typescript={`// .env file
+            <CodeExampleSwitcher
+              typescript={`// .env file
 SLACK_BOT_TOKEN=xoxb-your-bot-token-here
 SLACK_SIGNING_SECRET=your-signing-secret-here
 
@@ -145,7 +250,7 @@ const slack = new SlackAPI({
   botToken: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET
 });`}
-        javascript={`// .env file
+              javascript={`// .env file
 SLACK_BOT_TOKEN=xoxb-your-bot-token-here
 SLACK_SIGNING_SECRET=your-signing-secret-here
 
@@ -156,19 +261,27 @@ const slack = new SlackAPI({
   botToken: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET
 });`}
-        title="Environment setup"
-      />
+              title="Environment setup"
+            />
 
-      <InfoBox type="security" title="Security Best Practice">
-        Never hardcode your bot token or signing secret. Always use environment variables or a secure configuration management system.
-      </InfoBox>
+            <InfoBox type="security" title="Security Best Practice">
+              Never hardcode your bot token or signing secret. Always use environment variables or a secure configuration management system.
+            </InfoBox>
+          </div>
+        </div>
 
-      ## Core Methods
-
-      ### Message Operations
-
-      <CodeExampleSwitcher
-        typescript={`// Send simple text message
+        {/* Core Methods Section */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Core Methods</h2>
+          
+          <div className="mb-8">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+              <MessageSquare className="h-5 w-5 mr-2 text-primary" />
+              Message Operations
+            </h3>
+            
+            <CodeExampleSwitcher
+              typescript={`// Send simple text message
 await slack.sendMessage('#general', 'Hello World!');
 
 // Send message with rich formatting
@@ -196,7 +309,7 @@ await slack.updateMessage('#general', '1234567890.123456', 'Updated message cont
 
 // Delete a message
 await slack.deleteMessage('#general', '1234567890.123456');`}
-        javascript={`// Send simple text message
+              javascript={`// Send simple text message
 await slack.sendMessage('#general', 'Hello World!');
 
 // Send message with rich formatting
@@ -218,13 +331,18 @@ await slack.sendMessage('#general', 'Deployment Status', {
 await slack.sendMessage('#general', 'This is a thread reply', {
   threadTs: '1234567890.123456'
 });`}
-        title="Message operations"
-      />
+              title="Message operations"
+            />
+          </div>
 
-      ### File Upload and Sharing
-
-      <CodeExampleSwitcher
-        typescript={`import fs from 'fs';
+          <div className="mb-8">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+              <Database className="h-5 w-5 mr-2 text-primary" />
+              File Upload and Sharing
+            </h3>
+            
+            <CodeExampleSwitcher
+              typescript={`import fs from 'fs';
 
 // Upload a file from buffer
 const fileBuffer = fs.readFileSync('./report.pdf');
@@ -249,7 +367,7 @@ await slack.uploadFile('#analytics', imageBuffer, {
   title: 'Q3 Sales Chart',
   threadTs: '1234567890.123456'
 });`}
-        javascript={`const fs = require('fs');
+              javascript={`const fs = require('fs');
 
 // Upload a file from buffer
 const fileBuffer = fs.readFileSync('./report.pdf');
@@ -266,432 +384,22 @@ await slack.uploadFile('#data', csvContent, {
   filetype: 'csv',
   title: 'User Data Export'
 });`}
-        title="File upload operations"
-      />
+              title="File upload operations"
+            />
+          </div>
+        </div>
 
-      ### Channel Management
+        {/* Error Handling Section */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Error Handling</h2>
 
-      <CodeExampleSwitcher
-        typescript={`// Create a public channel
-const publicChannel = await slack.createChannel('project-alpha');
+          <InfoBox type="warning" title="Rate Limits">
+            Slack has rate limits for different API methods. The wrapper includes built-in retry logic for handling rate limits gracefully.
+          </InfoBox>
 
-// Create a private channel
-const privateChannel = await slack.createChannel('secret-project', {
-  isPrivate: true
-});
-
-// Create channel with topic and purpose
-const channel = await slack.createChannel('team-standup', {
-  topic: 'Daily standup discussions',
-  purpose: 'Share daily updates and blockers'
-});
-
-// Get list of channels
-const channels = await slack.getChannels();
-console.log('Available channels:', channels.map(c => c.name));
-
-// Join a channel
-await slack.joinChannel('#random');
-
-// Invite users to channel
-await slack.inviteUsersToChannel('#project-alpha', ['U123456', 'U789012']);
-
-// Get channel members
-const members = await slack.getChannelMembers('#project-alpha');
-console.log('Channel members:', members);
-
-// Set channel topic
-await slack.setChannelTopic('#project-alpha', 'Project Alpha development updates');
-
-// Archive a channel
-await slack.archiveChannel('#old-project');`}
-        javascript={`// Create a public channel
-const publicChannel = await slack.createChannel('project-alpha');
-
-// Create a private channel
-const privateChannel = await slack.createChannel('secret-project', {
-  isPrivate: true
-});
-
-// Get list of channels
-const channels = await slack.getChannels();
-console.log('Available channels:', channels.map(c => c.name));
-
-// Join a channel
-await slack.joinChannel('#random');
-
-// Set channel topic
-await slack.setChannelTopic('#project-alpha', 'Project Alpha development updates');`}
-        title="Channel management"
-      />
-
-      ### User and Team Operations
-
-      <CodeExampleSwitcher
-        typescript={`// Get user information
-const user = await slack.getUserInfo('U1234567890');
-console.log(\`User: \${user.realName} (\${user.name})\`);
-console.log(\`Email: \${user.profile.email}\`);
-console.log(\`Timezone: \${user.tz}\`);
-
-// Get team information
-const team = await slack.getTeamInfo();
-console.log(\`Team: \${team.name}\`);
-
-// Add reaction to message
-await slack.addReaction('#general', '1234567890.123456', 'thumbsup');
-
-// Remove reaction
-await slack.removeReaction('#general', '1234567890.123456', 'thumbsup');
-
-// Set a reminder
-await slack.setReminder('Team meeting in 5 minutes!', 'in 5 minutes');
-
-// Set reminder for specific user
-await slack.setReminder('Don\\'t forget the client call', 'tomorrow at 9am', 'U1234567890');`}
-        javascript={`// Get user information
-const user = await slack.getUserInfo('U1234567890');
-console.log(\`User: \${user.realName} (\${user.name})\`);
-
-// Get team information
-const team = await slack.getTeamInfo();
-console.log(\`Team: \${team.name}\`);
-
-// Add reaction to message
-await slack.addReaction('#general', '1234567890.123456', 'thumbsup');
-
-// Set a reminder
-await slack.setReminder('Team meeting in 5 minutes!', 'in 5 minutes');`}
-        title="User and team operations"
-      />
-
-      ### Search and History
-
-      <CodeExampleSwitcher
-        typescript={`// Search messages
-const searchResults = await slack.searchMessages('deployment', {
-  count: 20,
-  page: 1,
-  sortDir: 'desc'
-});
-
-console.log(\`Found \${searchResults.messages.total} messages\`);
-searchResults.messages.matches.forEach(match => {
-  console.log(\`Message: \${match.text}\`);
-});
-
-// Advanced search with filters
-const recentDeployments = await slack.searchMessages('deployment after:2024-01-01 in:#engineering');
-
-// Search in specific channel
-const channelSearch = await slack.searchMessages('bug in:#support');`}
-        javascript={`// Search messages
-const searchResults = await slack.searchMessages('deployment', {
-  count: 20,
-  page: 1,
-  sortDir: 'desc'
-});
-
-console.log(\`Found \${searchResults.messages.total} messages\`);
-
-// Search in specific channel
-const channelSearch = await slack.searchMessages('bug in:#support');`}
-        title="Search operations"
-      />
-
-      ## Slash Commands
-
-      <CodeExampleSwitcher
-        typescript={`import express from 'express';
-
-const app = express();
-app.use(express.urlencoded({ extended: true }));
-
-// Handle slash command with signature verification
-app.post('/slack/command', async (req, res) => {
-  const signature = req.headers['x-slack-signature'] as string;
-  const timestamp = req.headers['x-slack-request-timestamp'] as string;
-  const rawBody = JSON.stringify(req.body);
-  
-  try {
-    const response = await slack.handleSlashCommand(
-      req.body,
-      signature,
-      timestamp,
-      rawBody
-    );
-    
-    res.json(response);
-  } catch (error) {
-    console.error('Slash command error:', error);
-    res.status(400).json({
-      text: 'Error processing command'
-    });
-  }
-});
-
-// Custom command processor
-class CustomSlashCommands {
-  static async processCommand(payload: SlashCommandPayload): Promise<CommandResponse> {
-    const { command, text, userId, channelId } = payload;
-    
-    switch (command) {
-      case '/weather':
-        return {
-          responseType: 'ephemeral',
-          text: \`Weather for \${text || 'your location'}: Sunny, 75°F\`,
-          blocks: [{
-            type: 'section',
-            text: {
-              type: 'mrkdwn',
-              text: \`:sunny: *Weather Update*\\n\\nLocation: \${text || 'Current Location'}\\nTemperature: 75°F\\nCondition: Sunny\`
-            }
-          }]
-        };
-        
-      case '/standup':
-        return {
-          responseType: 'in_channel',
-          text: 'Daily standup reminder posted!',
-          blocks: [{
-            type: 'section',
-            text: {
-              type: 'mrkdwn',
-              text: ':calendar: *Daily Standup Reminder*\\n\\nPlease share:\\n• What you did yesterday\\n• What you\\'re working on today\\n• Any blockers'
-            }
-          }]
-        };
-        
-      default:
-        return {
-          responseType: 'ephemeral',
-          text: \`Unknown command: \${command}\`
-        };
-    }
-  }
-}
-
-app.listen(3000, () => {
-  console.log('Slack bot listening on port 3000');
-});`}
-        javascript={`const express = require('express');
-
-const app = express();
-app.use(express.urlencoded({ extended: true }));
-
-// Handle slash command
-app.post('/slack/command', async (req, res) => {
-  try {
-    const response = await slack.handleSlashCommand(req.body);
-    res.json(response);
-  } catch (error) {
-    console.error('Slash command error:', error);
-    res.status(400).json({
-      text: 'Error processing command'
-    });
-  }
-});
-
-app.listen(3000, () => {
-  console.log('Slack bot listening on port 3000');
-});`}
-        title="Slash command handling"
-      />
-
-      ## Advanced Features
-
-      ### Interactive Components
-
-      <CodeExampleSwitcher
-        typescript={`// Send message with buttons
-await slack.sendMessage('#general', 'Approve deployment?', {
-  blocks: [
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: 'Ready to deploy version 2.1.0 to production?'
-      }
-    },
-    {
-      type: 'actions',
-      elements: [
-        {
-          type: 'button',
-          text: { type: 'plain_text', text: 'Approve' },
-          style: 'primary',
-          value: 'approve_deployment',
-          action_id: 'deployment_approve'
-        },
-        {
-          type: 'button',
-          text: { type: 'plain_text', text: 'Reject' },
-          style: 'danger',
-          value: 'reject_deployment',
-          action_id: 'deployment_reject'
-        }
-      ]
-    }
-  ]
-});
-
-// Send message with dropdown
-await slack.sendMessage('#general', 'Select environment:', {
-  blocks: [
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: 'Which environment do you want to deploy to?'
-      },
-      accessory: {
-        type: 'static_select',
-        placeholder: { type: 'plain_text', text: 'Select environment' },
-        options: [
-          { text: { type: 'plain_text', text: 'Staging' }, value: 'staging' },
-          { text: { type: 'plain_text', text: 'Production' }, value: 'production' }
-        ],
-        action_id: 'environment_select'
-      }
-    }
-  ]
-});`}
-        javascript={`// Send message with buttons
-await slack.sendMessage('#general', 'Approve deployment?', {
-  blocks: [
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: 'Ready to deploy version 2.1.0 to production?'
-      }
-    },
-    {
-      type: 'actions',
-      elements: [
-        {
-          type: 'button',
-          text: { type: 'plain_text', text: 'Approve' },
-          style: 'primary',
-          value: 'approve_deployment'
-        },
-        {
-          type: 'button',
-          text: { type: 'plain_text', text: 'Reject' },
-          style: 'danger',
-          value: 'reject_deployment'
-        }
-      ]
-    }
-  ]
-});`}
-        title="Interactive components"
-      />
-
-      ### Workflow Automation
-
-      <CodeExampleSwitcher
-        typescript={`// Automated deployment notifications
-class DeploymentNotifier {
-  constructor(private slack: SlackAPI) {}
-
-  async notifyDeploymentStart(version: string, environment: string) {
-    await this.slack.sendMessage('#deployments', \`🚀 Deployment Started\`, {
-      blocks: [{
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: \`:rocket: *Deployment Started*\\n\\n*Version:* \${version}\\n*Environment:* \${environment}\\n*Status:* In Progress\`
-        }
-      }]
-    });
-  }
-
-  async notifyDeploymentSuccess(version: string, environment: string, duration: string) {
-    await this.slack.sendMessage('#deployments', \`✅ Deployment Successful\`, {
-      blocks: [{
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: \`:white_check_mark: *Deployment Successful*\\n\\n*Version:* \${version}\\n*Environment:* \${environment}\\n*Duration:* \${duration}\`
-        }
-      }]
-    });
-    
-    // Add celebration reaction
-    const response = await this.slack.sendMessage('#general', \`Version \${version} is now live! :tada:\`);
-    await this.slack.addReaction('#general', response.ts, 'tada');
-  }
-
-  async notifyDeploymentFailure(version: string, environment: string, error: string) {
-    await this.slack.sendMessage('#deployments', \`❌ Deployment Failed\`, {
-      blocks: [
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: \`:x: *Deployment Failed*\\n\\n*Version:* \${version}\\n*Environment:* \${environment}\`
-          }
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: \`*Error:*\\n\\\`\\\`\\\`\\n\${error}\\n\\\`\\\`\\\`\`
-          }
-        }
-      ]
-    });
-  }
-}
-
-// Usage
-const notifier = new DeploymentNotifier(slack);
-await notifier.notifyDeploymentStart('2.1.0', 'production');`}
-        javascript={`// Automated deployment notifications
-class DeploymentNotifier {
-  constructor(slack) {
-    this.slack = slack;
-  }
-
-  async notifyDeploymentStart(version, environment) {
-    await this.slack.sendMessage('#deployments', \`🚀 Deployment Started\`, {
-      blocks: [{
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: \`:rocket: *Deployment Started*\\n\\n*Version:* \${version}\\n*Environment:* \${environment}\`
-        }
-      }]
-    });
-  }
-
-  async notifyDeploymentSuccess(version, environment, duration) {
-    await this.slack.sendMessage('#deployments', \`✅ Deployment Successful\`, {
-      blocks: [{
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: \`:white_check_mark: *Deployment Successful*\\n\\n*Version:* \${version}\\n*Duration:* \${duration}\`
-        }
-      }]
-    });
-  }
-}
-
-const notifier = new DeploymentNotifier(slack);
-await notifier.notifyDeploymentStart('2.1.0', 'production');`}
-        title="Workflow automation"
-      />
-
-      ## Error Handling
-
-      <InfoBox type="warning" title="Rate Limits">
-        Slack has rate limits for different API methods. The wrapper includes built-in retry logic for handling rate limits gracefully.
-      </InfoBox>
-
-      <CodeExampleSwitcher
-        typescript={`import { SlackAPI } from 'macro_api';
+          <div className="mt-8">
+            <CodeExampleSwitcher
+              typescript={`import { SlackAPI } from 'macro_api';
 
 const slack = new SlackAPI({
   botToken: process.env.SLACK_BOT_TOKEN,
@@ -725,33 +433,8 @@ async function robustSlackOperation() {
     
     throw error;
   }
-}
-
-// Batch operations with error handling
-async function sendBulkMessages(channels: string[], message: string) {
-  const results = [];
-  const errors = [];
-  
-  for (const channel of channels) {
-    try {
-      const result = await slack.sendMessage(channel, message);
-      results.push({ channel, success: true, ts: result.ts });
-    } catch (error) {
-      errors.push({ channel, error: error instanceof Error ? error.message : 'Unknown error' });
-    }
-    
-    // Rate limiting: wait between requests
-    await new Promise(resolve => setTimeout(resolve, 1000));
-  }
-  
-  console.log(\`Sent \${results.length} messages successfully\`);
-  if (errors.length > 0) {
-    console.log(\`Failed to send \${errors.length} messages:\`, errors);
-  }
-  
-  return { results, errors };
 }`}
-        javascript={`const { SlackAPI } = require('macro_api');
+              javascript={`const { SlackAPI } = require('macro_api');
 
 const slack = new SlackAPI({
   botToken: process.env.SLACK_BOT_TOKEN,
@@ -774,142 +457,164 @@ async function robustSlackOperation() {
     throw error;
   }
 }`}
-        title="Robust error handling"
-      />
+              title="Robust error handling"
+            />
+          </div>
+        </div>
 
-      ## Best Practices
+        {/* Best Practices Section */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Best Practices</h2>
 
-      <InfoBox type="tip" title="Performance Tips">
-        - Use message threading to keep channels organized
-        - Implement proper rate limiting in your applications
-        - Cache user and channel information to reduce API calls
-        - Use webhook signatures for security in production
-      </InfoBox>
+          <InfoBox type="tip" title="Performance Tips">
+            <ul className="space-y-2">
+              <li className="flex items-start">
+                <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                <span>Use message threading to keep channels organized</span>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                <span>Implement proper rate limiting in your applications</span>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                <span>Cache user and channel information to reduce API calls</span>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                <span>Use webhook signatures for security in production</span>
+              </li>
+            </ul>
+          </InfoBox>
+        </div>
 
-      ### Message Formatting Best Practices
+        {/* API Reference Section */}
+        <div className="glass-card">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">API Reference</h2>
+          <p className="text-responsive-sm text-muted-foreground leading-relaxed mb-8">
+            For complete API documentation and advanced features, visit the <a href="https://api.slack.com/" className="text-primary underline">official Slack API documentation</a>.
+          </p>
 
-      <CodeExampleSwitcher
-        typescript={`// Good: Use Block Kit for rich formatting
-await slack.sendMessage('#general', 'Status Update', {
-  blocks: [
-    {
-      type: 'header',
-      text: { type: 'plain_text', text: 'Weekly Status Update' }
-    },
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: '*Project:* Alpha Release\\n*Status:* :green_circle: On Track\\n*Due Date:* March 15, 2024'
-      }
-    },
-    {
-      type: 'divider'
-    },
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: '*Completed this week:*\\n• User authentication\\n• Database setup\\n• API endpoints'
-      }
-    }
-  ]
-});
+          <div className="mb-8">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+              <Shield className="h-5 w-5 mr-2 text-primary" />
+              Bot Token Scopes
+            </h3>
+            <p className="text-muted-foreground mb-6">Common scopes needed for different operations:</p>
+            
+            <div className="glass-card bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-blue-500/20 dark:border-blue-400/20 overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-white/10">
+                    <th className="text-left py-3 px-4 font-semibold">Operation</th>
+                    <th className="text-left py-3 px-4 font-semibold">Required Scope</th>
+                    <th className="text-left py-3 px-4 font-semibold">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-white/5">
+                    <td className="py-3 px-4">Send Messages</td>
+                    <td className="py-3 px-4 font-mono text-primary">chat:write</td>
+                    <td className="py-3 px-4 text-muted-foreground">Send messages to channels and DMs</td>
+                  </tr>
+                  <tr className="border-b border-white/5">
+                    <td className="py-3 px-4">Upload Files</td>
+                    <td className="py-3 px-4 font-mono text-primary">files:write</td>
+                    <td className="py-3 px-4 text-muted-foreground">Upload and share files</td>
+                  </tr>
+                  <tr className="border-b border-white/5">
+                    <td className="py-3 px-4">Manage Channels</td>
+                    <td className="py-3 px-4 font-mono text-primary">channels:manage</td>
+                    <td className="py-3 px-4 text-muted-foreground">Create and modify public channels</td>
+                  </tr>
+                  <tr className="border-b border-white/5">
+                    <td className="py-3 px-4">Read User Info</td>
+                    <td className="py-3 px-4 font-mono text-primary">users:read</td>
+                    <td className="py-3 px-4 text-muted-foreground">View user information</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 px-4">Add Reactions</td>
+                    <td className="py-3 px-4 font-mono text-primary">reactions:write</td>
+                    <td className="py-3 px-4 text-muted-foreground">Add and remove message reactions</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-// Good: Use threads for follow-up messages
-const parentMessage = await slack.sendMessage('#project-alpha', 'Daily standup time! 👋');
-await slack.sendMessage('#project-alpha', 'What did you work on yesterday?', {
-  threadTs: parentMessage.ts
-});
+          <div className="mb-8">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+              <ExternalLink className="h-5 w-5 mr-2 text-primary" />
+              Support Resources
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <a href="https://api.slack.com/" target="_blank" rel="noopener noreferrer" className="glass-card group hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-start space-x-4">
+                  <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                    <ExternalLink className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">Slack API Documentation</h4>
+                    <p className="text-muted-foreground text-sm mb-3">Official Slack API reference and guides</p>
+                    <div className="flex items-center text-primary text-sm font-medium">
+                      <span>Visit Documentation</span>
+                      <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+                </div>
+              </a>
 
-// Good: Use appropriate emoji and formatting
-await slack.sendMessage('#alerts', 'System Alert', {
-  blocks: [{
-    type: 'section',
-    text: {
-      type: 'mrkdwn',
-      text: ':warning: *High CPU Usage Detected*\\n\\nServer: web-01\\nCPU: 95%\\nTime: <!date^1609459200^{date_short} at {time}|Jan 1, 2021 at 12:00 PM>'
-    }
-  }]
-});`}
-        javascript={`// Good: Use Block Kit for rich formatting
-await slack.sendMessage('#general', 'Status Update', {
-  blocks: [
-    {
-      type: 'header',
-      text: { type: 'plain_text', text: 'Weekly Status Update' }
-    },
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: '*Project:* Alpha Release\\n*Status:* On Track\\n*Due Date:* March 15, 2024'
-      }
-    }
-  ]
-});
+              <a href="https://app.slack.com/block-kit-builder" target="_blank" rel="noopener noreferrer" className="glass-card group hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-start space-x-4">
+                  <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                    <Code className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">Block Kit Builder</h4>
+                    <p className="text-muted-foreground text-sm mb-3">Visual builder for creating rich message layouts</p>
+                    <div className="flex items-center text-primary text-sm font-medium">
+                      <span>Open Builder</span>
+                      <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+                </div>
+              </a>
 
-// Good: Use threads for follow-up
-const parentMessage = await slack.sendMessage('#project-alpha', 'Daily standup time!');
-await slack.sendMessage('#project-alpha', 'What did you work on yesterday?', {
-  threadTs: parentMessage.ts
-});`}
-        title="Message formatting best practices"
-      />
+              <a href="https://slackcommunity.com/" target="_blank" rel="noopener noreferrer" className="glass-card group hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-start space-x-4">
+                  <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                    <Users className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">Developer Community</h4>
+                    <p className="text-muted-foreground text-sm mb-3">Connect with other Slack developers</p>
+                    <div className="flex items-center text-primary text-sm font-medium">
+                      <span>Join Community</span>
+                      <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+                </div>
+              </a>
 
-      ## API Reference
-
-      For complete API documentation and advanced features, visit the [official Slack API documentation](https://api.slack.com/).
-
-      ### Bot Token Scopes
-
-      Common scopes needed for different operations:
-
-      <div className="not-prose overflow-x-auto my-6">
-        <table className="w-full text-sm border-collapse border border-gray-300 dark:border-gray-600">
-          <thead>
-            <tr className="bg-gray-50 dark:bg-gray-800">
-              <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Operation</th>
-              <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Required Scope</th>
-              <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 text-left">Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">Send Messages</td>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2 font-mono">chat:write</td>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">Send messages to channels and DMs</td>
-            </tr>
-            <tr>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">Upload Files</td>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2 font-mono">files:write</td>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">Upload and share files</td>
-            </tr>
-            <tr>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">Manage Channels</td>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2 font-mono">channels:manage</td>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">Create and modify public channels</td>
-            </tr>
-            <tr>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">Read User Info</td>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2 font-mono">users:read</td>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">View user information</td>
-            </tr>
-            <tr>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">Add Reactions</td>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2 font-mono">reactions:write</td>
-              <td className="border border-gray-300 dark:border-gray-600 px-4 py-2">Add and remove message reactions</td>
-            </tr>
-          </tbody>
-        </table>
+              <a href="https://github.com/cptcr/macro_api/issues" target="_blank" rel="noopener noreferrer" className="glass-card group hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-start space-x-4">
+                  <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                    <AlertCircle className="h-6 w-6 text-orange-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">GitHub Issues</h4>
+                    <p className="text-muted-foreground text-sm mb-3">Report bugs and request features</p>
+                    <div className="flex items-center text-primary text-sm font-medium">
+                      <span>Report Issue</span>
+                      <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
-
-      ### Support
-
-      - [Slack API Documentation](https://api.slack.com/)
-      - [Block Kit Builder](https://app.slack.com/block-kit-builder)
-      - [Slack Developer Community](https://slackcommunity.com/)
-      - [GitHub Issues](https://github.com/cptcr/macro_api/issues)
     </div>
   );
 };

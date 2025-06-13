@@ -40,6 +40,8 @@ const DocumentationPage: React.FC = () => {
   const searchParams = useSearchParams();
   const [activeSection, setActiveSection] = useState('getting-started');
   const [searchTerm, setSearchTerm] = useState('');
+  const [sidebarPosition, setSidebarPosition] = useState<'fixed' | 'absolute'>('fixed');
+  const [sidebarTop, setSidebarTop] = useState(0);
   
   // Use reading progress hook
   useReadingProgress();
@@ -51,6 +53,42 @@ const DocumentationPage: React.FC = () => {
       setActiveSection(section);
     }
   }, [searchParams]);
+
+  // Handle sidebar sticky behavior
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const navbarHeight = 80;
+      const sidebarHeight = windowHeight - navbarHeight;
+      
+      // Get the actual footer element to calculate its position more accurately
+      const footerElement = document.querySelector('footer') || document.querySelector('[class*="footer"]');
+      const footerHeight = footerElement ? footerElement.offsetHeight : 700; // Fallback to larger value
+      
+      // Calculate the position where sidebar should stop being fixed
+      const maxScrollBeforeFooter = documentHeight - footerHeight - sidebarHeight - navbarHeight;
+      
+      // Keep sidebars fixed unless we're very close to the very bottom of the page
+      if (scrollTop > maxScrollBeforeFooter && (scrollTop + windowHeight) >= (documentHeight - 50)) {
+        setSidebarPosition('absolute');
+        setSidebarTop(maxScrollBeforeFooter + navbarHeight);
+      } else {
+        setSidebarPosition('fixed');
+        setSidebarTop(navbarHeight);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll);
+    handleScroll();
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
 
   // Update URL when section changes
   const handleSectionChange = (sectionId: string) => {
@@ -114,15 +152,21 @@ const DocumentationPage: React.FC = () => {
         />
       </div>
 
-      {/* Enhanced Navbar with glassmorphism */}
-      <div className="sticky top-0 z-50 backdrop-glass-strong border-b border-white/20 dark:border-white/10">
+      {/* Enhanced Navbar with proper z-index and positioning */}
+      <div className="fixed top-0 left-0 right-0 z-50 backdrop-glass-strong border-b border-white/20 dark:border-white/10">
         <Navbar />
       </div>
 
-      <div className="flex min-h-screen relative z-10">
-        {/* Enhanced Sidebar with glassmorphism */}
+      <div className="flex min-h-screen relative z-10" style={{ paddingTop: '80px' }}>
+        {/* Enhanced Sidebar with sticky behavior */}
         <div className="hidden lg:block w-80 xl:w-96 flex-shrink-0">
-          <div className="sticky top-16 h-[calc(100vh-4rem)] glass border-r border-white/20 dark:border-white/10 backdrop-glass-strong">
+          <div 
+            className={`${sidebarPosition === 'fixed' ? 'fixed' : 'absolute'} w-80 xl:w-96 h-[calc(100vh-80px)] glass border-r border-white/20 dark:border-white/10 backdrop-glass-strong transition-all duration-300 z-40`}
+            style={{ 
+              top: sidebarPosition === 'fixed' ? '80px' : `${sidebarTop}px`,
+              left: sidebarPosition === 'fixed' ? 0 : undefined
+            }}
+          >
             <DocsSidebar
               activeSection={activeSection}
               onSectionChange={handleSectionChange}
@@ -152,7 +196,7 @@ const DocumentationPage: React.FC = () => {
             className="flex-1 overflow-y-auto scrollbar-modern"
             data-content-area
           >
-            <div className="relative">
+            <div className="relative min-h-screen">
               {/* Content container with enhanced padding and max-width */}
               <div className="w-full">
                 {/* Background decorative elements */}
@@ -169,9 +213,15 @@ const DocumentationPage: React.FC = () => {
             </div>
           </main>
           
-          {/* Enhanced Table of Contents for Desktop */}
+          {/* Enhanced Table of Contents for Desktop with similar sticky behavior */}
           <div className="hidden xl:block w-80 flex-shrink-0">
-            <div className="sticky top-16 h-[calc(100vh-4rem)] glass border-l border-white/20 dark:border-white/10 backdrop-glass">
+            <div 
+              className={`${sidebarPosition === 'fixed' ? 'fixed' : 'absolute'} w-80 h-[calc(100vh-80px)] glass border-l border-white/20 dark:border-white/10 backdrop-glass transition-all duration-300 z-40`}
+              style={{ 
+                top: sidebarPosition === 'fixed' ? '80px' : `${sidebarTop}px`,
+                right: sidebarPosition === 'fixed' ? 0 : undefined
+              }}
+            >
               <TableOfContents activeSection={activeSection} />
             </div>
           </div>

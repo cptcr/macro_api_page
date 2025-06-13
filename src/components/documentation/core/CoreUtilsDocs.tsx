@@ -1,78 +1,143 @@
 import React from 'react';
 import CodeExampleSwitcher from '@/components/common/CodeExampleSwitcher';
 import InfoBox from '@/components/common/InfoBox';
-import { Settings, Shield, Zap, Code, FileCode, AlertTriangle } from 'lucide-react';
+import { Settings, Shield, Zap, Code, FileCode, AlertTriangle, ArrowRight, CheckCircle, Sparkles, RefreshCw } from 'lucide-react';
 
 const CoreUtilsDocs: React.FC = () => {
   return (
-    <div className="prose prose-gray dark:prose-invert max-w-none">
-      {/* Header */}
-      <div className="not-prose mb-8">
-        <div className="flex items-center mb-4">
-          <Settings className="h-10 w-10 mr-4 text-blue-600 dark:text-blue-400" />
-          <div>
-            <h1 className="text-4xl font-bold mb-2">Utility Functions & Main Entry</h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300">
-              Core utilities and the main entry point for macro_api
-            </p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50/50 via-white to-purple-50/50 dark:from-gray-950 dark:via-blue-950/30 dark:to-purple-950/20 relative overflow-hidden">
+      {/* Background effects matching main page */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-gradient-to-r from-blue-400 to-purple-600 rounded-full opacity-10 blur-3xl animate-float" />
+        <div className="absolute bottom-1/4 right-1/4 w-32 h-32 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-gradient-to-r from-purple-400 to-pink-600 rounded-full opacity-10 blur-3xl animate-float" style={{ animationDelay: '-3s' }} />
+        <div 
+          className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]" 
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='none' fill-rule='evenodd'%3e%3cg fill='%23000' fill-opacity='0.4'%3e%3ccircle cx='7' cy='7' r='1'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e")`
+          }} 
+        />
+      </div>
+
+      <div className="relative z-10 container-responsive section-padding">
+        {/* Header Section */}
+        <div className="text-center section-margin-sm">
+          <div className="glass-nav inline-flex items-center mb-6 sm:mb-8">
+            <Settings className="h-4 w-4 mr-2 text-primary animate-pulse" />
+            <span className="text-sm font-medium text-foreground">
+              Core Infrastructure
+            </span>
+          </div>
+          
+          <div className="flex items-center justify-center mb-6">
+            <Settings className="h-12 w-12 sm:h-16 sm:w-16 mr-4 sm:mr-6 text-blue-600 dark:text-blue-400" />
+            <div className="text-left">
+              <h1 className="text-responsive-lg font-bold mb-2 text-gradient-secondary">
+                Utility Functions & Main Entry
+              </h1>
+              <p className="text-responsive-xs text-muted-foreground">
+                Core utilities and the main entry point for macro_api
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8">
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-blue-600 dark:text-blue-400 border border-blue-500/20">
+              Error Utilities
+            </span>
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-green-600 dark:text-green-400 border border-green-500/20">
+              Type Safety
+            </span>
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-purple-600 dark:text-purple-400 border border-purple-500/20">
+              Main Entry
+            </span>
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-orange-600 dark:text-orange-400 border border-orange-500/20">
+              Unified Client
+            </span>
           </div>
         </div>
-        
-        <div className="flex flex-wrap gap-2 mb-6">
-          <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm">
-            Error Utilities
-          </span>
-          <span className="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm">
-            Type Safety
-          </span>
-          <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full text-sm">
-            Main Entry
-          </span>
-          <span className="px-3 py-1 bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 rounded-full text-sm">
-            Unified Client
-          </span>
+
+        {/* Overview Section */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Overview</h2>
+          <p className="text-responsive-sm text-muted-foreground leading-relaxed mb-8">
+            This section covers the utility functions (<code className="glass px-2 py-1 rounded text-sm font-mono text-primary">src/utils/errorHandling.ts</code>) and main entry point (<code className="glass px-2 py-1 rounded text-sm font-mono text-primary">src/index.ts</code>) that provide the foundation for macro_api's functionality.
+          </p>
         </div>
-      </div>
 
-      ## Overview
+        {/* Error Handling Utilities Section */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Error Handling Utilities</h2>
+          <p className="text-responsive-sm text-muted-foreground leading-relaxed mb-6">
+            <strong>File:</strong> <code className="glass px-2 py-1 rounded text-sm font-mono text-primary">src/utils/errorHandling.ts</code>
+          </p>
+          <p className="text-responsive-sm text-muted-foreground leading-relaxed mb-8">
+            This file provides utility functions for consistent error handling across the macro_api codebase, solving TypeScript errors and providing better type safety.
+          </p>
 
-      This section covers the utility functions (`src/utils/errorHandling.ts`) and main entry point (`src/index.ts`) that provide the foundation for macro_api's functionality.
+          <div className="mb-8">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-6 flex items-center">
+              <Sparkles className="h-6 w-6 mr-2 text-primary" />
+              Key Features
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              <div className="glass-card group hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-start space-x-4">
+                  <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                    <Shield className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2">Type Guards</h4>
+                    <p className="text-sm text-muted-foreground">Safe type checking for error objects</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="glass-card group hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-start space-x-4">
+                  <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                    <Code className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2">Safe Conversions</h4>
+                    <p className="text-sm text-muted-foreground">Convert unknown types safely</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="glass-card group hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-start space-x-4">
+                  <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                    <AlertTriangle className="h-6 w-6 text-orange-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2">Error Extraction</h4>
+                    <p className="text-sm text-muted-foreground">Extract error messages safely</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="glass-card group hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-start space-x-4">
+                  <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                    <Zap className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2">Axios Handling</h4>
+                    <p className="text-sm text-muted-foreground">Specialized Axios error processing</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-      ## Error Handling Utilities
-
-      **File:** `src/utils/errorHandling.ts`
-
-      This file provides utility functions for consistent error handling across the macro_api codebase, solving TypeScript errors and providing better type safety.
-
-      ### Key Features
-
-      <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <Shield className="h-6 w-6 text-green-600 mb-2" />
-          <h3 className="font-semibold mb-1">Type Guards</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Safe type checking for error objects</p>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <Code className="h-6 w-6 text-blue-600 mb-2" />
-          <h3 className="font-semibold mb-1">Safe Conversions</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Convert unknown types safely</p>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <AlertTriangle className="h-6 w-6 text-orange-600 mb-2" />
-          <h3 className="font-semibold mb-1">Error Extraction</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Extract error messages safely</p>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-          <Zap className="h-6 w-6 text-purple-600 mb-2" />
-          <h3 className="font-semibold mb-1">Axios Handling</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">Specialized Axios error processing</p>
-        </div>
-      </div>
-
-      ### Type Guards and Error Detection
-
-      <CodeExampleSwitcher
-        typescript={`import {
+          <div className="mb-8">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+              <Code className="h-5 w-5 mr-2 text-primary" />
+              Type Guards and Error Detection
+            </h3>
+            
+            <CodeExampleSwitcher
+              typescript={`import {
   isAxiosError,
   hasAxiosResponse,
   extractErrorMessage,
@@ -125,7 +190,7 @@ const testErrorTypes = () => {
   const unknownError = null;
   console.log(extractErrorMessage(unknownError)); // "Unknown error occurred"
 };`}
-        javascript={`const {
+              javascript={`const {
   isAxiosError,
   hasAxiosResponse,
   extractErrorMessage,
@@ -161,13 +226,17 @@ const testErrorTypes = () => {
   const unknownError = null;
   console.log(extractErrorMessage(unknownError)); // "Unknown error occurred"
 };`}
-        title="Type guards and error detection"
-      />
+              title="Type guards and error detection"
+            />
+          </div>
+        </div>
 
-      ### Axios Error Handling
-
-      <CodeExampleSwitcher
-        typescript={`import { handleAxiosError, hasAxiosResponse } from 'macro_api/utils/errorHandling';
+        {/* Axios Error Handling Section */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Axios Error Handling</h2>
+          
+          <CodeExampleSwitcher
+            typescript={`import { handleAxiosError, hasAxiosResponse } from 'macro_api/utils/errorHandling';
 
 // Consistent Axios error handling across all API classes
 class APIWrapper {
@@ -269,7 +338,7 @@ const advancedErrorHandler = (error: unknown, serviceName: string, operation: st
     throw new Error(\`\${serviceName} API Error: \${message}\`);
   }
 };`}
-        javascript={`const { handleAxiosError, hasAxiosResponse, extractErrorMessage } = require('macro_api/utils/errorHandling');
+            javascript={`const { handleAxiosError, hasAxiosResponse, extractErrorMessage } = require('macro_api/utils/errorHandling');
 
 // API wrapper with consistent error handling
 class APIWrapper {
@@ -329,13 +398,16 @@ const advancedErrorHandler = (error, serviceName, operation) => {
     throw new Error(\`\${serviceName}: \${message}\`);
   }
 };`}
-        title="Axios error handling utilities"
-      />
+            title="Axios error handling utilities"
+          />
+        </div>
 
-      ### Safe Type Conversions
-
-      <CodeExampleSwitcher
-        typescript={`import {
+        {/* Safe Type Conversions Section */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Safe Type Conversions</h2>
+          
+          <CodeExampleSwitcher
+            typescript={`import {
   toRecord,
   toPaginationParams,
   toRequestData,
@@ -464,7 +536,7 @@ class SafeAPIWrapper {
     return this.processApiResponse(await response.json());
   }
 }`}
-        javascript={`const {
+            javascript={`const {
   toRecord,
   toString,
   toNumber,
@@ -504,19 +576,28 @@ class SafeAPIWrapper {
     return { id, count, raw: data };
   }
 }`}
-        title="Safe type conversion utilities"
-      />
+            title="Safe type conversion utilities"
+          />
+        </div>
 
-      ## Main Entry Point
+        {/* Main Entry Point Section */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Main Entry Point</h2>
+          <p className="text-responsive-sm text-muted-foreground leading-relaxed mb-6">
+            <strong>File:</strong> <code className="glass px-2 py-1 rounded text-sm font-mono text-primary">src/index.ts</code>
+          </p>
+          <p className="text-responsive-sm text-muted-foreground leading-relaxed mb-8">
+            The main entry point exports all macro_api functionality and provides the unified <code className="glass px-2 py-1 rounded text-sm font-mono text-primary">MacroAPIClient</code>.
+          </p>
 
-      **File:** `src/index.ts`
-
-      The main entry point exports all macro_api functionality and provides the unified `MacroAPIClient`.
-
-      ### Package Information
-
-      <CodeExampleSwitcher
-        typescript={`import { VERSION, PACKAGE_INFO } from 'macro_api';
+          <div className="mb-8">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+              <FileCode className="h-5 w-5 mr-2 text-primary" />
+              Package Information
+            </h3>
+            
+            <CodeExampleSwitcher
+              typescript={`import { VERSION, PACKAGE_INFO } from 'macro_api';
 
 // Get version information
 console.log('macro_api version:', VERSION); // "3.0.0"
@@ -563,7 +644,7 @@ console.log('Package info:', PACKAGE_INFO);
   ]
 }
 */`}
-        javascript={`const { VERSION, PACKAGE_INFO } = require('macro_api');
+              javascript={`const { VERSION, PACKAGE_INFO } = require('macro_api');
 
 // Get version and package information
 console.log('Version:', VERSION);
@@ -574,13 +655,17 @@ console.log('Supported services:');
 PACKAGE_INFO.supportedServices.forEach(service => {
   console.log('-', service);
 });`}
-        title="Package information and metadata"
-      />
+              title="Package information and metadata"
+            />
+          </div>
+        </div>
 
-      ### Unified MacroAPIClient
-
-      <CodeExampleSwitcher
-        typescript={`import { MacroAPIClient, ChatGPT, SpotifyAPI } from 'macro_api';
+        {/* Unified MacroAPIClient Section */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Unified MacroAPIClient</h2>
+          
+          <CodeExampleSwitcher
+            typescript={`import { MacroAPIClient, ChatGPT, SpotifyAPI } from 'macro_api';
 
 // Create unified client with caching and retry logic
 const client = new MacroAPIClient({
@@ -725,7 +810,7 @@ const gracefulShutdown = async () => {
 // Handle process termination
 process.on('SIGTERM', gracefulShutdown);
 process.on('SIGINT', gracefulShutdown);`}
-        javascript={`const { MacroAPIClient, ChatGPT, SpotifyAPI } = require('macro_api');
+            javascript={`const { MacroAPIClient, ChatGPT, SpotifyAPI } = require('macro_api');
 
 // Create unified client
 const client = new MacroAPIClient({
@@ -788,17 +873,21 @@ const shutdown = async () => {
 };
 
 process.on('SIGTERM', shutdown);`}
-        title="Unified MacroAPIClient usage"
-      />
+            title="Unified MacroAPIClient usage"
+          />
+        </div>
 
-      ### Available Exports
+        {/* Available Exports Section */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Available Exports</h2>
+          
+          <InfoBox type="info" title="Complete Export List">
+            The main entry point exports all available classes, types, and utilities from macro_api.
+          </InfoBox>
 
-      <InfoBox type="info" title="Complete Export List">
-        The main entry point exports all available classes, types, and utilities from macro_api.
-      </InfoBox>
-
-      <CodeExampleSwitcher
-        typescript={`// Core API Classes
+          <div className="mt-6">
+            <CodeExampleSwitcher
+              typescript={`// Core API Classes
 import {
   YouTubeNotify,
   SpotifyAPI,
@@ -908,7 +997,7 @@ const initializeServices = () => {
     entertainment: { spotify }
   };
 };`}
-        javascript={`// Core API Classes
+              javascript={`// Core API Classes
 const {
   ChatGPT,
   SpotifyAPI,
@@ -944,15 +1033,23 @@ const initializeServices = () => {
   
   return { gpt, slack, stripe };
 };`}
-        title="Complete export reference"
-      />
+              title="Complete export reference"
+            />
+          </div>
+        </div>
 
-      ## Integration Patterns
-
-      ### Service Factory Pattern
-
-      <CodeExampleSwitcher
-        typescript={`import { MacroAPIClient } from 'macro_api';
+        {/* Integration Patterns Section */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Integration Patterns</h2>
+          
+          <div className="mb-8">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+              <Settings className="h-5 w-5 mr-2 text-primary" />
+              Service Factory Pattern
+            </h3>
+            
+            <CodeExampleSwitcher
+              typescript={`import { MacroAPIClient } from 'macro_api';
 import type { CacheConfig } from 'macro_api';
 
 // Service factory for consistent initialization
@@ -1062,7 +1159,7 @@ const result = await factory.execute(
     cacheTtl: 1800
   }
 );`}
-        javascript={`const { MacroAPIClient } = require('macro_api');
+              javascript={`const { MacroAPIClient } = require('macro_api');
 
 // Service factory
 class MacroAPIServiceFactory {
@@ -1105,22 +1202,47 @@ class MacroAPIServiceFactory {
 // Usage
 const factory = new MacroAPIServiceFactory();
 const gpt = factory.createChatGPT(process.env.OPENAI_API_KEY);`}
-        title="Service factory pattern"
-      />
+              title="Service factory pattern"
+            />
+          </div>
+        </div>
 
-      ## Best Practices
+        {/* Best Practices Section */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Best Practices</h2>
 
-      <InfoBox type="tip" title="Integration Best Practices">
-        - Use the unified `MacroAPIClient` for consistent error handling and caching
-        - Import only the services you need to reduce bundle size
-        - Configure appropriate cache TTL values based on data volatility
-        - Always handle errors gracefully using the built-in error types
-        - Monitor cache performance and adjust settings as needed
-      </InfoBox>
+          <InfoBox type="tip" title="Integration Best Practices">
+            <ul className="space-y-2">
+              <li className="flex items-start">
+                <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                <span>Use the unified MacroAPIClient for consistent error handling and caching</span>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                <span>Import only the services you need to reduce bundle size</span>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                <span>Configure appropriate cache TTL values based on data volatility</span>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                <span>Always handle errors gracefully using the built-in error types</span>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                <span>Monitor cache performance and adjust settings as needed</span>
+              </li>
+            </ul>
+          </InfoBox>
 
-      ### Environment Configuration
-
-      <CodeExampleSwitcher
+          <div className="mt-8">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+              <Settings className="h-5 w-5 mr-2 text-primary" />
+              Environment Configuration
+            </h3>
+            
+            <CodeExampleSwitcher
               typescript={`// environment.ts - Centralized environment configuration
 interface EnvironmentConfig {
   // Core settings
@@ -1273,15 +1395,107 @@ if (gpt) {
     { service: 'chatgpt', method: 'chat' }
   );
 }`}
-              title="Environment-based application factory" javascript={''}      />
+              javascript={`// Environment configuration for JavaScript
+const createEnvironmentConfig = () => {
+  const nodeEnv = process.env.NODE_ENV || 'development';
+  
+  return {
+    nodeEnv,
+    cache: {
+      type: process.env.REDIS_URL ? 'redis' : 'memory',
+      ttl: parseInt(process.env.CACHE_TTL || '3600'),
+      maxSize: parseInt(process.env.CACHE_MAX_SIZE || '1000'),
+      redisUrl: process.env.REDIS_URL
+    },
+    apiKeys: {
+      openai: process.env.OPENAI_API_KEY,
+      spotify: {
+        clientId: process.env.SPOTIFY_CLIENT_ID,
+        clientSecret: process.env.SPOTIFY_CLIENT_SECRET
+      },
+      stripe: process.env.STRIPE_SECRET_KEY
+    }
+  };
+};
 
-      ## Next Steps
+// Application factory
+class MacroAPIApplication {
+  constructor() {
+    this.config = createEnvironmentConfig();
+    this.client = this.createClient();
+    this.services = new Map();
+  }
+  
+  createClient() {
+    const cacheConfig = this.config.cache.type === 'redis' 
+      ? {
+          type: 'redis',
+          ttl: this.config.cache.ttl,
+          redis: { url: this.config.cache.redisUrl }
+        }
+      : {
+          type: 'memory',
+          ttl: this.config.cache.ttl,
+          maxSize: this.config.cache.maxSize
+        };
+    
+    return new MacroAPIClient({ cache: cacheConfig });
+  }
+  
+  async initialize() {
+    if (this.config.apiKeys.openai) {
+      const { ChatGPT } = require('macro_api');
+      this.services.set('chatgpt', new ChatGPT({
+        apiKey: this.config.apiKeys.openai
+      }));
+    }
+    
+    console.log(\`Initialized \${this.services.size} services\`);
+  }
+}`}
+              title="Environment-based application factory"
+            />
+          </div>
+        </div>
 
-      - **[Cache System](./caching)** - Learn about the intelligent caching system
-      - **[Error Handling](./error-handling)** - Master robust error handling patterns  
-      - **[API Integration Examples](./chatgpt)** - See utilities in action with real APIs
-      - **[Best Practices](./best-practices)** - Advanced integration patterns
+        {/* Next Steps */}
+        <div className="glass-card">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Next Steps</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <a href="/documentation?section=core-cache" className="glass-card group hover:scale-[1.02] transition-all duration-300 block">
+              <div className="flex items-start space-x-4">
+                <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                  <RefreshCw className="h-6 w-6 text-blue-600" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">Cache System</h3>
+                  <p className="text-muted-foreground text-sm mb-3">Learn about the intelligent caching system</p>
+                  <div className="flex items-center text-primary text-sm font-medium">
+                    <span>Learn More</span>
+                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </div>
+            </a>
 
+            <a href="/documentation?section=chatgpt" className="glass-card group hover:scale-[1.02] transition-all duration-300 block">
+              <div className="flex items-start space-x-4">
+                <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                  <Code className="h-6 w-6 text-green-600" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">API Integration Examples</h3>
+                  <p className="text-muted-foreground text-sm mb-3">See utilities in action with real APIs</p>
+                  <div className="flex items-center text-primary text-sm font-medium">
+                    <span>Explore APIs</span>
+                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
