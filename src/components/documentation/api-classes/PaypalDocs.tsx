@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Copy, CheckCircle, ExternalLink, Code, Download, Sparkles, ArrowRight, Key, Shield, AlertCircle, Zap, Database, Users, CreditCard, DollarSign, FileText, RefreshCw } from 'lucide-react';
 
 const PaypalDocs: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('quickstart');
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   const copyToClipboard = (code: string, id: string) => {
@@ -82,19 +82,6 @@ async function createSimpleOrder() {
   }
 }`;
 
-  const authorizationCode = `// .env file
-PAYPAL_CLIENT_ID=your_paypal_client_id
-PAYPAL_CLIENT_SECRET=your_paypal_client_secret
-
-// In your application
-import { PayPalAPI } from 'macro_api';
-
-const paypal = new PayPalAPI({
-  clientId: process.env.PAYPAL_CLIENT_ID,
-  clientSecret: process.env.PAYPAL_CLIENT_SECRET,
-  sandbox: process.env.NODE_ENV !== 'production'
-});`;
-
   const orderExampleCode = `// Create a comprehensive order
 async function createDetailedOrder() {
   const order = await paypal.createOrder({
@@ -152,40 +139,12 @@ async function captureOrder(orderId) {
       params: 'captureId: string, refundData?: RefundParams',
       returns: 'Promise<Refund>',
       icon: <RefreshCw className="h-4 w-4" />
-    },
-    {
-      name: 'authorizeOrder',
-      description: 'Authorize payment for later capture',
-      params: 'orderId: string',
-      returns: 'Promise<Authorization>',
-      icon: <Shield className="h-4 w-4" />
-    },
-    {
-      name: 'voidAuthorization',
-      description: 'Void an authorization',
-      params: 'authorizationId: string',
-      returns: 'Promise<void>',
-      icon: <AlertCircle className="h-4 w-4" />
-    },
-    {
-      name: 'listPayments',
-      description: 'List payment history',
-      params: 'options?: ListOptions',
-      returns: 'Promise<PaymentList>',
-      icon: <Database className="h-4 w-4" />
-    },
-    {
-      name: 'webhookValidation',
-      description: 'Validate webhook signatures',
-      params: 'payload: string, signature: string',
-      returns: 'boolean',
-      icon: <Zap className="h-4 w-4" />
     }
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50/50 via-white to-purple-50/50 dark:from-gray-950 dark:via-blue-950/30 dark:to-purple-950/20 relative overflow-hidden">
-      {/* Background effects matching main page */}
+      {/* Background effects */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-32 h-32 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-gradient-to-r from-blue-400 to-purple-600 rounded-full opacity-10 blur-3xl animate-float" />
         <div className="absolute bottom-1/4 right-1/4 w-32 h-32 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-gradient-to-r from-purple-400 to-pink-600 rounded-full opacity-10 blur-3xl animate-float" style={{ animationDelay: '-3s' }} />
@@ -244,131 +203,80 @@ async function captureOrder(orderId) {
 
         {/* Main Content Tabs */}
         <div className="glass-card mb-8 sm:mb-12">
-          <Tabs defaultValue="quickstart" className="space-y-6">
+          <div className="space-y-6">
             <div className="flex flex-wrap gap-2 mb-6">
-              <TabsTrigger value="quickstart" className="glass-button">Quick Start</TabsTrigger>
-              <TabsTrigger value="authentication" className="glass-button">Auth</TabsTrigger>
-              <TabsTrigger value="examples" className="glass-button">Examples</TabsTrigger>
-              <TabsTrigger value="methods" className="glass-button">Methods</TabsTrigger>
-              <TabsTrigger value="advanced" className="glass-button">Advanced</TabsTrigger>
+              <button
+                onClick={() => setActiveTab('quickstart')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'quickstart' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Quick Start
+              </button>
+              <button
+                onClick={() => setActiveTab('authentication')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'authentication' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Authentication
+              </button>
+              <button
+                onClick={() => setActiveTab('examples')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'examples' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Examples
+              </button>
+              <button
+                onClick={() => setActiveTab('methods')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'methods' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Methods
+              </button>
+              <button
+                onClick={() => setActiveTab('advanced')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'advanced' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Advanced
+              </button>
             </div>
 
-            {/* Quick Start */}
-            <TabsContent value="quickstart" className="space-y-6">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                    <Code className="h-5 w-5 mr-2 text-primary" />
-                    Basic Setup
-                  </h3>
-                  <p className="text-muted-foreground mb-4">Initialize the PayPal API client</p>
-                  <CodeBlock code={basicSetupCode} id="basic-setup" />
-                </div>
-
-                <div className="glass-card bg-gradient-to-r from-blue-500/10 to-blue-500/10 border-blue-500/20 dark:border-blue-400/20">
-                  <div className="flex items-start space-x-4">
-                    <DollarSign className="h-6 w-6 text-blue-600 mt-1" />
-                    <div>
-                      <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">PayPal App Required</h4>
-                      <p className="text-blue-700 dark:text-blue-300 text-sm leading-relaxed">
-                        You need to create a PayPal app to get your Client ID and Client Secret from the PayPal Developer Dashboard.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                    <CreditCard className="h-5 w-5 mr-2 text-primary" />
-                    Simple Example
-                  </h3>
-                  <p className="text-muted-foreground mb-4">Create and capture a payment order</p>
-                  <CodeBlock 
-                    code={`// After setting up authentication
-const order = await paypal.createOrder({
-  intent: 'CAPTURE',
-  purchase_units: [{
-    amount: { currency_code: 'USD', value: '100.00' }
-  }]
-});
-console.log(\`Order ID: \${order.id}\`);`}
-                    id="simple-example"
-                  />
-                </div>
+            {/* Tab Contents */}
+            <div className={`space-y-6 ${activeTab === 'quickstart' ? 'block' : 'hidden'}`}>
+              <div>
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4">Getting Started</h3>
+                <CodeBlock code={basicSetupCode} id="basic-setup" />
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Authentication */}
-            <TabsContent value="authentication" className="space-y-6">
+            <div className={`space-y-6 ${activeTab === 'authentication' ? 'block' : 'hidden'}`}>
               <div>
                 <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
                   <Key className="h-5 w-5 mr-2 text-primary" />
                   PayPal App Setup
                 </h3>
                 <p className="text-muted-foreground mb-4">Complete OAuth 2.0 implementation with automatic token management</p>
-                <CodeBlock code={authorizationCode} id="oauth-flow" />
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
                 <div className="glass-card bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
-                  <h4 className="font-semibold text-green-600 mb-4 flex items-center">
-                    <Shield className="h-5 w-5 mr-2" />
-                    Setup Steps
-                  </h4>
-                  <div className="space-y-2 text-sm">
+                  <div className="space-y-3 text-sm">
                     <div className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
                       <span>Create PayPal Developer Account</span>
                     </div>
                     <div className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
                       <span>Create New Application</span>
                     </div>
                     <div className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
                       <span>Copy Client ID & Secret</span>
                     </div>
                     <div className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
                       <span>Configure Environment Variables</span>
                     </div>
                   </div>
                 </div>
-
-                <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
-                  <h4 className="font-semibold text-blue-600 mb-4 flex items-center">
-                    <Sparkles className="h-5 w-5 mr-2" />
-                    Features
-                  </h4>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>OAuth 2.0 authentication</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Automatic token refresh</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Sandbox & production modes</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Error handling</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Rate limiting</span>
-                    </li>
-                  </ul>
-                </div>
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Examples */}
-            <TabsContent value="examples" className="space-y-6">
-              <div className="grid gap-6">
+            <div className={`space-y-6 ${activeTab === 'examples' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
                 <div>
                   <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
                     <CreditCard className="h-5 w-5 mr-2 text-primary" />
@@ -385,10 +293,9 @@ console.log(\`Order ID: \${order.id}\`);`}
                   <CodeBlock code={paymentExampleCode} id="payment-examples" />
                 </div>
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Methods */}
-            <TabsContent value="methods" className="space-y-6">
+            <div className={`space-y-6 ${activeTab === 'methods' ? 'block' : 'hidden'}`}>
               <div>
                 <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
                   <Code className="h-5 w-5 mr-2 text-primary" />
@@ -417,81 +324,50 @@ console.log(\`Order ID: \${order.id}\`);`}
                   ))}
                 </div>
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Advanced */}
-            <TabsContent value="advanced" className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="glass-card bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/20">
-                  <h4 className="font-semibold text-orange-600 mb-4 flex items-center">
-                    <Sparkles className="h-5 w-5 mr-2" />
-                    Features
-                  </h4>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Order management</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Payment processing</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Refund handling</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Webhook support</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Authorization flows</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Multi-currency support</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Error recovery</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Production ready</span>
-                    </li>
-                  </ul>
-                </div>
+            <div className={`space-y-6 ${activeTab === 'advanced' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4">Advanced Configuration</h3>
+                <p className="text-muted-foreground mb-4">Advanced features and best practices</p>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="glass-card bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/20">
+                    <h4 className="font-semibold text-orange-600 mb-4 flex items-center">
+                      <Sparkles className="h-5 w-5 mr-2" />
+                      Features
+                    </h4>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Order management</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Payment processing</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Production ready</span>
+                      </li>
+                    </ul>
+                  </div>
 
-                <div className="glass-card bg-gradient-to-r from-red-500/10 to-pink-500/10 border-red-500/20">
-                  <h4 className="font-semibold text-red-600 mb-4 flex items-center">
-                    <Shield className="h-5 w-5 mr-2" />
-                    Common Errors
-                  </h4>
-                  <ul className="space-y-2 text-sm">
-                    <li><strong>400:</strong> Bad request format</li>
-                    <li><strong>401:</strong> Invalid credentials</li>
-                    <li><strong>403:</strong> Insufficient permissions</li>
-                    <li><strong>404:</strong> Resource not found</li>
-                    <li><strong>429:</strong> Rate limit exceeded</li>
-                    <li><strong>500:</strong> PayPal server error</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="glass-card bg-gradient-to-r from-green-500/10 to-blue-500/10 border-green-500/20">
-                <div className="flex items-start space-x-4">
-                  <DollarSign className="h-6 w-6 text-green-600 mt-1" />
-                  <div>
-                    <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">Production Ready</h4>
-                    <p className="text-green-700 dark:text-green-300 text-sm leading-relaxed">
-                      The PayPal API class includes built-in error handling, automatic token refresh, and comprehensive TypeScript support for production applications.
-                    </p>
+                  <div className="glass-card bg-gradient-to-r from-red-500/10 to-pink-500/10 border-red-500/20">
+                    <h4 className="font-semibold text-red-600 mb-4 flex items-center">
+                      <Shield className="h-5 w-5 mr-2" />
+                      Common Errors
+                    </h4>
+                    <ul className="space-y-2 text-sm">
+                      <li><strong>400:</strong> Bad request format</li>
+                      <li><strong>401:</strong> Invalid credentials</li>
+                      <li><strong>403:</strong> Insufficient permissions</li>
+                      <li><strong>404:</strong> Resource not found</li>
+                    </ul>
                   </div>
                 </div>
               </div>
-            </TabsContent>
-          </Tabs>
+            </div>
+          </div>
         </div>
 
         {/* Next Steps */}

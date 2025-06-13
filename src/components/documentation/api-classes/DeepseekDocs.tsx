@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Copy, Brain, Play, Search, User, Code, Download, Sparkles, ArrowRight, Key, Shield, Zap, Database, CheckCircle, ExternalLink } from 'lucide-react';
 
 const DeepseekDocs: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('quickstart');
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   const copyToClipboard = (code: string, id: string) => {
@@ -234,58 +234,57 @@ async function advancedChat() {
 
         {/* Main Content Tabs */}
         <div className="glass-card mb-8 sm:mb-12">
-          <Tabs defaultValue="quickstart" className="space-y-6">
+          <div className="space-y-6">
             <div className="flex flex-wrap gap-2 mb-6">
-              <TabsTrigger value="quickstart" className="glass-button">Quick Start</TabsTrigger>
-              <TabsTrigger value="authentication" className="glass-button">Authentication</TabsTrigger>
-              <TabsTrigger value="chat" className="glass-button">Chat</TabsTrigger>
-              <TabsTrigger value="models" className="glass-button">Models</TabsTrigger>
-              <TabsTrigger value="advanced" className="glass-button">Advanced</TabsTrigger>
+              <button
+                onClick={() => setActiveTab('quickstart')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'quickstart' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Quick Start
+              </button>
+              <button
+                onClick={() => setActiveTab('authentication')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'authentication' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Authentication
+              </button>
+              <button
+                onClick={() => setActiveTab('examples')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'examples' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Examples
+              </button>
+              <button
+                onClick={() => setActiveTab('methods')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'methods' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Methods
+              </button>
+              <button
+                onClick={() => setActiveTab('advanced')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'advanced' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Advanced
+              </button>
             </div>
 
-            {/* Quick Start */}
-            <TabsContent value="quickstart" className="space-y-6">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                    <Code className="h-5 w-5 mr-2 text-primary" />
-                    Basic Setup
-                  </h3>
-                  <p className="text-muted-foreground mb-4">Initialize the DeepSeek API client for code generation</p>
-                  <CodeBlock code={basicSetupCode} id="basic-setup" />
-                </div>
-
-                <div className="glass-card bg-gradient-to-r from-purple-500/10 to-blue-500/10 border-purple-500/20 dark:border-purple-400/20">
-                  <div className="flex items-start space-x-4">
-                    <Key className="h-6 w-6 text-purple-600 mt-1" />
-                    <div>
-                      <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">API Key Required</h4>
-                      <p className="text-purple-700 dark:text-purple-300 text-sm leading-relaxed">
-                        You need a valid API key from DeepSeek to use this service.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+            {/* Tab Contents */}
+            <div className={`space-y-6 ${activeTab === 'quickstart' ? 'block' : 'hidden'}`}>
+              <div>
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4">Getting Started</h3>
+                <CodeBlock code={basicSetupCode} id="basic-setup" />
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Authentication */}
-            <TabsContent value="authentication" className="space-y-6">
+            <div className={`space-y-6 ${activeTab === 'authentication' ? 'block' : 'hidden'}`}>
               <div>
                 <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
                   <Key className="h-5 w-5 mr-2 text-primary" />
-                  Getting Your API Key
+                  API Setup
                 </h3>
+                <p className="text-muted-foreground mb-4">Configure your API credentials</p>
                 <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
                   <div className="space-y-3 text-sm">
-                    <div className="flex items-center">
-                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
-                      <span>Visit <a href="https://platform.deepseek.com" className="underline" target="_blank" rel="noopener noreferrer">DeepSeek Platform</a></span>
-                    </div>
-                    <div className="flex items-center">
-                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
-                      <span>Sign up or log in to your account</span>
-                    </div>
                     <div className="flex items-center">
                       <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
                       <span>Navigate to the API section in your dashboard</span>
@@ -301,100 +300,103 @@ async function advancedChat() {
                   </div>
                 </div>
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Chat */}
-            <TabsContent value="chat" className="space-y-6">
-              <div>
-                <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                  <Brain className="h-5 w-5 mr-2 text-primary" />
-                  Chat Completions
-                </h3>
-                <p className="text-muted-foreground mb-4">Use DeepSeek for programming assistance and code explanations</p>
-                <CodeBlock code={chatCode} id="chat-examples" />
+            <div className={`space-y-6 ${activeTab === 'examples' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                    <Brain className="h-5 w-5 mr-2 text-primary" />
+                    Chat Completions
+                  </h3>
+                  <p className="text-muted-foreground mb-4">Use DeepSeek for programming assistance and code explanations</p>
+                  <CodeBlock code={chatCode} id="chat-examples" />
+                </div>
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Models */}
-            <TabsContent value="models" className="space-y-6">
-              <div>
-                <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                  <Database className="h-5 w-5 mr-2 text-primary" />
-                  Available Models
-                </h3>
-                <div className="grid gap-4">
-                  {models.map((model, index) => (
-                    <div key={index} className="glass-card group hover:scale-[1.01] transition-all duration-300">
-                      <div className="flex items-start space-x-4">
-                        <div className={`w-4 h-4 rounded-full bg-${model.color}-500 mt-2`} />
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
-                            {model.name}
-                          </h4>
-                          <p className="text-muted-foreground text-sm">{model.description}</p>
+            <div className={`space-y-6 ${activeTab === 'methods' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                    <Database className="h-5 w-5 mr-2 text-primary" />
+                    Available Models
+                  </h3>
+                  <div className="grid gap-4">
+                    {models.map((model, index) => (
+                      <div key={index} className="glass-card group hover:scale-[1.01] transition-all duration-300">
+                        <div className="flex items-start space-x-4">
+                          <div className={`w-4 h-4 rounded-full bg-${model.color}-500 mt-2`} />
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
+                              {model.name}
+                            </h4>
+                            <p className="text-muted-foreground text-sm">{model.description}</p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Advanced */}
-            <TabsContent value="advanced" className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="glass-card bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
-                  <h4 className="font-semibold text-green-600 mb-4 flex items-center">
-                    <Sparkles className="h-5 w-5 mr-2" />
-                    Advanced Features
-                  </h4>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Multi-language code generation</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Code explanation and analysis</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Streaming responses</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Text embeddings</span>
-                    </li>
-                  </ul>
-                </div>
+            <div className={`space-y-6 ${activeTab === 'advanced' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="glass-card bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
+                    <h4 className="font-semibold text-green-600 mb-4 flex items-center">
+                      <Sparkles className="h-5 w-5 mr-2" />
+                      Advanced Features
+                    </h4>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Multi-language code generation</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Code explanation and analysis</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Streaming responses</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Text embeddings</span>
+                      </li>
+                    </ul>
+                  </div>
 
-                <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
-                  <h4 className="font-semibold text-blue-600 mb-4 flex items-center">
-                    <Shield className="h-5 w-5 mr-2" />
-                    Best Practices
-                  </h4>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Use lower temperature for code</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Provide clear, detailed prompts</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Use appropriate models</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Implement error handling</span>
-                    </li>
-                  </ul>
+                  <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
+                    <h4 className="font-semibold text-blue-600 mb-4 flex items-center">
+                      <Shield className="h-5 w-5 mr-2" />
+                      Best Practices
+                    </h4>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Use lower temperature for code</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Provide clear, detailed prompts</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Use appropriate models</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Implement error handling</span>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
-            </TabsContent>
-          </Tabs>
+            </div>
+          </div>
         </div>
 
         {/* Next Steps */}

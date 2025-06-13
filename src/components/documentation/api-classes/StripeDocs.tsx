@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Copy, CreditCard, Building, Globe, Play, Search, User, Code, Download, Sparkles, ArrowRight, Key, Shield, Zap, Database, Users, CheckCircle, ExternalLink, RefreshCw } from 'lucide-react';
 
 const StripeDocs: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('quickstart');
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   const copyToClipboard = (code: string, id: string) => {
@@ -91,26 +91,6 @@ async function createCustomer() {
   
   console.log('Customer created:', customer.id);
   return customer;
-}
-
-// Retrieve a customer
-async function getCustomer(customerId) {
-  const customer = await stripe.getCustomer(customerId);
-  console.log('Customer:', customer);
-  return customer;
-}
-
-// Update customer information
-async function updateCustomer(customerId) {
-  const updatedCustomer = await stripe.updateCustomer(customerId, {
-    name: 'John Smith',
-    email: 'johnsmith@example.com',
-    metadata: {
-      lastUpdated: new Date().toISOString()
-    }
-  });
-  
-  return updatedCustomer;
 }`;
 
   const subscriptionCode = `// Create a subscription
@@ -134,41 +114,6 @@ async function createSubscription(customerId, priceId) {
   
   console.log('Subscription created:', subscription.id);
   return subscription;
-}
-
-// Update a subscription
-async function updateSubscription(subscriptionId) {
-  const updatedSubscription = await stripe.updateSubscription(subscriptionId, {
-    items: [
-      {
-        id: 'si_item_id',
-        price: 'price_new_plan',
-        quantity: 2
-      }
-    ],
-    proration_behavior: 'create_prorations',
-    metadata: {
-      updated: new Date().toISOString(),
-      reason: 'plan_upgrade'
-    }
-  });
-  
-  return updatedSubscription;
-}
-
-// Cancel a subscription
-async function cancelSubscription(subscriptionId, immediate = false) {
-  if (immediate) {
-    // Cancel immediately
-    const canceledSubscription = await stripe.cancelSubscription(subscriptionId);
-    return canceledSubscription;
-  } else {
-    // Cancel at period end
-    const subscription = await stripe.updateSubscription(subscriptionId, {
-      cancel_at_period_end: true
-    });
-    return subscription;
-  }
 }`;
 
   const features = [
@@ -202,7 +147,7 @@ async function cancelSubscription(subscriptionId, immediate = false) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50/50 via-white to-purple-50/50 dark:from-gray-950 dark:via-blue-950/30 dark:to-purple-950/20 relative overflow-hidden">
-      {/* Background effects matching main page */}
+      {/* Background effects */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-32 h-32 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-gradient-to-r from-blue-400 to-purple-600 rounded-full opacity-10 blur-3xl animate-float" />
         <div className="absolute bottom-1/4 right-1/4 w-32 h-32 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-gradient-to-r from-purple-400 to-pink-600 rounded-full opacity-10 blur-3xl animate-float" style={{ animationDelay: '-3s' }} />
@@ -287,61 +232,60 @@ async function cancelSubscription(subscriptionId, immediate = false) {
 
         {/* Main Content Tabs */}
         <div className="glass-card mb-8 sm:mb-12">
-          <Tabs defaultValue="quickstart" className="space-y-6">
+          <div className="space-y-6">
             <div className="flex flex-wrap gap-2 mb-6">
-              <TabsTrigger value="quickstart" className="glass-button">Quick Start</TabsTrigger>
-              <TabsTrigger value="authentication" className="glass-button">Authentication</TabsTrigger>
-              <TabsTrigger value="customers" className="glass-button">Customers</TabsTrigger>
-              <TabsTrigger value="subscriptions" className="glass-button">Subscriptions</TabsTrigger>
-              <TabsTrigger value="advanced" className="glass-button">Advanced</TabsTrigger>
+              <button
+                onClick={() => setActiveTab('quickstart')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'quickstart' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Quick Start
+              </button>
+              <button
+                onClick={() => setActiveTab('authentication')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'authentication' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Authentication
+              </button>
+              <button
+                onClick={() => setActiveTab('examples')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'examples' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Examples
+              </button>
+              <button
+                onClick={() => setActiveTab('methods')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'methods' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Methods
+              </button>
+              <button
+                onClick={() => setActiveTab('advanced')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'advanced' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Advanced
+              </button>
             </div>
 
-            {/* Quick Start */}
-            <TabsContent value="quickstart" className="space-y-6">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                    <Code className="h-5 w-5 mr-2 text-primary" />
-                    Basic Setup
-                  </h3>
-                  <p className="text-muted-foreground mb-4">Initialize the Stripe API client for payment processing</p>
-                  <CodeBlock code={basicSetupCode} id="basic-setup" />
-                </div>
-
-                <div className="glass-card bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-blue-500/20 dark:border-blue-400/20">
-                  <div className="flex items-start space-x-4">
-                    <Key className="h-6 w-6 text-blue-600 mt-1" />
-                    <div>
-                      <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">API Key Required</h4>
-                      <p className="text-blue-700 dark:text-blue-300 text-sm leading-relaxed">
-                        You need a valid Stripe secret key to use the Stripe API. Never expose your secret key in client-side code.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+            {/* Tab Contents */}
+            <div className={`space-y-6 ${activeTab === 'quickstart' ? 'block' : 'hidden'}`}>
+              <div>
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4">Getting Started</h3>
+                <CodeBlock code={basicSetupCode} id="basic-setup" />
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Authentication */}
-            <TabsContent value="authentication" className="space-y-6">
+            <div className={`space-y-6 ${activeTab === 'authentication' ? 'block' : 'hidden'}`}>
               <div>
                 <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
                   <Key className="h-5 w-5 mr-2 text-primary" />
-                  Getting Your Stripe API Key
+                  Stripe API Setup
                 </h3>
-                <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
+                <p className="text-muted-foreground mb-4">Get your API keys from the Stripe Dashboard</p>
+                <div className="glass-card bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
                   <div className="space-y-3 text-sm">
                     <div className="flex items-center">
                       <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
-                      <span>Sign up for a Stripe account at <a href="https://stripe.com" className="underline" target="_blank" rel="noopener noreferrer">stripe.com</a></span>
-                    </div>
-                    <div className="flex items-center">
-                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
-                      <span>Go to your Stripe Dashboard</span>
-                    </div>
-                    <div className="flex items-center">
-                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
-                      <span>Navigate to Developers {'>'} API keys</span>
+                      <span>Navigate to Developers → API keys</span>
                     </div>
                     <div className="flex items-center">
                       <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
@@ -354,77 +298,84 @@ async function cancelSubscription(subscriptionId, immediate = false) {
                   </div>
                 </div>
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Customers */}
-            <TabsContent value="customers" className="space-y-6">
-              <div>
-                <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                  <Users className="h-5 w-5 mr-2 text-primary" />
-                  Customer Management
-                </h3>
-                <p className="text-muted-foreground mb-4">Create and manage customer information securely</p>
-                <CodeBlock code={customerCode} id="customer-examples" />
-              </div>
-            </TabsContent>
-
-            {/* Subscriptions */}
-            <TabsContent value="subscriptions" className="space-y-6">
-              <div>
-                <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                  <RefreshCw className="h-5 w-5 mr-2 text-primary" />
-                  Subscription Management
-                </h3>
-                <p className="text-muted-foreground mb-4">Handle recurring billing and subscription lifecycle</p>
-                <CodeBlock code={subscriptionCode} id="subscription-examples" />
-              </div>
-            </TabsContent>
-
-            {/* Advanced */}
-            <TabsContent value="advanced" className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="glass-card bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
-                  <h4 className="font-semibold text-green-600 mb-4 flex items-center">
-                    <Sparkles className="h-5 w-5 mr-2" />
-                    Advanced Features
-                  </h4>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Multi-currency support</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Webhook event handling</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Marketplace payments</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Advanced fraud protection</span>
-                    </li>
-                  </ul>
+            <div className={`space-y-6 ${activeTab === 'examples' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                    <Users className="h-5 w-5 mr-2 text-primary" />
+                    Customer Management
+                  </h3>
+                  <p className="text-muted-foreground mb-4">Create and manage customer information securely</p>
+                  <CodeBlock code={customerCode} id="customer-examples" />
                 </div>
 
-                <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
-                  <h4 className="font-semibold text-blue-600 mb-4 flex items-center">
-                    <Shield className="h-5 w-5 mr-2" />
-                    Rate Limits
-                  </h4>
-                  <div className="space-y-2 text-sm">
-                    {rateLimits.map((limit, index) => (
-                      <div key={index} className="flex justify-between">
-                        <span className="font-medium">{limit.tier}:</span>
-                        <span>{limit.limit}</span>
-                      </div>
-                    ))}
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                    <RefreshCw className="h-5 w-5 mr-2 text-primary" />
+                    Subscription Management
+                  </h3>
+                  <p className="text-muted-foreground mb-4">Handle recurring billing and subscription lifecycle</p>
+                  <CodeBlock code={subscriptionCode} id="subscription-examples" />
+                </div>
+              </div>
+            </div>
+
+            <div className={`space-y-6 ${activeTab === 'methods' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                  <Code className="h-5 w-5 mr-2 text-primary" />
+                  Available Methods
+                </h3>
+                <p className="text-muted-foreground mb-4">Complete API method reference</p>
+              </div>
+            </div>
+
+            <div className={`space-y-6 ${activeTab === 'advanced' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4">Advanced Configuration</h3>
+                <p className="text-muted-foreground mb-4">Advanced features and best practices</p>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="glass-card bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
+                    <h4 className="font-semibold text-green-600 mb-4 flex items-center">
+                      <Sparkles className="h-5 w-5 mr-2" />
+                      Advanced Features
+                    </h4>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Multi-currency support</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Webhook event handling</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Advanced fraud protection</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
+                    <h4 className="font-semibold text-blue-600 mb-4 flex items-center">
+                      <Shield className="h-5 w-5 mr-2" />
+                      Rate Limits
+                    </h4>
+                    <div className="space-y-2 text-sm">
+                      {rateLimits.map((limit, index) => (
+                        <div key={index} className="flex justify-between">
+                          <span className="font-medium">{limit.tier}:</span>
+                          <span>{limit.limit}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </TabsContent>
-          </Tabs>
+            </div>
+          </div>
         </div>
 
         {/* Next Steps */}

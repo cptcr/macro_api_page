@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Copy, MessageSquare, Play, Search, User, Code, Download, Sparkles, ArrowRight, Key, Shield, Zap, Database, Brain, CheckCircle, ExternalLink } from 'lucide-react';
 
 const ChatGptDocs: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('quickstart');
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   const copyToClipboard = (code: string, id: string) => {
@@ -198,57 +198,57 @@ console.log(completion.choices[0]?.message?.content);`;
 
         {/* Main Content Tabs */}
         <div className="glass-card mb-8 sm:mb-12">
-          <Tabs defaultValue="quickstart" className="space-y-6">
+          <div className="space-y-6">
             <div className="flex flex-wrap gap-2 mb-6">
-              <TabsTrigger value="quickstart" className="glass-button">Quick Start</TabsTrigger>
-              <TabsTrigger value="authentication" className="glass-button">Authentication</TabsTrigger>
-              <TabsTrigger value="features" className="glass-button">Core Features</TabsTrigger>
-              <TabsTrigger value="advanced" className="glass-button">Advanced</TabsTrigger>
+              <button
+                onClick={() => setActiveTab('quickstart')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'quickstart' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Quick Start
+              </button>
+              <button
+                onClick={() => setActiveTab('authentication')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'authentication' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Authentication
+              </button>
+              <button
+                onClick={() => setActiveTab('examples')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'examples' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Examples
+              </button>
+              <button
+                onClick={() => setActiveTab('methods')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'methods' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Methods
+              </button>
+              <button
+                onClick={() => setActiveTab('advanced')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'advanced' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Advanced
+              </button>
             </div>
 
-            {/* Quick Start */}
-            <TabsContent value="quickstart" className="space-y-6">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                    <Code className="h-5 w-5 mr-2 text-primary" />
-                    Basic Setup
-                  </h3>
-                  <p className="text-muted-foreground mb-4">Initialize the ChatGPT API client</p>
-                  <CodeBlock code={basicSetupCode} id="basic-setup" />
-                </div>
-
-                <div className="glass-card bg-gradient-to-r from-green-500/10 to-blue-500/10 border-green-500/20 dark:border-green-400/20">
-                  <div className="flex items-start space-x-4">
-                    <Key className="h-6 w-6 text-green-600 mt-1" />
-                    <div>
-                      <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">API Key Required</h4>
-                      <p className="text-green-700 dark:text-green-300 text-sm leading-relaxed">
-                        You need a valid API key from OpenAI to use the ChatGPT API service.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+            {/* Tab Contents */}
+            <div className={`space-y-6 ${activeTab === 'quickstart' ? 'block' : 'hidden'}`}>
+              <div>
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4">Getting Started</h3>
+                <CodeBlock code={basicSetupCode} id="basic-setup" />
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Authentication */}
-            <TabsContent value="authentication" className="space-y-6">
+            <div className={`space-y-6 ${activeTab === 'authentication' ? 'block' : 'hidden'}`}>
               <div>
                 <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
                   <Key className="h-5 w-5 mr-2 text-primary" />
-                  Getting Your OpenAI API Key
+                  OpenAI API Setup
                 </h3>
-                <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
+                <p className="text-muted-foreground mb-4">Get your OpenAI API key from the OpenAI platform</p>
+                <div className="glass-card bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
                   <div className="space-y-3 text-sm">
-                    <div className="flex items-center">
-                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
-                      <span>Visit the <a href="https://platform.openai.com" className="underline" target="_blank" rel="noopener noreferrer">OpenAI Platform</a></span>
-                    </div>
-                    <div className="flex items-center">
-                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
-                      <span>Sign in to your account or create a new one</span>
-                    </div>
                     <div className="flex items-center">
                       <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
                       <span>Navigate to the API Keys section in your account settings</span>
@@ -264,75 +264,87 @@ console.log(completion.choices[0]?.message?.content);`;
                   </div>
                 </div>
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Core Features */}
-            <TabsContent value="features" className="space-y-6">
-              <div>
+            <div className={`space-y-6 ${activeTab === 'examples' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                    <MessageSquare className="h-5 w-5 mr-2 text-primary" />
+                    Advanced Chat Completions
+                  </h3>
+                  <p className="text-muted-foreground mb-4">Advanced chat completion with full control</p>
+                  <CodeBlock code={advancedCode} id="advanced-chat" />
+                </div>
+              </div>
+            </div>
+
+            <div className={`space-y-6 ${activeTab === 'methods' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
                 <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                  <MessageSquare className="h-5 w-5 mr-2 text-primary" />
-                  Advanced Chat Completions
+                  <Code className="h-5 w-5 mr-2 text-primary" />
+                  Available Methods
                 </h3>
-                <p className="text-muted-foreground mb-4">Advanced chat completion with full control</p>
-                <CodeBlock code={advancedCode} id="advanced-chat" />
+                <p className="text-muted-foreground mb-4">Complete list of ChatGPT/OpenAI API methods</p>
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Advanced */}
-            <TabsContent value="advanced" className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="glass-card bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
-                  <h4 className="font-semibold text-green-600 mb-4 flex items-center">
-                    <Sparkles className="h-5 w-5 mr-2" />
-                    Production Ready
-                  </h4>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Automatic token refresh</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Built-in retry logic</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Rate limit handling</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Error categorization</span>
-                    </li>
-                  </ul>
-                </div>
+            <div className={`space-y-6 ${activeTab === 'advanced' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="glass-card bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
+                    <h4 className="font-semibold text-green-600 mb-4 flex items-center">
+                      <Sparkles className="h-5 w-5 mr-2" />
+                      Production Ready
+                    </h4>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Automatic token refresh</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Built-in retry logic</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Rate limit handling</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Error categorization</span>
+                      </li>
+                    </ul>
+                  </div>
 
-                <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
-                  <h4 className="font-semibold text-blue-600 mb-4 flex items-center">
-                    <Shield className="h-5 w-5 mr-2" />
-                    Security Features
-                  </h4>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Secure API key handling</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Request validation</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Response sanitization</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Environment isolation</span>
-                    </li>
-                  </ul>
+                  <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
+                    <h4 className="font-semibold text-blue-600 mb-4 flex items-center">
+                      <Shield className="h-5 w-5 mr-2" />
+                      Security Features
+                    </h4>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Secure API key handling</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Request validation</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Response sanitization</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Environment isolation</span>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
-            </TabsContent>
-          </Tabs>
+            </div>
+          </div>
         </div>
 
         {/* Next Steps */}

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Copy, Calendar, Play, Search, User, Code, Download, Sparkles, ArrowRight, Key, Shield, Zap, Database, Users, Trophy, CheckCircle, ExternalLink } from 'lucide-react';
 
 const FootballApiDocs: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('quickstart');
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   const copyToClipboard = (code: string, id: string) => {
@@ -220,58 +220,57 @@ async function getLiveFixtures() {
 
         {/* Main Content Tabs */}
         <div className="glass-card mb-8 sm:mb-12">
-          <Tabs defaultValue="quickstart" className="space-y-6">
+          <div className="space-y-6">
             <div className="flex flex-wrap gap-2 mb-6">
-              <TabsTrigger value="quickstart" className="glass-button">Quick Start</TabsTrigger>
-              <TabsTrigger value="authentication" className="glass-button">Authentication</TabsTrigger>
-              <TabsTrigger value="fixtures" className="glass-button">Fixtures</TabsTrigger>
-              <TabsTrigger value="leagues" className="glass-button">League IDs</TabsTrigger>
-              <TabsTrigger value="advanced" className="glass-button">Advanced</TabsTrigger>
+              <button
+                onClick={() => setActiveTab('quickstart')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'quickstart' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Quick Start
+              </button>
+              <button
+                onClick={() => setActiveTab('authentication')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'authentication' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Authentication
+              </button>
+              <button
+                onClick={() => setActiveTab('examples')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'examples' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Examples
+              </button>
+              <button
+                onClick={() => setActiveTab('methods')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'methods' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Methods
+              </button>
+              <button
+                onClick={() => setActiveTab('advanced')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'advanced' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Advanced
+              </button>
             </div>
 
-            {/* Quick Start */}
-            <TabsContent value="quickstart" className="space-y-6">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                    <Code className="h-5 w-5 mr-2 text-primary" />
-                    Basic Setup
-                  </h3>
-                  <p className="text-muted-foreground mb-4">Initialize the Football API client</p>
-                  <CodeBlock code={basicSetupCode} id="basic-setup" />
-                </div>
-
-                <div className="glass-card bg-gradient-to-r from-green-500/10 to-blue-500/10 border-green-500/20 dark:border-green-400/20">
-                  <div className="flex items-start space-x-4">
-                    <Key className="h-6 w-6 text-green-600 mt-1" />
-                    <div>
-                      <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">RapidAPI Key Required</h4>
-                      <p className="text-green-700 dark:text-green-300 text-sm leading-relaxed">
-                        You need a valid API key from RapidAPI to use the Football API service.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+            {/* Tab Contents */}
+            <div className={`space-y-6 ${activeTab === 'quickstart' ? 'block' : 'hidden'}`}>
+              <div>
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4">Getting Started</h3>
+                <CodeBlock code={basicSetupCode} id="basic-setup" />
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Authentication */}
-            <TabsContent value="authentication" className="space-y-6">
+            <div className={`space-y-6 ${activeTab === 'authentication' ? 'block' : 'hidden'}`}>
               <div>
                 <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
                   <Key className="h-5 w-5 mr-2 text-primary" />
-                  Getting Your API Key
+                  RapidAPI Setup
                 </h3>
-                <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
+                <p className="text-muted-foreground mb-4">Get your API key from RapidAPI for API-Football</p>
+                <div className="glass-card bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
                   <div className="space-y-3 text-sm">
-                    <div className="flex items-center">
-                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
-                      <span>Visit <a href="https://rapidapi.com/api-sports/api/api-football" className="underline" target="_blank" rel="noopener noreferrer">API-Football on RapidAPI</a></span>
-                    </div>
-                    <div className="flex items-center">
-                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
-                      <span>Sign up or log in to your RapidAPI account</span>
-                    </div>
                     <div className="flex items-center">
                       <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
                       <span>Subscribe to the API-Football service (free tier available)</span>
@@ -287,88 +286,91 @@ async function getLiveFixtures() {
                   </div>
                 </div>
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Fixtures */}
-            <TabsContent value="fixtures" className="space-y-6">
-              <div>
-                <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                  <Calendar className="h-5 w-5 mr-2 text-primary" />
-                  Fixtures and Match Data
-                </h3>
-                <p className="text-muted-foreground mb-4">Get live and scheduled football matches</p>
-                <CodeBlock code={fixturesCode} id="fixtures-examples" />
+            <div className={`space-y-6 ${activeTab === 'examples' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                    <Calendar className="h-5 w-5 mr-2 text-primary" />
+                    Fixtures and Match Data
+                  </h3>
+                  <p className="text-muted-foreground mb-4">Get live and scheduled football matches</p>
+                  <CodeBlock code={fixturesCode} id="fixtures-examples" />
+                </div>
               </div>
-            </TabsContent>
+            </div>
 
-            {/* League IDs */}
-            <TabsContent value="leagues" className="space-y-6">
-              <div>
-                <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                  <Trophy className="h-5 w-5 mr-2 text-primary" />
-                  Popular League IDs
-                </h3>
-                <div className="grid gap-4">
-                  {Array.from(new Set(leagues.map(l => l.region))).map(region => (
-                    <div key={region} className="glass-card">
-                      <h4 className="font-semibold text-lg mb-3">{region}</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        {leagues.filter(l => l.region === region).map(league => (
-                          <div key={league.id} className="flex items-center justify-between p-2 rounded glass">
-                            <span className="text-sm">{league.name}</span>
-                            <code className="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">{league.id}</code>
-                          </div>
-                        ))}
+            <div className={`space-y-6 ${activeTab === 'methods' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                    <Trophy className="h-5 w-5 mr-2 text-primary" />
+                    Popular League IDs
+                  </h3>
+                  <div className="grid gap-4">
+                    {Array.from(new Set(leagues.map(l => l.region))).map(region => (
+                      <div key={region} className="glass-card">
+                        <h4 className="font-semibold text-lg mb-3">{region}</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          {leagues.filter(l => l.region === region).map(league => (
+                            <div key={league.id} className="flex items-center justify-between p-2 rounded glass">
+                              <span className="text-sm">{league.name}</span>
+                              <code className="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">{league.id}</code>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </TabsContent>
-
-            {/* Advanced */}
-            <TabsContent value="advanced" className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="glass-card bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
-                  <h4 className="font-semibold text-green-600 mb-4 flex items-center">
-                    <Sparkles className="h-5 w-5 mr-2" />
-                    Performance Tips
-                  </h4>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Cache frequently accessed data</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Use specific parameters to reduce response size</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Implement proper error handling for rate limits</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Monitor your API usage to avoid hitting limits</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
-                  <h4 className="font-semibold text-blue-600 mb-4 flex items-center">
-                    <Shield className="h-5 w-5 mr-2" />
-                    Rate Limits
-                  </h4>
-                  <div className="space-y-2 text-sm">
-                    <div><strong>Free:</strong> 100 requests per day</div>
-                    <div><strong>Basic:</strong> 1,000 requests per day</div>
-                    <div><strong>Pro:</strong> 10,000 requests per day</div>
-                    <div><strong>Ultra:</strong> 100,000 requests per day</div>
+                    ))}
                   </div>
                 </div>
               </div>
-            </TabsContent>
-          </Tabs>
+            </div>
+
+            <div className={`space-y-6 ${activeTab === 'advanced' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="glass-card bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
+                    <h4 className="font-semibold text-green-600 mb-4 flex items-center">
+                      <Sparkles className="h-5 w-5 mr-2" />
+                      Performance Tips
+                    </h4>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Cache frequently accessed data</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Use specific parameters to reduce response size</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Implement proper error handling for rate limits</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Monitor your API usage to avoid hitting limits</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
+                    <h4 className="font-semibold text-blue-600 mb-4 flex items-center">
+                      <Shield className="h-5 w-5 mr-2" />
+                      Rate Limits
+                    </h4>
+                    <div className="space-y-2 text-sm">
+                      <div><strong>Free:</strong> 100 requests per day</div>
+                      <div><strong>Basic:</strong> 1,000 requests per day</div>
+                      <div><strong>Pro:</strong> 10,000 requests per day</div>
+                      <div><strong>Ultra:</strong> 100,000 requests per day</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Next Steps */}
@@ -411,5 +413,6 @@ async function getLiveFixtures() {
       </div>
     </div>
   );
-}
+};
+
 export default FootballApiDocs;

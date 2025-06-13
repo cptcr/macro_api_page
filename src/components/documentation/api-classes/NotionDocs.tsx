@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Copy, Music, Play, Search, User, Album, Heart, List, CheckCircle, ExternalLink, Code, Download, Sparkles, ArrowRight, Key, Shield, FileText, Database, Users } from 'lucide-react';
 
 const NotionDocs: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('quickstart');
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   const copyToClipboard = (code: string, id: string) => {
@@ -80,16 +80,6 @@ async function createPage() {
   }
 }`;
 
-  const authorizationCode = `// Get authorization URL for OAuth flow
-const scopes = ['user-read-private', 'user-read-email', 'playlist-read-private'];
-const authUrl = notion.getAuthorizationUrl(scopes, 'random-state-string');
-
-// Redirect user to authUrl, then handle callback
-await notion.exchangeCode(authorizationCode);
-
-// Or set access token manually
-notion.setAccessToken('access-token', 3600, 'refresh-token');`;
-
   const userExampleCode = `// Get current user profile
 const user = await notion.getCurrentUser();
 console.log(user);
@@ -105,20 +95,6 @@ const pages = await notion.getPages(['page-id-1', 'page-id-2']);`;
 
   const methods = [
     {
-      name: 'getAuthorizationUrl',
-      description: 'Generate OAuth authorization URL',
-      params: 'scopes: string[], state?: string',
-      returns: 'string',
-      icon: <User className="h-4 w-4" />
-    },
-    {
-      name: 'exchangeCode',
-      description: 'Exchange authorization code for access token',
-      params: 'code: string',
-      returns: 'Promise<void>',
-      icon: <User className="h-4 w-4" />
-    },
-    {
       name: 'getCurrentUser',
       description: 'Get current user profile',
       params: 'None',
@@ -131,20 +107,6 @@ const pages = await notion.getPages(['page-id-1', 'page-id-2']);`;
       params: 'pageId: string',
       returns: 'Promise<Page>',
       icon: <FileText className="h-4 w-4" />
-    },
-    {
-      name: 'getPages',
-      description: 'Get multiple pages by IDs',
-      params: 'pageIds: string[]',
-      returns: 'Promise<PageResponse>',
-      icon: <FileText className="h-4 w-4" />
-    },
-    {
-      name: 'getDatabase',
-      description: 'Get database by ID',
-      params: 'databaseId: string',
-      returns: 'Promise<Database>',
-      icon: <Database className="h-4 w-4" />
     },
     {
       name: 'createPage',
@@ -164,7 +126,7 @@ const pages = await notion.getPages(['page-id-1', 'page-id-2']);`;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50/50 via-white to-purple-50/50 dark:from-gray-950 dark:via-blue-950/30 dark:to-purple-950/20 relative overflow-hidden">
-      {/* Background effects matching main page */}
+      {/* Background effects */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-32 h-32 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-gradient-to-r from-blue-400 to-purple-600 rounded-full opacity-10 blur-3xl animate-float" />
         <div className="absolute bottom-1/4 right-1/4 w-32 h-32 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-gradient-to-r from-purple-400 to-pink-600 rounded-full opacity-10 blur-3xl animate-float" style={{ animationDelay: '-3s' }} />
@@ -223,130 +185,76 @@ const pages = await notion.getPages(['page-id-1', 'page-id-2']);`;
 
         {/* Main Content Tabs */}
         <div className="glass-card mb-8 sm:mb-12">
-          <Tabs defaultValue="quickstart" className="space-y-6">
+          <div className="space-y-6">
             <div className="flex flex-wrap gap-2 mb-6">
-              <TabsTrigger value="quickstart" className="glass-button">Quick Start</TabsTrigger>
-              <TabsTrigger value="authentication" className="glass-button">Auth</TabsTrigger>
-              <TabsTrigger value="examples" className="glass-button">Examples</TabsTrigger>
-              <TabsTrigger value="methods" className="glass-button">Methods</TabsTrigger>
-              <TabsTrigger value="advanced" className="glass-button">Advanced</TabsTrigger>
+              <button
+                onClick={() => setActiveTab('quickstart')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'quickstart' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Quick Start
+              </button>
+              <button
+                onClick={() => setActiveTab('authentication')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'authentication' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Authentication
+              </button>
+              <button
+                onClick={() => setActiveTab('examples')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'examples' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Examples
+              </button>
+              <button
+                onClick={() => setActiveTab('methods')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'methods' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Methods
+              </button>
+              <button
+                onClick={() => setActiveTab('advanced')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'advanced' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Advanced
+              </button>
             </div>
 
-            {/* Quick Start */}
-            <TabsContent value="quickstart" className="space-y-6">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                    <Code className="h-5 w-5 mr-2 text-primary" />
-                    Basic Setup
-                  </h3>
-                  <p className="text-muted-foreground mb-4">Initialize the Notion API client</p>
-                  <CodeBlock code={basicSetupCode} id="basic-setup" />
-                </div>
-
-                <div className="glass-card bg-gradient-to-r from-gray-500/10 to-blue-500/10 border-gray-500/20 dark:border-gray-400/20">
-                  <div className="flex items-start space-x-4">
-                    <FileText className="h-6 w-6 text-gray-600 mt-1" />
-                    <div>
-                      <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">Notion Integration Required</h4>
-                      <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
-                        You'll need to create a Notion integration at <a href="https://developers.notion.com/" className="underline" target="_blank" rel="noopener noreferrer">developers.notion.com</a> to get your API key.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                    <Play className="h-5 w-5 mr-2 text-primary" />
-                    Simple Example
-                  </h3>
-                  <p className="text-muted-foreground mb-4">Get page information</p>
-                  <CodeBlock 
-                    code={`// After setting up authentication
-const page = await notion.getPage('page-id-here');
-console.log(\`Page title: \${page.properties?.title}\`);`}
-                    id="simple-example"
-                  />
-                </div>
+            {/* Tab Contents */}
+            <div className={`space-y-6 ${activeTab === 'quickstart' ? 'block' : 'hidden'}`}>
+              <div>
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4">Getting Started</h3>
+                <CodeBlock code={basicSetupCode} id="basic-setup" />
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Authentication */}
-            <TabsContent value="authentication" className="space-y-6">
+            <div className={`space-y-6 ${activeTab === 'authentication' ? 'block' : 'hidden'}`}>
               <div>
                 <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
                   <Key className="h-5 w-5 mr-2 text-primary" />
                   API Setup
                 </h3>
                 <p className="text-muted-foreground mb-4">Complete API key setup and configuration</p>
-                <CodeBlock code={authorizationCode} id="oauth-flow" />
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
                 <div className="glass-card bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
-                  <h4 className="font-semibold text-green-600 mb-4 flex items-center">
-                    <Shield className="h-5 w-5 mr-2" />
-                    Required Permissions
-                  </h4>
-                  <div className="space-y-2 text-sm">
+                  <div className="space-y-3 text-sm">
                     <div className="flex items-center">
                       <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <code className="glass px-2 py-1 rounded text-xs">Read content</code>
-                      <span className="ml-2 text-muted-foreground">- Access pages and databases</span>
+                      <span>Read content</span>
                     </div>
                     <div className="flex items-center">
                       <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <code className="glass px-2 py-1 rounded text-xs">Update content</code>
-                      <span className="ml-2 text-muted-foreground">- Modify existing content</span>
+                      <span>Update content</span>
                     </div>
                     <div className="flex items-center">
                       <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <code className="glass px-2 py-1 rounded text-xs">Insert content</code>
-                      <span className="ml-2 text-muted-foreground">- Create new pages and entries</span>
-                    </div>
-                    <div className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <code className="glass px-2 py-1 rounded text-xs">User information</code>
-                      <span className="ml-2 text-muted-foreground">- Access user data</span>
+                      <span>Insert content</span>
                     </div>
                   </div>
                 </div>
-
-                <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
-                  <h4 className="font-semibold text-blue-600 mb-4 flex items-center">
-                    <Sparkles className="h-5 w-5 mr-2" />
-                    Features
-                  </h4>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Database operations</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Page management</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Block editing</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>User management</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Search functionality</span>
-                    </li>
-                  </ul>
-                </div>
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Examples */}
-            <TabsContent value="examples" className="space-y-6">
-              <div className="grid gap-6">
+            <div className={`space-y-6 ${activeTab === 'examples' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
                 <div>
                   <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
                     <User className="h-5 w-5 mr-2 text-primary" />
@@ -363,10 +271,9 @@ console.log(\`Page title: \${page.properties?.title}\`);`}
                   <CodeBlock code={trackExampleCode} id="track-examples" />
                 </div>
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Methods */}
-            <TabsContent value="methods" className="space-y-6">
+            <div className={`space-y-6 ${activeTab === 'methods' ? 'block' : 'hidden'}`}>
               <div>
                 <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
                   <Code className="h-5 w-5 mr-2 text-primary" />
@@ -395,81 +302,50 @@ console.log(\`Page title: \${page.properties?.title}\`);`}
                   ))}
                 </div>
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Advanced */}
-            <TabsContent value="advanced" className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="glass-card bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/20">
-                  <h4 className="font-semibold text-orange-600 mb-4 flex items-center">
-                    <Sparkles className="h-5 w-5 mr-2" />
-                    Features
-                  </h4>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Database operations</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Page management</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Block editing</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>User management</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Search functionality</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Error handling</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Rate limiting</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>TypeScript support</span>
-                    </li>
-                  </ul>
-                </div>
+            <div className={`space-y-6 ${activeTab === 'advanced' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4">Advanced Configuration</h3>
+                <p className="text-muted-foreground mb-4">Advanced features and best practices</p>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="glass-card bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/20">
+                    <h4 className="font-semibold text-orange-600 mb-4 flex items-center">
+                      <Sparkles className="h-5 w-5 mr-2" />
+                      Features
+                    </h4>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Database operations</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Page management</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>TypeScript support</span>
+                      </li>
+                    </ul>
+                  </div>
 
-                <div className="glass-card bg-gradient-to-r from-red-500/10 to-pink-500/10 border-red-500/20">
-                  <h4 className="font-semibold text-red-600 mb-4 flex items-center">
-                    <Shield className="h-5 w-5 mr-2" />
-                    Common Errors
-                  </h4>
-                  <ul className="space-y-2 text-sm">
-                    <li><strong>401:</strong> Invalid or expired token</li>
-                    <li><strong>403:</strong> Insufficient permissions</li>
-                    <li><strong>404:</strong> Resource not found</li>
-                    <li><strong>429:</strong> Rate limit exceeded</li>
-                    <li><strong>500:</strong> Notion server error</li>
-                    <li><strong>503:</strong> Service unavailable</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="glass-card bg-gradient-to-r from-green-500/10 to-blue-500/10 border-green-500/20">
-                <div className="flex items-start space-x-4">
-                  <FileText className="h-6 w-6 text-green-600 mt-1" />
-                  <div>
-                    <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">Production Ready</h4>
-                    <p className="text-green-700 dark:text-green-300 text-sm leading-relaxed">
-                      The Notion API class includes built-in error handling, rate limiting, and comprehensive TypeScript support for production applications.
-                    </p>
+                  <div className="glass-card bg-gradient-to-r from-red-500/10 to-pink-500/10 border-red-500/20">
+                    <h4 className="font-semibold text-red-600 mb-4 flex items-center">
+                      <Shield className="h-5 w-5 mr-2" />
+                      Common Errors
+                    </h4>
+                    <ul className="space-y-2 text-sm">
+                      <li><strong>401:</strong> Invalid or expired token</li>
+                      <li><strong>403:</strong> Insufficient permissions</li>
+                      <li><strong>404:</strong> Resource not found</li>
+                      <li><strong>429:</strong> Rate limit exceeded</li>
+                    </ul>
                   </div>
                 </div>
               </div>
-            </TabsContent>
-          </Tabs>
+            </div>
+          </div>
         </div>
 
         {/* Next Steps */}

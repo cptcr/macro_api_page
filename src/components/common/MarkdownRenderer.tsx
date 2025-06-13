@@ -11,9 +11,7 @@ interface MarkdownRendererProps {
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, className = '' }) => {
   const [copied, setCopied] = React.useState<string | null>(null);
 
-  // Simple markdown parser for documentation
   const parseMarkdown = (text: string): JSX.Element => {
-    // Split by lines for processing
     const lines = text.split('\n');
     const elements: JSX.Element[] = [];
     let currentIndex = 0;
@@ -21,13 +19,11 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, className 
     while (currentIndex < lines.length) {
       const line = lines[currentIndex].trim();
       
-      // Skip empty lines
       if (!line) {
         currentIndex++;
         continue;
       }
 
-      // Headers
       if (line.startsWith('# ')) {
         elements.push(
           <h1 key={currentIndex} className="text-responsive-lg font-bold mb-6 text-gradient-secondary">
@@ -54,7 +50,6 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, className 
         );
       }
       
-      // Code blocks
       else if (line.startsWith('```')) {
         const language = line.substring(3);
         const codeLines: string[] = [];

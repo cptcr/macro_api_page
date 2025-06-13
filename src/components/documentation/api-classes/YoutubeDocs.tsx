@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Copy, Youtube, Bell, Monitor, Clock, Play, Search, User, Code, Download, Sparkles, ArrowRight, Key, Shield, Zap, Database, CheckCircle, ExternalLink } from 'lucide-react';
 
 const YoutubeDocs: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('quickstart');
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   const copyToClipboard = (code: string, id: string) => {
@@ -119,13 +119,6 @@ multiMonitor.addChannel({
   interval: 300000 // 5 minutes
 });
 
-multiMonitor.addChannel({
-  id: 'UCXuqSBlHAE6Xw-yeJA0Tunw',
-  name: 'Linus Tech Tips',
-  webhook: process.env.DISCORD_WEBHOOK_TECH,
-  interval: 600000 // 10 minutes
-});
-
 // Start monitoring all channels
 multiMonitor.startAll();`;
 
@@ -191,7 +184,7 @@ console.log('Channel ID:', channelId);`;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50/50 via-white to-purple-50/50 dark:from-gray-950 dark:via-blue-950/30 dark:to-purple-950/20 relative overflow-hidden">
-      {/* Background effects matching main page */}
+      {/* Background effects */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-32 h-32 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-gradient-to-r from-blue-400 to-purple-600 rounded-full opacity-10 blur-3xl animate-float" />
         <div className="absolute bottom-1/4 right-1/4 w-32 h-32 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-gradient-to-r from-purple-400 to-pink-600 rounded-full opacity-10 blur-3xl animate-float" style={{ animationDelay: '-3s' }} />
@@ -276,58 +269,60 @@ console.log('Channel ID:', channelId);`;
 
         {/* Main Content Tabs */}
         <div className="glass-card mb-8 sm:mb-12">
-          <Tabs defaultValue="quickstart" className="space-y-6">
+          <div className="space-y-6">
             <div className="flex flex-wrap gap-2 mb-6">
-              <TabsTrigger value="quickstart" className="glass-button">Quick Start</TabsTrigger>
-              <TabsTrigger value="authentication" className="glass-button">Authentication</TabsTrigger>
-              <TabsTrigger value="multichannel" className="glass-button">Multi-Channel</TabsTrigger>
-              <TabsTrigger value="channelids" className="glass-button">Channel IDs</TabsTrigger>
-              <TabsTrigger value="advanced" className="glass-button">Advanced</TabsTrigger>
+              <button
+                onClick={() => setActiveTab('quickstart')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'quickstart' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Quick Start
+              </button>
+              <button
+                onClick={() => setActiveTab('authentication')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'authentication' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Authentication
+              </button>
+              <button
+                onClick={() => setActiveTab('examples')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'examples' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Examples
+              </button>
+              <button
+                onClick={() => setActiveTab('methods')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'methods' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Methods
+              </button>
+              <button
+                onClick={() => setActiveTab('advanced')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'advanced' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Advanced
+              </button>
             </div>
 
-            {/* Quick Start */}
-            <TabsContent value="quickstart" className="space-y-6">
+            {/* Tab Contents */}
+            <div className={`space-y-6 ${activeTab === 'quickstart' ? 'block' : 'hidden'}`}>
+              <div>
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4">Getting Started</h3>
+                <CodeBlock code={basicSetupCode} id="basic-setup" />
+              </div>
+            </div>
+
+            <div className={`space-y-6 ${activeTab === 'authentication' ? 'block' : 'hidden'}`}>
               <div className="space-y-6">
                 <div>
                   <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                    <Code className="h-5 w-5 mr-2 text-primary" />
-                    Basic Setup
-                  </h3>
-                  <p className="text-muted-foreground mb-4">Initialize the YouTube monitor for channel notifications</p>
-                  <CodeBlock code={basicSetupCode} id="basic-setup" />
-                </div>
-
-                <div className="glass-card bg-gradient-to-r from-red-500/10 to-blue-500/10 border-red-500/20 dark:border-red-400/20">
-                  <div className="flex items-start space-x-4">
-                    <Key className="h-6 w-6 text-red-600 mt-1" />
-                    <div>
-                      <h4 className="font-semibold text-red-800 dark:text-red-200 mb-2">API Keys Required</h4>
-                      <p className="text-red-700 dark:text-red-300 text-sm leading-relaxed">
-                        You need both a YouTube Data API key and a Discord webhook URL to use this service.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
-
-            {/* Authentication */}
-            <TabsContent value="authentication" className="space-y-6">
-              <div className="grid gap-6">
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
                     <Key className="h-5 w-5 mr-2 text-primary" />
-                    Getting Your YouTube Data API Key
+                    YouTube API Setup
                   </h3>
-                  <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
+                  <div className="glass-card bg-gradient-to-r from-red-500/10 to-orange-500/10 border-red-500/20">
                     <div className="space-y-3 text-sm">
                       <div className="flex items-center">
                         <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
-                        <span>Go to the <a href="https://console.cloud.google.com/" className="underline" target="_blank" rel="noopener noreferrer">Google Cloud Console</a></span>
-                      </div>
-                      <div className="flex items-center">
-                        <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
-                        <span>Create a new project or select an existing one</span>
+                        <span>Go to Google Cloud Console</span>
                       </div>
                       <div className="flex items-center">
                         <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
@@ -376,100 +371,105 @@ console.log('Channel ID:', channelId);`;
                   </div>
                 </div>
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Multi-Channel */}
-            <TabsContent value="multichannel" className="space-y-6">
-              <div>
-                <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                  <Database className="h-5 w-5 mr-2 text-primary" />
-                  Multiple Channel Monitoring
-                </h3>
-                <p className="text-muted-foreground mb-4">Monitor multiple YouTube channels simultaneously</p>
-                <CodeBlock code={multiChannelCode} id="multi-channel-examples" />
-              </div>
-            </TabsContent>
-
-            {/* Channel IDs */}
-            <TabsContent value="channelids" className="space-y-6">
-              <div className="grid gap-6">
+            <div className={`space-y-6 ${activeTab === 'examples' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
                 <div>
                   <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                    <Search className="h-5 w-5 mr-2 text-primary" />
-                    Finding Channel IDs
+                    <Database className="h-5 w-5 mr-2 text-primary" />
+                    Multiple Channel Monitoring
                   </h3>
-                  <p className="text-muted-foreground mb-4">Helper function to get channel ID from custom URLs</p>
-                  <CodeBlock code={findChannelIdCode} id="find-channel-id" />
+                  <p className="text-muted-foreground mb-4">Monitor multiple YouTube channels simultaneously</p>
+                  <CodeBlock code={multiChannelCode} id="multi-channel-examples" />
                 </div>
+              </div>
+            </div>
 
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                    <Youtube className="h-5 w-5 mr-2 text-primary" />
-                    Popular Tech Channels
-                  </h3>
-                  <div className="grid gap-4">
-                    {Array.from(new Set(channelIds.map(c => c.category))).map(category => (
-                      <div key={category} className="glass-card">
-                        <h4 className="font-semibold text-lg mb-3">{category}</h4>
-                        <div className="grid grid-cols-1 gap-2">
-                          {channelIds.filter(c => c.category === category).map(channel => (
-                            <div key={channel.id} className="flex items-center justify-between p-2 rounded glass">
-                              <span className="text-sm">{channel.name}</span>
-                              <code className="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">{channel.id}</code>
-                            </div>
-                          ))}
+            <div className={`space-y-6 ${activeTab === 'methods' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
+                <div className="grid gap-6">
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                      <Search className="h-5 w-5 mr-2 text-primary" />
+                      Finding Channel IDs
+                    </h3>
+                    <p className="text-muted-foreground mb-4">Helper function to get channel ID from custom URLs</p>
+                    <CodeBlock code={findChannelIdCode} id="find-channel-id" />
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                      <Youtube className="h-5 w-5 mr-2 text-primary" />
+                      Popular Tech Channels
+                    </h3>
+                    <div className="grid gap-4">
+                      {Array.from(new Set(channelIds.map(c => c.category))).map(category => (
+                        <div key={category} className="glass-card">
+                          <h4 className="font-semibold text-lg mb-3">{category}</h4>
+                          <div className="grid grid-cols-1 gap-2">
+                            {channelIds.filter(c => c.category === category).map(channel => (
+                              <div key={channel.id} className="flex items-center justify-between p-2 rounded glass">
+                                <span className="text-sm">{channel.name}</span>
+                                <code className="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">{channel.id}</code>
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Advanced */}
-            <TabsContent value="advanced" className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="glass-card bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
-                  <h4 className="font-semibold text-green-600 mb-4 flex items-center">
-                    <Sparkles className="h-5 w-5 mr-2" />
-                    Optimization Tips
-                  </h4>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Use longer check intervals (10+ minutes) to conserve API quota</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Monitor only active channels that upload regularly</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Implement proper error handling and retry logic</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
-                      <span>Consider using multiple API keys for high-volume monitoring</span>
-                    </li>
-                  </ul>
-                </div>
+            <div className={`space-y-6 ${activeTab === 'advanced' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4">Advanced Configuration</h3>
+                <p className="text-muted-foreground mb-4">Advanced features and best practices</p>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="glass-card bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
+                    <h4 className="font-semibold text-green-600 mb-4 flex items-center">
+                      <Sparkles className="h-5 w-5 mr-2" />
+                      Optimization Tips
+                    </h4>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Use longer check intervals (10+ minutes) to conserve API quota</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Monitor only active channels that upload regularly</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Implement proper error handling and retry logic</span>
+                      </li>
+                      <li className="flex items-center">
+                        <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
+                        <span>Consider using multiple API keys for high-volume monitoring</span>
+                      </li>
+                    </ul>
+                  </div>
 
-                <div className="glass-card bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/20">
-                  <h4 className="font-semibold text-orange-600 mb-4 flex items-center">
-                    <Shield className="h-5 w-5 mr-2" />
-                    YouTube API Quotas
-                  </h4>
-                  <div className="space-y-2 text-sm">
-                    <div><strong>Default quota:</strong> 10,000 units per day</div>
-                    <div><strong>Search cost:</strong> 100 units per request</div>
-                    <div><strong>Maximum requests:</strong> 100 searches per day (default)</div>
-                    <div><strong>Quota resets:</strong> Daily at midnight Pacific Time</div>
-                    <div><strong>Rate limit:</strong> 10,000 requests per 100 seconds per user</div>
+                  <div className="glass-card bg-gradient-to-r from-orange-500/10 to-red-500/10 border-orange-500/20">
+                    <h4 className="font-semibold text-orange-600 mb-4 flex items-center">
+                      <Shield className="h-5 w-5 mr-2" />
+                      YouTube API Quotas
+                    </h4>
+                    <div className="space-y-2 text-sm">
+                      <div><strong>Default quota:</strong> 10,000 units per day</div>
+                      <div><strong>Search cost:</strong> 100 units per request</div>
+                      <div><strong>Maximum requests:</strong> 100 searches per day (default)</div>
+                      <div><strong>Quota resets:</strong> Daily at midnight Pacific Time</div>
+                      <div><strong>Rate limit:</strong> 10,000 requests per 100 seconds per user</div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </TabsContent>
-          </Tabs>
+            </div>
+          </div>
         </div>
 
         {/* Next Steps */}

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Copy, Github, GitBranch, GitCommit, GitPullRequest, GitMerge, Code, Download, Sparkles, ArrowRight, Key, Shield, Zap, Database, Users, CheckCircle, ExternalLink, AlertCircle, FileText, Star, Eye, Activity } from 'lucide-react';
 
 const GithubDocs: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('quickstart');
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   const copyToClipboard = (code: string, id: string) => {
@@ -269,58 +269,57 @@ Addresses #38\`,
 
         {/* Main Content Tabs */}
         <div className="glass-card mb-8 sm:mb-12">
-          <Tabs defaultValue="quickstart" className="space-y-6">
+          <div className="space-y-6">
             <div className="flex flex-wrap gap-2 mb-6">
-              <TabsTrigger value="quickstart" className="glass-button">Quick Start</TabsTrigger>
-              <TabsTrigger value="authentication" className="glass-button">Authentication</TabsTrigger>
-              <TabsTrigger value="issues" className="glass-button">Issues</TabsTrigger>
-              <TabsTrigger value="pullrequests" className="glass-button">Pull Requests</TabsTrigger>
-              <TabsTrigger value="methods" className="glass-button">Methods</TabsTrigger>
+              <button
+                onClick={() => setActiveTab('quickstart')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'quickstart' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Quick Start
+              </button>
+              <button
+                onClick={() => setActiveTab('authentication')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'authentication' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Authentication
+              </button>
+              <button
+                onClick={() => setActiveTab('examples')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'examples' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Examples
+              </button>
+              <button
+                onClick={() => setActiveTab('methods')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'methods' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Methods
+              </button>
+              <button
+                onClick={() => setActiveTab('advanced')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 glass-button ${activeTab === 'advanced' ? 'bg-primary text-primary-foreground' : 'bg-secondary hover:bg-secondary/80'}`}
+              >
+                Advanced
+              </button>
             </div>
 
-            {/* Quick Start */}
-            <TabsContent value="quickstart" className="space-y-6">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                    <Code className="h-5 w-5 mr-2 text-primary" />
-                    Basic Setup
-                  </h3>
-                  <p className="text-muted-foreground mb-4">Initialize the GitHub API client</p>
-                  <CodeBlock code={basicSetupCode} id="basic-setup" />
-                </div>
-
-                <div className="glass-card bg-gradient-to-r from-gray-500/10 to-blue-500/10 border-gray-500/20 dark:border-gray-400/20">
-                  <div className="flex items-start space-x-4">
-                    <Key className="h-6 w-6 text-gray-600 mt-1" />
-                    <div>
-                      <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">Personal Access Token Required</h4>
-                      <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
-                        You need a GitHub Personal Access Token (PAT) to use the GitHub API. The token determines what resources you can access.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+            {/* Tab Contents */}
+            <div className={`space-y-6 ${activeTab === 'quickstart' ? 'block' : 'hidden'}`}>
+              <div>
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4">Getting Started</h3>
+                <CodeBlock code={basicSetupCode} id="basic-setup" />
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Authentication */}
-            <TabsContent value="authentication" className="space-y-6">
+            <div className={`space-y-6 ${activeTab === 'authentication' ? 'block' : 'hidden'}`}>
               <div>
                 <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
                   <Key className="h-5 w-5 mr-2 text-primary" />
-                  Getting Your GitHub Token
+                  GitHub Token Setup
                 </h3>
-                <div className="glass-card bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20">
+                <p className="text-muted-foreground mb-4">Create a personal access token from GitHub</p>
+                <div className="glass-card bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
                   <div className="space-y-3 text-sm">
-                    <div className="flex items-center">
-                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
-                      <span>Go to <a href="https://github.com/settings/tokens" className="underline" target="_blank" rel="noopener noreferrer">GitHub Settings</a></span>
-                    </div>
-                    <div className="flex items-center">
-                      <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
-                      <span>Click "Generate new token" → "Generate new token (classic)"</span>
-                    </div>
                     <div className="flex items-center">
                       <CheckCircle className="h-4 w-4 text-green-500 mr-3" />
                       <span>Give your token a descriptive name</span>
@@ -336,56 +335,62 @@ Addresses #38\`,
                   </div>
                 </div>
               </div>
-            </TabsContent>
+            </div>
 
-            {/* Issues */}
-            <TabsContent value="issues" className="space-y-6">
-              <div>
-                <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                  <AlertCircle className="h-5 w-5 mr-2 text-primary" />
-                  Issue Management
-                </h3>
-                <p className="text-muted-foreground mb-4">Create and manage GitHub issues programmatically</p>
-                <CodeBlock code={issuesCode} id="issues-examples" />
-              </div>
-            </TabsContent>
+            <div className={`space-y-6 ${activeTab === 'examples' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                    <AlertCircle className="h-5 w-5 mr-2 text-primary" />
+                    Issue Management
+                  </h3>
+                  <p className="text-muted-foreground mb-4">Create and manage GitHub issues programmatically</p>
+                  <CodeBlock code={issuesCode} id="issues-examples" />
+                </div>
 
-            {/* Pull Requests */}
-            <TabsContent value="pullrequests" className="space-y-6">
-              <div>
-                <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                  <GitPullRequest className="h-5 w-5 mr-2 text-primary" />
-                  Pull Request Management
-                </h3>
-                <p className="text-muted-foreground mb-4">Handle PR creation, review, and merging workflows</p>
-                <CodeBlock code={pullRequestCode} id="pr-examples" />
-              </div>
-            </TabsContent>
-
-            {/* Methods */}
-            <TabsContent value="methods" className="space-y-6">
-              <div>
-                <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
-                  <Code className="h-5 w-5 mr-2 text-primary" />
-                  Available Methods
-                </h3>
-                <div className="grid gap-4">
-                  {methods.map((category, index) => (
-                    <div key={index} className="glass-card">
-                      <h4 className="font-semibold text-lg mb-3">{category.category}</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        {category.methods.map((method, methodIndex) => (
-                          <div key={methodIndex} className="flex items-center p-2 rounded glass">
-                            <code className="text-sm">{method}</code>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                    <GitPullRequest className="h-5 w-5 mr-2 text-primary" />
+                    Pull Request Management
+                  </h3>
+                  <p className="text-muted-foreground mb-4">Handle PR creation, review, and merging workflows</p>
+                  <CodeBlock code={pullRequestCode} id="pr-examples" />
                 </div>
               </div>
-            </TabsContent>
-          </Tabs>
+            </div>
+
+            <div className={`space-y-6 ${activeTab === 'methods' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 flex items-center">
+                    <Code className="h-5 w-5 mr-2 text-primary" />
+                    Available Methods
+                  </h3>
+                  <div className="grid gap-4">
+                    {methods.map((category, index) => (
+                      <div key={index} className="glass-card">
+                        <h4 className="font-semibold text-lg mb-3">{category.category}</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          {category.methods.map((method, methodIndex) => (
+                            <div key={methodIndex} className="flex items-center p-2 rounded glass">
+                              <code className="text-sm">{method}</code>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className={`space-y-6 ${activeTab === 'advanced' ? 'block' : 'hidden'}`}>
+              <div className="space-y-6">
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4">Advanced Configuration</h3>
+                <p className="text-muted-foreground mb-4">Advanced features and best practices for GitHub API integration</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Next Steps */}
