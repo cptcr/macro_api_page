@@ -92,7 +92,6 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
         { id: 'getting-started', title: 'Getting Started', icon: BookOpen },
         { id: 'installation', title: 'Installation', icon: Download },
         { id: 'basic-usage', title: 'Basic Usage', icon: Code },
-        { id: 'authentication', title: 'Authentication', icon: Shield }
       ]
     },
     {
@@ -102,19 +101,7 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
       badge: 'New',
       items: [
         { id: 'core-cache', title: 'Cache System', icon: Database, isNew: true },
-        { id: 'core-errors', title: 'Error Handling', icon: AlertCircle },
         { id: 'core-utils', title: 'Utilities & Entry Point', icon: Settings }
-      ]
-    },
-    {
-      id: 'core-features',
-      title: 'Core Features',
-      icon: Layers,
-      items: [
-        { id: 'error-handling', title: 'Error Handling (Legacy)', icon: AlertCircle },
-        { id: 'caching', title: 'Caching System (Legacy)', icon: Database },
-        { id: 'retry-logic', title: 'Retry Logic', icon: RefreshCw },
-        { id: 'circuit-breaker', title: 'Circuit Breaker', icon: Shield }
       ]
     },
     {
@@ -222,10 +209,6 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
           <div className="glass rounded-lg p-2 hover:scale-105 transition-all duration-300">
             <div className="text-sm font-bold text-foreground">100+</div>
             <div className="text-xs text-muted-foreground">Methods</div>
-          </div>
-          <div className="glass rounded-lg p-2 hover:scale-105 transition-all duration-300">
-            <div className="text-sm font-bold text-foreground">1.2K+</div>
-            <div className="text-xs text-muted-foreground">Stars</div>
           </div>
         </div>
       </div>
@@ -337,7 +320,7 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
           
           <div className="flex items-center justify-between">
             <span className="font-medium">Last updated</span>
-            <span>Dec 2024</span>
+            <span>June 2025</span>
           </div>
           
           {/* New features highlight */}
@@ -391,23 +374,12 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({
                 <TrendingUp className="h-3 w-3 mr-1" />
                 Documentation Progress
               </span>
-              <span>95%</span>
+              <span>100%</span>
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 overflow-hidden">
               <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-1.5 rounded-full transition-all duration-500 relative" style={{ width: '95%' }}>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
               </div>
-            </div>
-          </div>
-
-          {/* Community stats */}
-          <div className="pt-3 border-t border-white/20 dark:border-gray-700 text-center">
-            <div className="glass rounded-full px-3 py-2 inline-flex items-center space-x-2 text-xs text-muted-foreground hover:scale-105 transition-all duration-300">
-              <Users className="h-3 w-3" />
-              <span>Used in 50+ countries</span>
-              <span className="text-muted-foreground">•</span>
-              <Star className="h-3 w-3 text-yellow-500" />
-              <span>1.2K+ stars</span>
             </div>
           </div>
         </div>

@@ -2,14 +2,11 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import '@/styles/globals.css';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { generateMetadata as generateMeta } from '../lib/metdata';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata: Metadata = {
-  title: 'macro_api - A Unified API Library for TypeScript/JavaScript',
-  description: 'A comprehensive TypeScript/JavaScript wrapper for popular APIs. Simplify your integrations with our unified interface.',
-  keywords: 'API, TypeScript, JavaScript, OpenAI, Spotify, Stripe, PayPal, Notion, Football API',
-};
+export const metadata = generateMeta();
 
 export default function RootLayout({
   children,
@@ -18,6 +15,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <meta name="theme-color" content="#3b82f6" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
       <body className={inter.className}>
         <ThemeProvider>
           {children}

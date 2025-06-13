@@ -1,7 +1,8 @@
+// src/app/documentation/DocumentationClient.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Navbar from '@/components/common/Navbar';
 import Footer from '@/components/common/Footer';
 import DocsSidebar from '@/components/documentation/DocsSidebar';
@@ -36,8 +37,12 @@ import VercelDocs from '@/components/documentation/production-apis/VercelDocs';
 import S3Docs from '@/components/documentation/production-apis/S3Docs';
 import DockerhubDocs from '@/components/documentation/production-apis/DockerhubDocs';
 
-const DocumentationPage: React.FC = () => {
-  const searchParams = useSearchParams();
+interface Props {
+  searchParams: { section?: string };
+}
+
+const DocumentationClient: React.FC<Props> = ({ searchParams }) => {
+  const router = useRouter();
   const [activeSection, setActiveSection] = useState('getting-started');
   const [searchTerm, setSearchTerm] = useState('');
   const [sidebarPosition, setSidebarPosition] = useState<'fixed' | 'absolute'>('fixed');
@@ -48,7 +53,7 @@ const DocumentationPage: React.FC = () => {
 
   // Handle URL parameters
   useEffect(() => {
-    const section = searchParams.get('section');
+    const section = searchParams.section;
     if (section) {
       setActiveSection(section);
     }
@@ -93,7 +98,7 @@ const DocumentationPage: React.FC = () => {
   // Update URL when section changes
   const handleSectionChange = (sectionId: string) => {
     setActiveSection(sectionId);
-    window.history.pushState({}, '', `/documentation?section=${sectionId}`);
+    router.push(`/documentation?section=${sectionId}`);
     
     // Scroll to top of content
     const contentArea = document.getElementById('documentation-content');
@@ -251,4 +256,4 @@ const DocumentationPage: React.FC = () => {
   );
 };
 
-export default DocumentationPage;
+export default DocumentationClient;

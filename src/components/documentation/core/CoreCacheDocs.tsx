@@ -28,10 +28,12 @@ const CoreCacheDocs: React.FC = () => {
             </span>
           </div>
           
-          <div className="flex items-center justify-center mb-6">
-            <Database className="h-12 w-12 sm:h-16 sm:w-16 mr-4 sm:mr-6 text-blue-600 dark:text-blue-400" />
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="bg-blue-500 p-3 rounded-full">
+              <Database className="h-8 w-8 text-white" />
+            </div>
             <div className="text-left">
-              <h1 className="text-responsive-lg font-bold mb-2 text-gradient-secondary">
+              <h1 className="text-responsive-lg font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
                 Cache System
               </h1>
               <p className="text-responsive-xs text-muted-foreground">
@@ -39,81 +41,70 @@ const CoreCacheDocs: React.FC = () => {
               </p>
             </div>
           </div>
-          
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8">
-            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-blue-600 dark:text-blue-400 border border-blue-500/20">
-              Memory Cache
-            </span>
-            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-green-600 dark:text-green-400 border border-green-500/20">
-              Redis Support
-            </span>
-            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-purple-600 dark:text-purple-400 border border-purple-500/20">
-              Hybrid Mode
-            </span>
-            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-orange-600 dark:text-orange-400 border border-orange-500/20">
-              LRU Eviction
-            </span>
-          </div>
-        </div>
 
-        {/* Overview Section */}
-        <div className="glass-card mb-8 sm:mb-12">
-          <h2 className="text-responsive-md font-bold mb-6 text-gradient">Overview</h2>
-          <p className="text-responsive-sm text-muted-foreground leading-relaxed mb-8">
+          <p className="text-responsive-sm text-muted-foreground max-w-3xl mx-auto mb-6">
             The cache system (<code className="glass px-2 py-1 rounded text-sm font-mono text-primary">src/core/cache.ts</code>) provides a powerful and flexible caching solution for macro_api. It supports multiple cache providers, intelligent eviction strategies, and comprehensive statistics tracking.
           </p>
 
-          <div className="mb-8">
-            <h3 className="text-xl sm:text-2xl font-semibold mb-6 flex items-center">
-              <Sparkles className="h-6 w-6 mr-2 text-primary" />
-              Key Features
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              <div className="glass-card group hover:scale-[1.02] transition-all duration-300">
-                <div className="flex items-start space-x-4">
-                  <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
-                    <Zap className="h-6 w-6 text-yellow-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2">Multiple Providers</h4>
-                    <p className="text-sm text-muted-foreground">Memory, Redis, and hybrid caching options</p>
-                  </div>
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-blue-600 dark:text-blue-400 border border-blue-500/20">Memory Cache</span>
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-green-600 dark:text-green-400 border border-green-500/20">Redis Support</span>
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-purple-600 dark:text-purple-400 border border-purple-500/20">Hybrid Mode</span>
+            <span className="glass px-3 py-1.5 rounded-full text-sm font-medium text-orange-600 dark:text-orange-400 border border-orange-500/20">LRU Eviction</span>
+          </div>
+        </div>
+
+        {/* Key Features */}
+        <div className="glass-card mb-8 sm:mb-12">
+          <h2 className="text-responsive-md font-bold mb-6 text-gradient flex items-center">
+            <Sparkles className="h-6 w-6 mr-2" />
+            Key Features
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <div className="glass-card group hover:scale-[1.02] transition-all duration-300">
+              <div className="flex items-start space-x-4">
+                <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                  <Zap className="h-6 w-6 text-yellow-600" />
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2">Multiple Providers</h4>
+                  <p className="text-sm text-muted-foreground">Memory, Redis, and hybrid caching options</p>
                 </div>
               </div>
-              
-              <div className="glass-card group hover:scale-[1.02] transition-all duration-300">
-                <div className="flex items-start space-x-4">
-                  <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
-                    <Shield className="h-6 w-6 text-green-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2">LRU Eviction</h4>
-                    <p className="text-sm text-muted-foreground">Intelligent cache eviction with LRU algorithm</p>
-                  </div>
+            </div>
+            
+            <div className="glass-card group hover:scale-[1.02] transition-all duration-300">
+              <div className="flex items-start space-x-4">
+                <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                  <Shield className="h-6 w-6 text-green-600" />
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2">LRU Eviction</h4>
+                  <p className="text-sm text-muted-foreground">Intelligent cache eviction with LRU algorithm</p>
                 </div>
               </div>
-              
-              <div className="glass-card group hover:scale-[1.02] transition-all duration-300">
-                <div className="flex items-start space-x-4">
-                  <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
-                    <BarChart3 className="h-6 w-6 text-purple-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2">Statistics</h4>
-                    <p className="text-sm text-muted-foreground">Comprehensive cache performance metrics</p>
-                  </div>
+            </div>
+            
+            <div className="glass-card group hover:scale-[1.02] transition-all duration-300">
+              <div className="flex items-start space-x-4">
+                <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                  <BarChart3 className="h-6 w-6 text-purple-600" />
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2">Statistics</h4>
+                  <p className="text-sm text-muted-foreground">Comprehensive cache performance metrics</p>
                 </div>
               </div>
-              
-              <div className="glass-card group hover:scale-[1.02] transition-all duration-300">
-                <div className="flex items-start space-x-4">
-                  <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
-                    <Clock className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2">TTL Support</h4>
-                    <p className="text-sm text-muted-foreground">Configurable time-to-live for cache entries</p>
-                  </div>
+            </div>
+            
+            <div className="glass-card group hover:scale-[1.02] transition-all duration-300">
+              <div className="flex items-start space-x-4">
+                <div className="glass rounded-xl p-3 group-hover:scale-110 transition-transform duration-300">
+                  <Clock className="h-6 w-6 text-blue-600" />
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2">TTL Support</h4>
+                  <p className="text-sm text-muted-foreground">Configurable time-to-live for cache entries</p>
                 </div>
               </div>
             </div>

@@ -355,7 +355,7 @@ const Navbar: React.FC = () => {
                     <div className="flex items-center justify-center mb-1">
                       <Shield className="h-4 w-4 text-primary mr-1" />
                     </div>
-                    <div className="text-lg sm:text-xl font-bold text-foreground">MIT</div>
+                    <div className="text-lg sm:text-xl font-bold text-foreground">Apache 2.0</div>
                     <div className="text-xs text-muted-foreground">License</div>
                   </div>
                 </div>
