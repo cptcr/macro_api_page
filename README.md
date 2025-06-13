@@ -1,8 +1,4 @@
-Here’s a refined **README.md** tailored for your **macro\_api\_page** Next.js v14 frontend, designed to interface with the [macro\_api](https://github.com/cptcr/macro_api) toolkit powering **macro.cptcr.dev**:
 
----
-
-````markdown
 # Macro API Page 🚀
 
 A **Next.js v14** application that serves as a polished frontend on top of the `macro_api` toolkit—integrating services like YouTube, Spotify, Valorant, DeepSeek, ChatGPT, and more.
@@ -109,18 +105,3 @@ Distributed under **Apache 2.0 License**. See [LICENSE](../macro_api/LICENSE) fo
 * Core functionality provided by `macro_api` ([github.com][1])
 * Bootstrapped with Next.js v14 App Router
 * Integrates diverse APIs: YouTube, Spotify, Valorant, DeepSeek, OpenAI
-
----
-
-### Next Steps
-
-Looking to add:
-
-* Authentication (NextAuth.js, JWT)
-* UI framework (e.g., Chakra UI, Material UI)
-* Unit & end-to-end testing
-* Docker & CI/CD workflow
-
-Let me know if you’d like help expanding this README or repository structure!
-
-[1]: https://github.com/cptcr/macro_api?utm_source=chatgpt.com "cptcr/macro_api: A comprehensive API toolkit for various ... - GitHub"
